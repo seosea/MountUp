@@ -5,7 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context=".Activity.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/logo_horizontal" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLightGray"/>
 
     <FrameLayout
         android:id="@+id/main_fragment"
@@ -13,51 +31,147 @@
         android:layout_height="0dp"
         android:layout_weight="1"></FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLightGray"
-        />
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="5dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_mount_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:id="@+id/view_selected_mount_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="mountList" />
+            android:background="@color/colorMain" />
 
-        <Button
-            android:id="@+id/btn_mount_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:visibility="invisible"
+            android:id="@+id/view_selected_mount_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="map" />
+            android:background="@color/colorMain" />
 
-        <Button
-            android:id="@+id/btn_recode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:visibility="invisible"
+            android:id="@+id/view_selected_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="recode" />
+            android:background="@color/colorMain" />
 
-        <Button
-            android:id="@+id/btn_my_review"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:visibility="invisible"
+            android:id="@+id/view_selected_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="myReview" />
+            android:background="@color/colorMain" />
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="setting" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btn_mount_list"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:background="@color/colorWhite"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_mountain_ranking_main" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="산 랭킹"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btn_mount_map"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:scaleType="fitCenter"
+                android:background="@color/colorWhite"
+                app:srcCompat="@drawable/ic_map_main" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="지도"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btn_user"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:scaleType="fitCenter"
+                android:background="@color/colorWhite"
+                app:srcCompat="@drawable/ic_user_main" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 기록"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btn_setting"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:scaleType="fitCenter"
+                android:background="@color/colorWhite"
+                app:srcCompat="@drawable/ic_settings_main" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="설정"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>
