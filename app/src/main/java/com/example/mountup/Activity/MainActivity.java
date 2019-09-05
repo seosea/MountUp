@@ -10,12 +10,10 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.example.mountup.Fragment.MountListFragment;
 import com.example.mountup.Fragment.MountMapFragment;
-import com.example.mountup.Fragment.MyReviewFragment;
-import com.example.mountup.Fragment.RecodeFragment;
+import com.example.mountup.Fragment.UserFragment;
 import com.example.mountup.Fragment.SettingFragment;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_user:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_fragment, new MyReviewFragment())
+                        .replace(R.id.main_fragment, new UserFragment())
                         .addToBackStack(null)
                         .commit();
 
