@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mountup.R;
 
-public class MyReviewFragment extends Fragment {
+public class UserFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         return view;
     }
