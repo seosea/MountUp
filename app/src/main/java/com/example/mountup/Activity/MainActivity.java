@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.mountup.Fragment.MountListFragment;
 import com.example.mountup.Fragment.MountMapFragment;
@@ -21,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FragmentManager fragmentManager;
     Fragment fragment;
 
-    Button btnMountList, btnMountMap, btnRecode, btnMyReview,btnSetting;
+    ImageButton btnMountList, btnMountMap, btnUser, btnSetting;
+    View selectedMountList, selectedMountMap, selectedUser, selectedSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +33,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Constant.context = this;
 
+        getDisplaySize();
         initFragment();
         initView();
         initListener();
+
+    }
+
+    private void getDisplaySize(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        Constant.WIDTH = size.x;
+        Constant.HEIGHT = size.y;
     }
 
     private void initFragment(){
@@ -47,16 +60,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView(){
         btnMountList = findViewById(R.id.btn_mount_list);
         btnMountMap = findViewById(R.id.btn_mount_map);
-        btnRecode = findViewById(R.id.btn_recode);
-        btnMyReview = findViewById(R.id.btn_my_review);
+        btnUser = findViewById(R.id.btn_user);
         btnSetting = findViewById(R.id.btn_setting);
+
+        selectedMountList = findViewById(R.id.view_selected_mount_list);
+        selectedMountMap = findViewById(R.id.view_selected_mount_map);
+        selectedUser = findViewById(R.id.view_selected_user);
+        selectedSetting = findViewById(R.id.view_selected_setting);
     }
 
     private void initListener(){
         btnMountList.setOnClickListener(this);
         btnMountMap.setOnClickListener(this);
-        btnRecode.setOnClickListener(this);
-        btnMyReview.setOnClickListener(this);
+        btnUser.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
     }
 
@@ -69,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.main_fragment, new MountListFragment())
                         .addToBackStack(null)
                         .commit();
+
+                selectedMountList.setVisibility(View.VISIBLE);
+                selectedMountMap.setVisibility(View.INVISIBLE);
+                selectedUser.setVisibility(View.INVISIBLE);
+                selectedSetting.setVisibility(View.INVISIBLE);
                 break;
             case R.id.btn_mount_map:
                 getSupportFragmentManager()
@@ -76,13 +97,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.main_fragment, new MountMapFragment())
                         .addToBackStack(null)
                         .commit();
+
+                selectedMountList.setVisibility(View.INVISIBLE);
+                selectedMountMap.setVisibility(View.VISIBLE);
+                selectedUser.setVisibility(View.INVISIBLE);
+                selectedSetting.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.btn_my_review:
+            case R.id.btn_user:
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.main_fragment, new UserFragment())
                         .addToBackStack(null)
                         .commit();
+
+                selectedMountList.setVisibility(View.INVISIBLE);
+                selectedMountMap.setVisibility(View.INVISIBLE);
+                selectedUser.setVisibility(View.VISIBLE);
+                selectedSetting.setVisibility(View.INVISIBLE);
                 break;
             case R.id.btn_setting:
                 getSupportFragmentManager()
@@ -90,8 +121,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.main_fragment, new SettingFragment())
                         .addToBackStack(null)
                         .commit();
+
+                selectedMountList.setVisibility(View.INVISIBLE);
+                selectedMountMap.setVisibility(View.INVISIBLE);
+                selectedUser.setVisibility(View.INVISIBLE);
+                selectedSetting.setVisibility(View.VISIBLE);
                 break;
 
         }
     }
+
 }
