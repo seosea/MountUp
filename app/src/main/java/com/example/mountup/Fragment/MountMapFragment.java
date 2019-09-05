@@ -13,10 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mountup.R;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
