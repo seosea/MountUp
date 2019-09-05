@@ -13,20 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mountup.R;
 
-public class MyReviewFragment extends Fragment {
+public class UserFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
         ReviewAdapter adapter = new ReviewAdapter();
 
         RecyclerView recyclerView = view.findViewById(R.id.rc_review_recyclerview);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
 
-        adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.image)));
-        adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.image)));
+        adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.mt2)));
+        adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.mt)));
         adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.image)));
         adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.image)));
         adapter.addItem(new Review("shin","good",BitmapFactory.decodeResource(getResources(),R.drawable.image)));

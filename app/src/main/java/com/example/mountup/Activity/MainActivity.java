@@ -11,8 +11,7 @@ import android.widget.Button;
 
 import com.example.mountup.Fragment.MountListFragment;
 import com.example.mountup.Fragment.MountMapFragment;
-import com.example.mountup.Fragment.MyReviewFragment;
-import com.example.mountup.Fragment.RecodeFragment;
+import com.example.mountup.Fragment.UserFragment;
 import com.example.mountup.Fragment.SettingFragment;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
@@ -78,17 +77,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addToBackStack(null)
                         .commit();
                 break;
-            case R.id.btn_recode:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, new RecodeFragment())
-                        .addToBackStack(null)
-                        .commit();
-                break;
             case R.id.btn_my_review:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_fragment, new MyReviewFragment())
+                        .replace(R.id.main_fragment, new UserFragment())
                         .addToBackStack(null)
                         .commit();
                 break;
