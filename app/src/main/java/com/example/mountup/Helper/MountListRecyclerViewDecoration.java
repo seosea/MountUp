@@ -17,7 +17,7 @@ public class MountListRecyclerViewDecoration extends RecyclerView.ItemDecoration
         spacing = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 12, mActivity.getResources().getDisplayMetrics());
         outerMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                20, mActivity.getResources().getDisplayMetrics());
+                10, mActivity.getResources().getDisplayMetrics());
     }
 
     @Override

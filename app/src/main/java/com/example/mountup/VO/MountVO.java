@@ -11,6 +11,16 @@ public class MountVO {
     private float m_grade;
     private Boolean m_bClimb;
 
+    public MountVO(Drawable thumbnail, String name, int height, float distance, float grade, Boolean bClimb)
+    {
+        this.m_thumbnail = thumbnail;
+        this.m_name = name;
+        this.m_height = height;
+        this.m_distance = distance;
+        this.m_grade = grade;
+        this.m_bClimb = bClimb;
+    }
+
     public Drawable getThumbnail() {
         return m_thumbnail;
     }
