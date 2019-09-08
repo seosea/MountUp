@@ -225,7 +225,7 @@ SwipeRefreshLayout.OnRefreshListener {
                 public int compare(MountVO o1, MountVO o2) {
                     if (o1.getDistance() > o2.getDistance()) {
                         return 1;
-                    } else if (o1.getDistance() > o2.getDistance()) {
+                    } else if (o1.getDistance() < o2.getDistance()) {
                         return -1;
                     } else {
                         return 0;
