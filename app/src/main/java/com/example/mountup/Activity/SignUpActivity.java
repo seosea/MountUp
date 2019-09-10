@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.R;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
@@ -40,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_complete_sign_up:
                 // TODO: 회원가입 완료
                 Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
             case R.id.btn_back_sign_up:

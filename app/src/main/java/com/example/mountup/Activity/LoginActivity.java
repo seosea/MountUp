@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button btnLogin, btnSignUp;
+
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         initView();
         initListener();
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
+    }
+
+    @Override public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
     }
 
     private void initView(){
@@ -38,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_login:
                 // TODO: 로그인
                 Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
             case R.id.btn_sign_up:
