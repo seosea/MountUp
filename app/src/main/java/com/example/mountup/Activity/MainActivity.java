@@ -15,6 +15,7 @@ import com.example.mountup.Fragment.MountListFragment;
 import com.example.mountup.Fragment.MountMapFragment;
 import com.example.mountup.Fragment.UserFragment;
 import com.example.mountup.Fragment.SettingFragment;
+import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageButton btnMountList, btnMountMap, btnUser, btnSetting;
     View selectedMountList, selectedMountMap, selectedUser, selectedSetting;
+
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         initListener();
 
+        backPressCloseHandler = new BackPressCloseHandler(this);
+  }
+
+    @Override public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
     }
 
     private void getDisplaySize(){
