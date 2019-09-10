@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.mountup.Activity.LoginActivity;
 import com.example.mountup.Activity.ReviseUserInformationActivity;
 import com.example.mountup.R;
 
@@ -44,6 +46,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_language_setting:
+                Toast.makeText(this.getContext(),"한국어만 지원 합니다.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_user_information_setting:
                 Intent intent = new Intent(this.getActivity(), ReviseUserInformationActivity.class);
@@ -51,6 +54,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.btn_logout_setting:
                 // TODO: 로그아웃 시
+                intent = new Intent(this.getActivity(), LoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }
