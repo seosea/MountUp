@@ -9,7 +9,14 @@
         <item name="colorPrimary">@color/colorMain</item>
         <item name="colorPrimaryDark">@color/colorMain</item>
         <item name="colorAccent">@color/colorGray</item>
+    </style>
 
+    <style name="starRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/custom_ratingbar_full</item>
+        <item name="android:minHeight">18dip</item>
+        <item name="android:maxHeight">18dip</item>
+        <item name="android:thumb">@null</item>
     </style>
 
 </resources>

@@ -1,27 +1,26 @@
 package com.example.mountup.Adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mountup.Activity.MountDetailActivity;
 import com.example.mountup.R;
 import com.example.mountup.VO.MountVO;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -67,16 +66,26 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
 
-            ((MountListViewHolder) holder).m_bClimb = mountVO.isClimb();
-            if (!((MountListViewHolder) holder).m_bClimb) {
-                ((MountListViewHolder) holder).iv_climbed.setVisibility(View.INVISIBLE);
+            ((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
+            if (! mountVO.isClimbed()) {
+                ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
+
+            ((MountListViewHolder) holder).rb_mountGrade.setRating(mountVO.getGrade());
 
             ((MountListViewHolder) holder).layout_mountPanel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
-                    //m_onItemClickListener.onItemClick(view, mountVO);
+                    //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(m_context, MountDetailActivity.class);
+                    intent.putExtra("name", mountVO.getName());
+                    intent.putExtra("height", Integer.toString(mountVO.getHeight()));
+                    intent.putExtra("distance", Float.toString(mountVO.getDistance()));
+                    intent.putExtra("grade", Float.toString(mountVO.getGrade()));
+                    intent.putExtra("isClimbed", Boolean.toString(mountVO.isClimbed()));
+                    Log.d("mee:MountListAdapter", "isClimbed : " + Boolean.toString(mountVO.isClimbed()));
+
+                    m_context.startActivity(intent);
                 }
             });
         }
@@ -98,7 +107,7 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     public void showLoading() {
         if (isMoreLoading && m_mountItems != null && onLoadMoreListener != null) {
-            Log.d("me:MountListAdapter", "showLoading");
+            Log.d("mee:MountListAdapter", "showLoading");
             isMoreLoading = false;
             new Handler().post(new Runnable() {
                 @Override
@@ -145,8 +154,9 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         private TextView tv_mountHeight;
         private TextView tv_mountDistance;
         private TextView tv_mountGrade;
-        private ImageView iv_climbed;
-        private boolean m_bClimb;
+        private ImageView iv_isClimbed;
+        private RatingBar rb_mountGrade;
+        private boolean isClimbed;
 
         public MountListViewHolder(View convertView) {
             super(convertView);
@@ -157,7 +167,16 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             tv_mountHeight = (TextView) convertView.findViewById(R.id.tv_mountHeight);
             tv_mountDistance = (TextView) convertView.findViewById(R.id.tv_mountDistance);
             tv_mountGrade = (TextView) convertView.findViewById(R.id.tv_mountGrade);
-            iv_climbed = (ImageView) convertView.findViewById(R.id.iv_climbed);
+            iv_isClimbed = (ImageView) convertView.findViewById(R.id.iv_climbed);
+            rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mountGrade);
+            /*
+            rb_mountGrade.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating,
+                                            boolean fromUser) {
+                    tv_mountGrade.setText(rating + "");
+                }
+            });*/
         }
     }
 

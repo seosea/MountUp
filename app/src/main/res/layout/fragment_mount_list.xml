@@ -9,6 +9,7 @@
     android:paddingRight="20dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <LinearLayout
@@ -36,7 +37,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_myLocation"
+            android:id="@+id/tv_myAddress"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
@@ -54,7 +55,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@color/colorWhite"
         android:orientation="horizontal">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -65,7 +66,7 @@
                 android:id="@+id/rv_mountList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:background="@color/colorWhite"
                 android:fadeScrollbars="true"
                 android:overScrollMode="never" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

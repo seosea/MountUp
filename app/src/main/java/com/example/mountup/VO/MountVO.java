@@ -1,6 +1,7 @@
 package com.example.mountup.VO;
 
 import android.graphics.drawable.Drawable;
+import android.widget.RatingBar;
 
 public class MountVO {
 
@@ -9,16 +10,19 @@ public class MountVO {
     private int m_height;
     private float m_distance;
     private float m_grade;
-    private Boolean m_bClimb;
+    private Boolean m_isClimbed;
 
-    public MountVO(Drawable thumbnail, String name, int height, float distance, float grade, Boolean bClimb)
+    public MountVO() {
+    }
+
+    public MountVO(Drawable thumbnail, String name, int height, float distance, float grade, Boolean isClimbed)
     {
         this.m_thumbnail = thumbnail;
         this.m_name = name;
         this.m_height = height;
         this.m_distance = distance;
         this.m_grade = grade;
-        this.m_bClimb = bClimb;
+        this.m_isClimbed = isClimbed;
     }
 
     public Drawable getThumbnail() {
@@ -48,10 +52,10 @@ public class MountVO {
     public float getGrade() { return m_grade; }
     public void setGrade(float grade) { this.m_grade = grade; }
 
-    public boolean isClimb() {
-        return m_bClimb;
+    public boolean isClimbed() {
+        return m_isClimbed;
     }
     public void setClimb(Boolean bClimb) {
-        this.m_bClimb = bClimb;
+        this.m_isClimbed = bClimb;
     }
 }
