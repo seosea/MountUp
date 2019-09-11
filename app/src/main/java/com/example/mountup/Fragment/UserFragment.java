@@ -33,15 +33,7 @@ public class UserFragment extends Fragment{
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
 
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeContainer);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+       
 
         adapter.addItem(new Review("shin","이 산 너무 좋아요 다음에 또 오고싶어요. 이 산 너무 좋아요 다음에 또 오고싶어요. 이 산 너무 좋아요 다음에 또 오고싶어요. ",
                 BitmapFactory.decodeResource(getResources(),R.drawable.mt2),1004,(float)4.75,true));
