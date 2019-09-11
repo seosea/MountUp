@@ -9,7 +9,6 @@
         <item name="colorPrimary">@color/colorNavy</item>
         <item name="colorPrimaryDark">@color/colorNavy</item>
         <item name="colorAccent">@color/colorGray</item>
-
     </style>
 
 </resources>

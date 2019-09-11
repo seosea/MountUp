@@ -16,7 +16,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/iv_review_user_profile"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_weight="0"
@@ -32,16 +32,16 @@
                 android:gravity="center_vertical"
                 android:text="TextView" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/btn_review_heart_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="5dp"
                 android:layout_weight="0"
                 android:adjustViewBounds="true"
                 android:background="#FFFFFF"
@@ -70,17 +70,22 @@
                 android:layout_weight="0"
                 android:text="TextView" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageView
-                android:id="@+id/imageView2"
+            <RatingBar
+                android:id="@+id/rb_review_grade"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/review_star" />
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="3"
+                android:stepSize="0.5"
+                android:progressTint="@color/colorGold"/>
 
         </LinearLayout>
 
