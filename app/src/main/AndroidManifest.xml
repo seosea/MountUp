@@ -23,6 +23,7 @@
         <activity android:name=".Activity.ReviseUserInformationActivity" />
         <activity android:name=".Activity.MainActivity">
         </activity>
+        <activity android:name=".Activity.MountDetailActivity"/>
     </application>
 
 </manifest>
