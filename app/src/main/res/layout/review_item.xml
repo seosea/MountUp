@@ -45,6 +45,7 @@
                 android:layout_weight="0"
                 android:adjustViewBounds="true"
                 android:background="#FFFFFF"
+                android:onClick="onClick"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/heart_uncheck" />
 
