@@ -1,16 +1,20 @@
 package com.example.mountup.VO;
 
 import android.graphics.drawable.Drawable;
-import android.widget.RatingBar;
 
 public class MountVO {
 
+    private int m_primary;
     private Drawable m_thumbnail;
     private String m_name;
     private int m_height;
     private float m_distance;
     private float m_grade;
     private Boolean m_isClimbed;
+    private double m_x, m_y;
+    private String m_address; // 주소
+    private String m_imgURL; // 이미지 URL
+    private String m_introduction; // 산 소개
 
     public MountVO() {
     }

@@ -117,6 +117,8 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         });
 
+        loadData();
+
         return view;
     }
 
@@ -124,7 +126,6 @@ SwipeRefreshLayout.OnRefreshListener {
     public void onStart() {
         super.onStart();
         Log.d("mee:MountListFragment", "onStart");
-        loadData();
     }
 
     @Override
@@ -157,7 +158,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
                 Random random = new Random();
                 for (int i = start; i < end; i++) {
-                    items.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.ic_mountain_ranking_main),
+                    items.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
                             i + 1 + "번산", random.nextInt(900) + 100,
                             Math.round(random.nextFloat() * 1000) / (float)10.0,
                             Math.round(random.nextFloat() * 50) / (float)10.0,
@@ -193,7 +194,7 @@ SwipeRefreshLayout.OnRefreshListener {
         for (int i = 0; i < 10; i++) {
             Random random = new Random();
 
-            m_bufferItems.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.ic_mountain_ranking_main),
+            m_bufferItems.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
                     i + 1 + "번산", random.nextInt(900) + 100,
                     Math.round(random.nextFloat() * 1000) / (float)10.0,
                     Math.round(random.nextFloat() * 50) / (float)10.0,

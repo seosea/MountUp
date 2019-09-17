@@ -66,7 +66,7 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
 
-            ((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
+            //((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
             if (! mountVO.isClimbed()) {
                 ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
@@ -156,7 +156,7 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         private TextView tv_mountGrade;
         private ImageView iv_isClimbed;
         private RatingBar rb_mountGrade;
-        private boolean isClimbed;
+        //private boolean isClimbed;
 
         public MountListViewHolder(View convertView) {
             super(convertView);
