@@ -132,8 +132,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:stepSize="0.1"
-                                android:clickable="false"
-                                android:focusable="false"
+                                android:isIndicator="true"
                                 android:numStars="5" />
 
                             <TextView
@@ -159,14 +158,11 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tv_mountIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_margin="20dp"
                 android:text="아름답고 푸른 백두산입니다." />
 
             <LinearLayout
@@ -175,7 +171,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_mountAdress"
+                    android:id="@+id/tv_mountAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
