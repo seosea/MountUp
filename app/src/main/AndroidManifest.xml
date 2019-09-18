@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity android:name=".Activity.SignUpActivity"></activity>
         <activity android:name=".Activity.LoginActivity" />
         <activity android:name=".Activity.ReviewActivity"></activity>
@@ -22,6 +23,7 @@
         <activity android:name=".Activity.ReviseUserInformationActivity" />
         <activity android:name=".Activity.MainActivity"></activity>
         <activity android:name=".Activity.MountDetailActivity" />
+
     </application> <!-- camera, gallery -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

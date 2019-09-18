@@ -51,7 +51,9 @@
         android:id="@+id/editText_review"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/edittext_border" />
+        android:background="@drawable/edittext_border"
+        android:gravity="left"
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btn_review_submit"
