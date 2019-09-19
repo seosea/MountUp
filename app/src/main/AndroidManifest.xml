@@ -14,6 +14,8 @@
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Activity.ReviewActivity"/>
+
         <activity android:name=".Activity.SignUpActivity">
         </activity>
         <activity android:name=".Activity.LoginActivity" >
@@ -28,5 +30,9 @@
         </activity>
         <activity android:name=".Activity.MountDetailActivity"/>
     </application>
+    <!-- camera, gallery -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>
