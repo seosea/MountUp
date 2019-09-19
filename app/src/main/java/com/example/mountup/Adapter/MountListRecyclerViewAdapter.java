@@ -60,13 +60,13 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         if (holder instanceof MountListViewHolder) {
             final MountVO mountVO = m_mountItems.get(position);
 
-            ((MountListViewHolder) holder).iv_mountThumbnail.setImageDrawable(mountVO.getThumbnail());
+            ((MountListViewHolder) holder).iv_mountThumbnail.setImageBitmap(mountVO.getThumbnail());
             ((MountListViewHolder) holder).tv_mountName.setText(mountVO.getName());
             ((MountListViewHolder) holder).tv_mountHeight.setText(Integer.toString(mountVO.getHeight()) + "m");
             ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
 
-            ((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
+            //((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
             if (! mountVO.isClimbed()) {
                 ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
@@ -78,12 +78,13 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 public void onClick(View view) {
                     //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(m_context, MountDetailActivity.class);
-                    intent.putExtra("name", mountVO.getName());
-                    intent.putExtra("height", Integer.toString(mountVO.getHeight()));
-                    intent.putExtra("distance", Float.toString(mountVO.getDistance()));
-                    intent.putExtra("grade", Float.toString(mountVO.getGrade()));
-                    intent.putExtra("isClimbed", Boolean.toString(mountVO.isClimbed()));
-                    Log.d("mee:MountListAdapter", "isClimbed : " + Boolean.toString(mountVO.isClimbed()));
+                    intent.putExtra("MountID", Integer.toString(mountVO.getID()));
+                    //intent.putExtra("name", mountVO.getName());
+                    //intent.putExtra("height", Integer.toString(mountVO.getHeight()));
+                    //intent.putExtra("distance", Float.toString(mountVO.getDistance()));
+                    //intent.putExtra("grade", Float.toString(mountVO.getGrade()));
+                    //intent.putExtra("isClimbed", Boolean.toString(mountVO.isClimbed()));
+                    //Log.d("mee:MountListAdapter", "isClimbed : " + Boolean.toString(mountVO.isClimbed()));
 
                     m_context.startActivity(intent);
                 }
@@ -142,6 +143,7 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public void setMore(boolean isMore) { this.isMoreLoading = isMore; }
 
     public void filterList(ArrayList<MountVO> filteredItems) {
+        m_mountItems.clear();
         m_mountItems = filteredItems;
         notifyDataSetChanged();
     }
@@ -156,7 +158,7 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         private TextView tv_mountGrade;
         private ImageView iv_isClimbed;
         private RatingBar rb_mountGrade;
-        private boolean isClimbed;
+        //private boolean isClimbed;
 
         public MountListViewHolder(View convertView) {
             super(convertView);

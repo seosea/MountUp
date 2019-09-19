@@ -17,7 +17,7 @@ public class MountListRecyclerViewDecoration extends RecyclerView.ItemDecoration
         spacing = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 12, mActivity.getResources().getDisplayMetrics());
         outerMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                10, mActivity.getResources().getDisplayMetrics());
+                5, mActivity.getResources().getDisplayMetrics());
     }
 
     @Override
@@ -30,8 +30,8 @@ public class MountListRecyclerViewDecoration extends RecyclerView.ItemDecoration
 
         outRect.left = column * spacing / spanCount;
         outRect.right = spacing - (column + 1) * spacing / spanCount;
-        outRect.top = spacing * 2;
-        outRect.bottom = spacing * 2;
+        outRect.bottom = spacing;
+        outRect.bottom = spacing;
 
         if (row != lastRow) {
             outRect.bottom = outerMargin;
