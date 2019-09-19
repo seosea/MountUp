@@ -29,7 +29,6 @@ import com.example.mountup.VO.MountVO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
 
 public class MountListFragment extends Fragment implements MountListRecyclerViewAdapter.OnLoadMoreListener,
 SwipeRefreshLayout.OnRefreshListener {
@@ -41,7 +40,6 @@ SwipeRefreshLayout.OnRefreshListener {
     private Spinner m_sortSpinner;
     private EditText m_et_mountSearch;
 
-    //private ArrayList<MountVO> m_mountItems; // 전체를 담고있는 리스트
     private ArrayList<MountVO> m_bufferItems; // 버퍼로 사용할 리스트
 
     @Nullable
@@ -49,7 +47,6 @@ SwipeRefreshLayout.OnRefreshListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mount_list, container, false);
 
-        //m_mountItems = new ArrayList();
         m_bufferItems = new ArrayList();
 
         // RecycleView 생성 및 사이즈 고정
@@ -118,13 +115,7 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sortMountList(m_sortSpinner.getSelectedItem().toString());
-                //loadData();
-            }
-        }, 2000);
+        sortMountList(m_sortSpinner.getSelectedItem().toString());
 
         return view;
     }

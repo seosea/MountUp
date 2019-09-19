@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MountManager;
@@ -39,9 +40,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         initView();
-        initListener();
 
         backPressCloseHandler = new BackPressCloseHandler(this);
+
+        Constant.ADMIN_ID = "admin";
+        Constant.ADMIN_PW = "1234";
+
+        // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
+        postToken();
+
+        //initListener();
     }
 
     @Override
@@ -63,42 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                    //////////////////////////////////////////////////////
-                Constant.ADMIN_ID = "admin";
-                Constant.ADMIN_PW = "1234";
-
-                // ID PW 설정
-                ContentValues values = new ContentValues();
-                values.put("id", Constant.ADMIN_ID);
-                values.put("pw", Constant.ADMIN_PW);
-
-                // 로그인 URL 설정
-                String url = "http://15011066.iptime.org:8888/api/login";
-
-                // execute 및 MyInfo에 토큰 저장
-                TokenTask tokenTask = new TokenTask(url, values);
-                tokenTask.execute();
-                //tokenTask.executeOnExecutor()
-
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ContentValues values = new ContentValues();
-                        values.put("id", Constant.ADMIN_ID);
-                        values.put("pw", Constant.ADMIN_PW);
-
-                        // 산 URL 설정
-                        String url = "http://15011066.iptime.org:8888/api/all";
-
-                        // execute, 산 리스트 생성 및 저장
-                        MountTask mountTask = new MountTask(url, values);
-                        mountTask.execute();
-                    }
-                }, 2000);
-
-                /////////////////////////////////////////////////////////////
-
                 // TODO: 로그인
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -112,88 +84,108 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public class MountTask extends AsyncTask<Void, Void, String> {
-        String url;
-        ContentValues values;
+    private void postToken() {
+        // ID PW 설정
+        ContentValues values = new ContentValues();
+        values.put("id", Constant.ADMIN_ID);
+        values.put("pw", Constant.ADMIN_PW);
 
-        MountTask(String url, ContentValues values) {
-            this.url = url;
-            this.values = values;
-        }
+        // 로그인 URL 설정
+        String url = "http://15011066.iptime.org:8888/api/login";
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //progress bar를 보여주는 등등의 행위
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String result;
-            PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
-            result = requestHttpURLConnection.request(url, values);
-            return result; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // 통신이 완료되면 호출됩니다.
-            // 결과에 따른 UI 수정 등은 여기서 합니다.
-
-            Log.d("mee:getMountJson", "result : " + result);
-
-            try {
-                JSONArray jsonArray = new JSONArray(result);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObj = jsonArray.getJSONObject(i);
-
-                    int mntID = jsonObj.getInt("mntID");
-                    String mntName = jsonObj.getString("mntName");
-                    int mntHeight = jsonObj.getInt("mntHeight");
-                    String mntInfo = jsonObj.getString("mntInfo");
-                    String mntPlace = jsonObj.getString("mntPlace");
-                    double mntStar = jsonObj.getDouble("mntStar");
-                    double mntLocX = jsonObj.getDouble("mntLocX");
-                    double mntLocY = jsonObj.getDouble("mntLocY");
-
-                    MountVO newItem = new MountVO();
-                    newItem.setMount(mntID, mntName, mntHeight, mntInfo, mntPlace, (float)mntStar, mntLocX, mntLocY);
-                    // (임시) 사진, 거리, 등반 확인, 별점
-                    newItem.setThumbnail(ContextCompat.getDrawable(Constant.context, R.drawable.mountain_sample));
-                    newItem.setDistance(new Random().nextFloat() * 100);
-                    newItem.setGrade(new Random().nextFloat() * 5);
-                    newItem.setClimb(new Random().nextInt(2) > 0 ? true : false);
-
-                    MountManager.getInstance().getItems().add(newItem);
-                    /*
-                    Log.d("mee:createItems","mntID :  " + mntID + " / MntName : " + mntName + " / mntHeight :  " + mntHeight
-                                                    + "/ mntInfo :  " + mntInfo + " / mntPlace : " + mntPlace + " / mntStar :  " + mntStar
-                                                    + "/ mntLocX : " + mntLocX + " / mntLocY : " + mntLocY);
-                                                    */
-                }
-
-                //  "mntID": 1,
-                //  "mntName": "개운산",
-                //  "mntHeight": "134",
-                //  "mntInfo": "개운산입니다.",
-                //  "mntPlace": "서울특별시 성북구 종암동",
-                //  "mntStar": 4.5,
-                //  "mntLocX": "37.598068",
-                //  "mntLocY": "127.025347"
-            } catch (JSONException e) {
-                e.printStackTrace();
+        // execute 및 MyInfo에 토큰 저장
+        TokenTask tokenTask = new TokenTask(url, values, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                postMountList();
             }
 
-            //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-            //Log.d("mee:MountTask", result);
+            @Override
+            public void onFailure(Exception e) {
+                //e.printStackTrace();
+            }
+        });
+        tokenTask.execute();
+        //tokenTask.executeOnExecutor()
+    }
+
+    private void postMountList() {
+        ContentValues values = new ContentValues();
+        values.put("id", Constant.ADMIN_ID);
+        values.put("pw", Constant.ADMIN_PW);
+
+        // 산 URL 설정
+        String url = "http://15011066.iptime.org:8888/api/all";
+
+        // execute, 산 리스트 생성 및 저장
+        MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                initListener();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                //e.printStackTrace();
+            }
+        });
+        mountTask.execute();
+    }
+
+    private void initMountFromJson(String json_str) {
+        //Log.d("mee:initMountFromJson", "json_str : " + json_str);
+
+        try {
+            JSONArray jsonArray = new JSONArray(json_str);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                int mntID = jsonObj.getInt("mntID");
+                String mntName = jsonObj.getString("mntName");
+                int mntHeight = jsonObj.getInt("mntHeight");
+                String mntInfo = jsonObj.getString("mntInfo");
+                String mntPlace = jsonObj.getString("mntPlace");
+                double mntStar = jsonObj.getDouble("mntStar");
+                double mntLocX = jsonObj.getDouble("mntLocX");
+                double mntLocY = jsonObj.getDouble("mntLocY");
+
+                MountVO newItem = new MountVO();
+                newItem.setMount(mntID, mntName, mntHeight, mntInfo, mntPlace, (float)mntStar, mntLocX, mntLocY);
+                // (임시) 사진, 거리, 등반 확인, 별점
+                Log.d("initMountFromJson", "context : " + Constant.context + " / image : " + R.drawable.mountain_sample);
+                newItem.setThumbnail(ContextCompat.getDrawable(this, R.drawable.mountain_sample));
+                newItem.setDistance(new Random().nextFloat() * 100);
+                newItem.setGrade(new Random().nextFloat() * 5);
+                newItem.setClimb(new Random().nextInt(2) > 0 ? true : false);
+
+                MountManager.getInstance().getItems().add(newItem);
+
+                //Log.d("mee:createItems","mntID :  " + mntID + " / MntName : " + mntName + " / mntHeight :  " + mntHeight + "/ mntInfo :  " + mntInfo + " / mntPlace : " + mntPlace + " / mntStar :  " + mntStar
+                //                                    + "/ mntLocX : " + mntLocX + " / mntLocY : " + mntLocY);
+            }
+
+            //  "mntID": 1,
+            //  "mntName": "개운산",
+            //  "mntHeight": "134",
+            //  "mntInfo": "개운산입니다.",
+            //  "mntPlace": "서울특별시 성북구 종암동",
+            //  "mntStar": 4.5,
+            //  "mntLocX": "37.598068",
+            //  "mntLocY": "127.025347"
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    public class TokenTask extends AsyncTask<Void, Void, String>  {
+    public class TokenTask extends AsyncTask<Void, Void, Void>  {
+        private AsyncCallback m_callback;
+        private Exception m_exception;
         String url;
         ContentValues values;
 
-        TokenTask(String url, ContentValues values){
+        TokenTask(String url, ContentValues values, AsyncCallback callback){
+            this.m_callback = callback;
             this.url = url;
             this.values = values;
         }
@@ -205,66 +197,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             String result;
             PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
-            result = requestHttpURLConnection.request(url, values);
-
-            return result; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
+            result = requestHttpURLConnection.request(url, values); // post token
             Log.d("mee:TokenPost", "result : " + result);
-
             // MyInfo에 토큰 설정
             try {
                 JSONObject job = new JSONObject(result);
                 String token_str = job.getString("token");
                 MyInfo.getInstance().setToken(token_str);
+
             } catch (JSONException e) {
                 e.printStackTrace();
+                m_exception = e;
             }
+
+            return null; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (m_callback != null && m_exception == null) {
+                m_callback.onSuccess(true);
+            } else {
+                m_callback.onFailure(m_exception);
+            }
+
             // 통신이 완료되면 호출됩니다.
             // 결과에 따른 UI 수정 등은 여기서 합니다.
         }
-
-        /* HttpPost 형식
-        @Override
-        protected String doInBackground(String... urls) {
-            String json_string = "";
-            JSONObject jsonObject = null;
-            try {
-                HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(urls[0]);
-                httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                List<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("id", "admin00"));
-                params.add(new BasicNameValuePair("pw", "123"));
-
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                HttpResponse response = httpClient.execute(httpPost);
-                HttpEntity respEntity = response.getEntity();
-
-                if (respEntity != null) {
-                    json_string = EntityUtils.toString(respEntity);
-                    jsonObject = new JSONObject(json_string);
-                    return json_string;
-                }
-
-                Log.d("mee:doInBackground", "result : " + json_string);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        */
             /*
             InputStream is = null;
             String result = "";
@@ -353,4 +317,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return null;
         }*/
     }
+
+    public class MountTask extends AsyncTask<Void, Void, Void> {
+        AsyncCallback m_callback;
+        Exception m_exception;
+        String url;
+        ContentValues values;
+
+        MountTask(String url, ContentValues values, AsyncCallback callback) {
+            this.m_callback = callback;
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //progress bar를 보여주는 등등의 행위
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String mountList_json_str;
+
+            PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
+            mountList_json_str = requestHttpURLConnection.request(url, values);
+
+            initMountFromJson(mountList_json_str);
+
+            return null; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (m_callback != null && m_exception == null) {
+                m_callback.onSuccess(true);
+            } else {
+                m_callback.onFailure(m_exception);
+            }
+        }
+    }
+
+
 }
