@@ -57,6 +57,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
         postToken();
 
+        Intent intent = new Intent(this, IntroActivity.class);
+        startActivity(intent);
+
         //initListener();
     }
 
