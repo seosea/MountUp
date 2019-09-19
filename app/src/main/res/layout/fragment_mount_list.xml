@@ -22,8 +22,13 @@
         <EditText
             android:id="@+id/et_mountSearch"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/custom_rounded_edittext"
+            android:drawableLeft="@drawable/ic_search"
             android:hint="찾으시는 산을 검색하세요"
+            android:textSize="15dp"
+            android:textColor="@color/colorDarkGray"
+            android:padding="10dp"
             android:maxLength="10"/>
 
     </LinearLayout>
@@ -50,8 +55,9 @@
             android:layout_weight="0.2"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:background="@drawable/spinner_background"
-            android:entries="@array/mount_sort" />
+            android:background="@drawable/custom_spinner_background"
+            android:entries="@array/mount_sort"
+            android:spinnerMode="dropdown"/>
     </LinearLayout>
 
     <LinearLayout
@@ -68,9 +74,10 @@
                 android:id="@+id/rv_mountList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorWhite"
                 android:fadeScrollbars="true"
-                android:overScrollMode="never" />
+                android:overScrollMode="never"
+                android:clipChildren="false"
+                android:clipToPadding="false"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 

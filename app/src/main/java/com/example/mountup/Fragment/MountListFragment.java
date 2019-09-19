@@ -105,7 +105,7 @@ SwipeRefreshLayout.OnRefreshListener {
         m_sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("mee:MountListFrament","Mount 정렬");
+                Log.d("mmee:MountListFrament","Mount 정렬");
                 sortMountList(adapterView.getItemAtPosition(i).toString());
             }
 
@@ -115,7 +115,7 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         });
 
-        sortMountList(m_sortSpinner.getSelectedItem().toString());
+        //sortMountList(m_sortSpinner.getSelectedItem().toString());
 
         return view;
     }
@@ -123,12 +123,12 @@ SwipeRefreshLayout.OnRefreshListener {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("mee:MountListFragment", "onStart");
+        Log.d("mmee:MountListFragment", "onStart");
     }
 
     @Override
     public void onRefresh() {
-        Log.d("mee:MountListFragment", "onRefresh");
+        Log.d("mmee:MountListFragment", "onRefresh");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -144,7 +144,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
     @Override
     public void onLoadMore() {
-        Log.d("mee:MountListFragment", "onLoadMore");
+        Log.d("mmee:MountListFragment", "onLoadMore");
         new AsyncTask<Void, Void, ArrayList<MountVO>>() {
             @Override
             protected ArrayList<MountVO> doInBackground(Void... voids) {
@@ -196,7 +196,7 @@ SwipeRefreshLayout.OnRefreshListener {
     }
 
     private void loadFirstData() {
-        Log.d("mee:MountListFragment", "loadData");
+        Log.d("mmee:MountListFragment", "loadData");
         m_bufferItems.clear();
         for (int i = 0; i < 10; i++) {
             m_bufferItems.add(MountManager.getInstance().getItems().get(i));
@@ -214,7 +214,7 @@ SwipeRefreshLayout.OnRefreshListener {
     }
 
     public void sortMountList(String str) {
-        Log.d("mee:MountListFragment", "spinner changed : " + str);
+        Log.d("mmee:MountListFragment", "spinner changed : " + str);
 
         if (str.equals("별점 순")) {
             Collections.sort(MountManager.getInstance().getItems(), new Comparator<MountVO>() {

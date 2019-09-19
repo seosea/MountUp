@@ -68,8 +68,8 @@ public class PostHttpURLConnection {
 
             urlConn.setRequestProperty("id", Constant.ADMIN_ID);
             urlConn.setRequestProperty("x-access-token", MyInfo.getInstance().getToken());
-            Log.d("mee:PostConn", "id : " + Constant.ADMIN_ID);
-            Log.d("mee:PostConn", "token : " + MyInfo.getInstance().getToken());
+            Log.d("mmee:PostConn", "id : " + Constant.ADMIN_ID);
+            Log.d("mmee:PostConn", "token : " + MyInfo.getInstance().getToken());
 
             // [2-2]. parameter 전달 및 데이터 읽어오기.
             String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;
@@ -81,7 +81,7 @@ public class PostHttpURLConnection {
             // [2-3]. 연결 요청 확인.
             // 실패 시 null을 리턴하고 메서드를 종료.
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.d("mee:PostConn", "fail");
+                Log.d("mmee:PostConn", "fail");
                 return null;
             }
 
@@ -98,7 +98,7 @@ public class PostHttpURLConnection {
                 page += line;
             }
 
-            Log.d("mee:PostConn", "page : " + page);
+            Log.d("mmee:PostConn", "page : " + page);
             return page;
 
         } catch (MalformedURLException e) { // for URL.

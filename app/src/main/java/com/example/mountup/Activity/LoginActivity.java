@@ -5,6 +5,10 @@ import androidx.core.content.ContextCompat;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -121,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
+                Log.d("mmee:mountTask", "get mount resource success!");
                 initListener();
             }
 
@@ -133,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initMountFromJson(String json_str) {
-        //Log.d("mee:initMountFromJson", "json_str : " + json_str);
+        //Log.d("mmee:initMountFromJson", "json_str : " + json_str);
 
         try {
             JSONArray jsonArray = new JSONArray(json_str);
@@ -151,16 +160,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 MountVO newItem = new MountVO();
                 newItem.setMount(mntID, mntName, mntHeight, mntInfo, mntPlace, (float)mntStar, mntLocX, mntLocY);
-                // (임시) 사진, 거리, 등반 확인, 별점
-                Log.d("initMountFromJson", "context : " + Constant.context + " / image : " + R.drawable.mountain_sample);
-                newItem.setThumbnail(ContextCompat.getDrawable(this, R.drawable.mountain_sample));
+
+                /*
+                    newItem.setThumbnail(ContextCompat.getDrawable(this, R.drawable.mountain_sample));
+                */
+                String url_img = "http://15011066.iptime.org:8888/basicImages/" + (i + 1) + ".jpg";
+                InputStream is = (InputStream) new URL(url_img).getContent();
+                Drawable mount_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
+                /*
+                Bitmap mount_bitmap = ((BitmapDrawable)mount_drawable).getBitmap();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap resize = BitmapFactory.decodeStream(is, null, options);
+                */
+                newItem.setThumbnail(((BitmapDrawable)mount_drawable).getBitmap());
+
+
+                Log.d("mmee:mountTask", "get mount resource " + (i + 1));
+
+                // (임시) 거리, 등반 확인, 별점
                 newItem.setDistance(new Random().nextFloat() * 100);
                 newItem.setGrade(new Random().nextFloat() * 5);
                 newItem.setClimb(new Random().nextInt(2) > 0 ? true : false);
 
                 MountManager.getInstance().getItems().add(newItem);
 
-                //Log.d("mee:createItems","mntID :  " + mntID + " / MntName : " + mntName + " / mntHeight :  " + mntHeight + "/ mntInfo :  " + mntInfo + " / mntPlace : " + mntPlace + " / mntStar :  " + mntStar
+                //Log.d("mmee:createItems","mntID :  " + mntID + " / MntName : " + mntName + " / mntHeight :  " + mntHeight + "/ mntInfo :  " + mntInfo + " / mntPlace : " + mntPlace + " / mntStar :  " + mntStar
                 //                                    + "/ mntLocX : " + mntLocX + " / mntLocY : " + mntLocY);
             }
 
@@ -174,6 +199,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //  "mntLocY": "127.025347"
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -201,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String result;
             PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
             result = requestHttpURLConnection.request(url, values); // post token
-            Log.d("mee:TokenPost", "result : " + result);
+            Log.d("mmee:TokenPost", "result : " + result);
             // MyInfo에 토큰 설정
             try {
                 JSONObject job = new JSONObject(result);
@@ -252,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
                 con.connect();
-                Log.d("mee:doInBackground", "URL : " + url.toString());
+                Log.d("mmee:doInBackground", "URL : " + url.toString());
 
                 // json object 생성
                 JSONObject jsonObject = new JSONObject();
@@ -260,7 +289,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 jsonObject.accumulate("pw", "123");
                 json = jsonObject.toString();
 
-                Log.d("mee:doInBackground", "jsonObject : " + json);
+                Log.d("mmee:doInBackground", "jsonObject : " + json);
 
                 // 전송값 설정
                 //StringBuffer buffer = new StringBuffer();
@@ -288,7 +317,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
 
                         result = buffer.toString();
-                        Log.d("mee:Login", "POST : " + result);
+                        Log.d("mmee:Login", "POST : " + result);
 
                         return result;
                     }

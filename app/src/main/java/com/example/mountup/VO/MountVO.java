@@ -1,11 +1,12 @@
 package com.example.mountup.VO;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public class MountVO {
 
     private int m_id;
-    private Drawable m_thumbnail;
+    private Bitmap m_thumbnail;
     private String m_name;
     private int m_height;
     private float m_distance;
@@ -58,10 +59,10 @@ public class MountVO {
         this.m_id = id;
     }
 
-    public Drawable getThumbnail() {
+    public Bitmap getThumbnail() {
         return m_thumbnail;
     }
-    public void setThumbnail(Drawable thumbnail) {
+    public void setThumbnail(Bitmap thumbnail) {
         this.m_thumbnail = thumbnail;
     }
 

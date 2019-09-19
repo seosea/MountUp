@@ -20,64 +20,60 @@ public class MountDetailActivity extends AppCompatActivity {
 
     private MountVO m_mount;
 
-    private TextView m_tv_mountName;
-    private TextView m_tv_mountHeight;
-    private TextView m_tv_mountDistance;
-    private TextView m_tv_mountGrade;
-    private TextView m_tv_mountIntro;
-    private TextView m_tv_mountAddress;
-    private ImageView m_iv_isClimbed;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_mount_detail);
 
-        m_mount = new MountVO();
+        initActivityWidget();
+    }
 
-        Intent intent = getIntent();
+    public MountVO getMountDataFromID(int mountID) {
+        MountVO mount = new MountVO();
         for (MountVO item : MountManager.getInstance().getItems()) {
-            Log.d("mee:MountDetail","item.getID() : " + item.getID() + " / intent : " + Integer.parseInt(intent.getStringExtra("MountID")));
-            if (item.getID() == Integer.parseInt(intent.getStringExtra("MountID"))) {
-                m_mount = item;
+            //Log.d("mmee:MountDetail","item.getID() : " + item.getID() + " / intent : " + Integer.parseInt(intent.getStringExtra("MountID")));
+            if (item.getID() == mountID) {
+                mount = item;
                 break;
             }
         }
+        return mount;
+    }
 
-        //m_mount.setName(intent.getStringExtra("name"));
-        //m_mount.setHeight(Integer.parseInt(intent.getStringExtra("height")));
-        //m_mount.setDistance(Float.parseFloat(intent.getStringExtra("distance")));
-        //m_mount.setGrade(Float.parseFloat(intent.getStringExtra("grade")));
-        //m_mount.setClimb(Boolean.parseBoolean(intent.getStringExtra("isClimbed")));
-        //Log.d("mee:MountDetailActivity", "isClimbed : " + Boolean.parseBoolean(intent.getStringExtra("isClimbed")));
+    public void initActivityWidget() {
+        m_mount = getMountDataFromID(Integer.parseInt(getIntent().getStringExtra("MountID")));
 
-        m_tv_mountName = (TextView) this.findViewById(R.id.tv_mountName);
+        //Log.d("mmee:initActivityWidget","Thumbnail : " + m_mount.getThumbnail());
+        ImageView m_iv_mountThumbnail = (ImageView) this.findViewById(R.id.iv_mountThumbnail);
+        m_iv_mountThumbnail.setImageBitmap(m_mount.getThumbnail());
+
+        TextView m_tv_mountName = (TextView) this.findViewById(R.id.tv_mountName);
         m_tv_mountName.setText(m_mount.getName());
 
-        m_tv_mountHeight = (TextView) this.findViewById(R.id.tv_mountHeight);
+        TextView m_tv_mountHeight = (TextView) this.findViewById(R.id.tv_mountHeight);
         m_tv_mountHeight.setText(Integer.toString(m_mount.getHeight()) + "m");
 
-        m_tv_mountDistance = (TextView) this.findViewById(R.id.tv_mountDistance);
+        TextView m_tv_mountDistance = (TextView) this.findViewById(R.id.tv_mountDistance);
         m_tv_mountDistance.setText(Float.toString(m_mount.getDistance()) + "km");
 
-        m_tv_mountGrade = (TextView) this.findViewById(R.id.tv_mountGrade);
+        TextView m_tv_mountGrade = (TextView) this.findViewById(R.id.tv_mountGrade);
         m_tv_mountGrade.setText(Float.toString(m_mount.getGrade()));
 
-        m_tv_mountAddress = (TextView) this.findViewById(R.id.tv_mountAddress);
+        TextView m_tv_mountAddress = (TextView) this.findViewById(R.id.tv_mountAddress);
         m_tv_mountAddress.setText(m_mount.getAddress());
 
-        m_tv_mountIntro = (TextView) this.findViewById(R.id.tv_mountIntro);
+        TextView m_tv_mountIntro = (TextView) this.findViewById(R.id.tv_mountIntro);
         m_tv_mountIntro.setText(m_mount.getIntro());
 
-        m_iv_isClimbed = (ImageView) this.findViewById(R.id.img_isClimbed);
+        ImageView m_iv_isClimbed = (ImageView) this.findViewById(R.id.img_isClimbed);
 
         if (! m_mount.isClimbed())
             m_iv_isClimbed.setVisibility(View.INVISIBLE);
 
         // rattingBar
-        RatingBar rb_mountGrage = (RatingBar) this.findViewById(R.id.rb_mountGrade);
-        rb_mountGrage.setRating(m_mount.getGrade());
+        RatingBar rb_mountGrade = (RatingBar) this.findViewById(R.id.rb_mountGrade);
+        rb_mountGrade.setRating(m_mount.getGrade());
 
         // close 버튼
         ImageButton closeButton = (ImageButton) this.findViewById(R.id.btn_close);
