@@ -115,4 +115,39 @@
         android:layout_marginRight="10dp"
         android:background="#EBEDEF"/>
 
+    <TextView
+        android:id="@+id/txt_my_address_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_marker_gray"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        android:layout_margin="5dp"
+        android:text="OO시 OO구" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/ftn_gps_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="14dp"
+            app:backgroundTint="@color/colorWhite"
+            android:clickable="true"
+            android:src="@drawable/ic_gps" />
+
+    </RelativeLayout>
+
 </LinearLayout>

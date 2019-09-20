@@ -1,6 +1,8 @@
 package com.example.mountup.Activity;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,17 +10,31 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mountup.Helper.Constant;
+import com.example.mountup.Helper.GpsTracker;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MountDetailActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class MountDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MountVO m_mount;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,6 +43,9 @@ public class MountDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mount_detail);
 
         initActivityWidget();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     public MountVO getMountDataFromID(int mountID) {
@@ -87,5 +106,21 @@ public class MountDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng SEOUL = new LatLng(m_mount.getLocX(), m_mount.getLocY());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(SEOUL);
+        markerOptions.title(m_mount.getName());
+        markerOptions.snippet(m_mount.getAddress());
+        mMap.addMarker(markerOptions);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
 }

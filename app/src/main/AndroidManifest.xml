@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mountup">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" /> <!-- camera, gallery -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -30,6 +33,12 @@
         <activity android:name=".Activity.ReviseUserInformationActivity" />
         <activity android:name=".Activity.MainActivity"></activity>
         <activity android:name=".Activity.MountDetailActivity" />
+
+        <!--Google map-->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBOKc4ONasjWjJhINjbZnqtlz5mudH8Q0M" />
     </application>
 
 </manifest>
