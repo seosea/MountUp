@@ -38,9 +38,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private final int MY_PERMISSIONS_LOCATION=1001;
-    private GpsTracker gpsTracker;
-
     FragmentManager fragmentManager;
     Fragment fragment;
 
@@ -53,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.v("text", "text");
         Constant.context = this;
 
         setContentView(R.layout.activity_main);
@@ -64,54 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        checkPermission();
-
-        gpsTracker = new GpsTracker(getApplicationContext());
-
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
-
-        Constant.X = latitude;
-        Constant.Y = longitude;
-
-        String strAddress = getCurrentAddress(latitude, longitude);
-        String[] address = strAddress.split(" ");
-        Constant.CURRENT_ADDRESS = address[1] + " " + address[2] + " " + address[3];
-        Log.v("CURRENT_ADDRESS", Constant.CURRENT_ADDRESS);
   }
-
-    public String getCurrentAddress( double latitude, double longitude) {
-
-        //지오코더... GPS를 주소로 변환
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        List<Address> addresses;
-
-        try {
-
-            addresses = geocoder.getFromLocation(
-                    latitude,
-                    longitude,
-                    7);
-        } catch (IOException ioException) {
-            //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            return "지오코더 서비스 사용불가";
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
-            return "잘못된 GPS 좌표";
-
-        }
-
-        if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
-            return "주소 미발견";
-
-        }
-
-        Address address = addresses.get(0);
-        return address.getAddressLine(0).toString()+"\n";
-    }
 
     @Override public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
@@ -151,47 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnMountMap.setOnClickListener(this);
         btnUser.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
-    }
-
-    private void checkPermission(){
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-        if (permissionCheck!= PackageManager.PERMISSION_GRANTED) {
-
-            Toast.makeText(this,"권한 승인이 필요합니다",Toast.LENGTH_LONG).show();
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(this,"GPS 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_LOCATION);
-                Toast.makeText(this,"GPS 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
-
-            }
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
-
-                } else {
-                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-
-        }
     }
 
     @Override
