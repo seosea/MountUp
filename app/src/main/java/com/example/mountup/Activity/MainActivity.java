@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String strAddress = getCurrentAddress(latitude, longitude);
         String[] address = strAddress.split(" ");
+        Log.d("mmee:MainActivity", "address check");
+        Log.d("mmee:MainActivity", "address : " + address[1] + " / " + address[2] + " / " +  address[3]);
         Constant.CURRENT_ADDRESS = address[1] + " " + address[2] + " " + address[3];
         Log.v("CURRENT_ADDRESS", Constant.CURRENT_ADDRESS);
   }

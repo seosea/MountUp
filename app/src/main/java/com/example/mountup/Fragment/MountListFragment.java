@@ -24,7 +24,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.MountListRecyclerViewDecoration;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
+import com.example.mountup.ServerConnect.MountImageTask;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
 
@@ -180,31 +182,27 @@ SwipeRefreshLayout.OnRefreshListener {
         new AsyncTask<Void, Void, ArrayList<MountVO>>() {
             @Override
             protected ArrayList<MountVO> doInBackground(Void... voids) {
+                ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
                 // 목록 10개 추가
                 int start = m_adapter.getItemCount() - 1;
                 int end = start + 10;
-                if (end > MountManager.getInstance().getItems().size() - 1) {
-                    end = MountManager.getInstance().getItems().size() - 1;
+                if (end > mountList.size() - 1) {
+                    end = mountList.size() - 1;
                 }
-                ArrayList<MountVO> items = new ArrayList<>();
 
                 m_bufferItems.clear();
                 for (int i = start; i < end; i++) {
-                    m_bufferItems.add(MountManager.getInstance().getItems().get(i));
-                    /*
-                    MountVO newItem = new MountVO();
-                    newItem.setMount(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
-                            i + 1 + "번산", random.nextInt(900) + 100,
-                            Math.round(random.nextFloat() * 1000) / (float)10.0,
-                            Math.round(random.nextFloat() * 50) / (float)10.0,
-                            random.nextInt(2) > 0 ? true : false);
-                            */
+                    if(mountList.get(i).getThumbnail() == null) {
+                        int id = mountList.get(i).getID();
+                        String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
+                        mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
+                        Log.d("mmee:loadMore", "get mount resource " + id);
+                    }
+                    m_bufferItems.add(mountList.get(i));
 
                 }
-
                 // 1초 sleep
-
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {
@@ -226,27 +224,31 @@ SwipeRefreshLayout.OnRefreshListener {
     }
 
     private void loadFirstData() {
-        Log.d("mmee:MountListFragment", "loadData");
-        m_bufferItems.clear();
-        for (int i = 0; i < 10; i++) {
-            MountManager.getInstance().getItems().get(i).setDistance(
-                    calculateDistance(
-                            MountManager.getInstance().getItems().get(i).getLocX(),
-                            MountManager.getInstance().getItems().get(i).getLocY()
-                    )
-            );
-            m_bufferItems.add(MountManager.getInstance().getItems().get(i));
-            /*
-            Random random = new Random();
+        Log.d("mmee:MountListFragment", "LoadFirstData");
+        ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
-            m_bufferItems.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
-                    i + 1 + "번산", random.nextInt(900) + 100,
-                    Math.round(random.nextFloat() * 1000) / (float)10.0,
-                    Math.round(random.nextFloat() * 50) / (float)10.0,
-                    random.nextInt(2) > 0 ? true : false));
-                    */
-        }
-        m_adapter.addAll(m_bufferItems);
+        MountImageTask mountImageTask =  new MountImageTask(new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                m_bufferItems.clear();
+                for (int i = 0; i < 10; i++) {
+                    MountManager.getInstance().getItems().get(i).setDistance(
+                            calculateDistance(
+                                    MountManager.getInstance().getItems().get(i).getLocX(),
+                                    MountManager.getInstance().getItems().get(i).getLocY()
+                            )
+                    );
+                    m_bufferItems.add(MountManager.getInstance().getItems().get(i));
+                }
+                m_adapter.addAll(m_bufferItems);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+        mountImageTask.execute();
     }
 
     public void sortMountList(String str) {
@@ -306,7 +308,7 @@ SwipeRefreshLayout.OnRefreshListener {
             });
         }
 
-        if (!MountManager.getInstance().getItems().isEmpty()) {
+       if (!MountManager.getInstance().getItems().isEmpty()) {
             loadFirstData();
             m_mountRecycleView.smoothScrollToPosition(0);
         }
