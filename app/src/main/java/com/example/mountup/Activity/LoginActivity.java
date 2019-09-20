@@ -3,6 +3,8 @@ package com.example.mountup.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,10 +17,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
+import com.example.mountup.Helper.NetworkStatus;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button btnLogin, btnSignUp;
 
     private BackPressCloseHandler backPressCloseHandler;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +59,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Constant.ADMIN_ID = "admin";
         Constant.ADMIN_PW = "1234";
 
+        connectNetwork();
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
-        postToken();
 
         Intent intent = new Intent(this, IntroActivity.class);
         startActivity(intent);
-
         //initListener();
     }
 
@@ -78,6 +82,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSignUp.setOnClickListener(this);
     }
 
+    private void connectNetwork(){
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+        if(status == NetworkStatus.TYPE_MOBILE){
+            Log.v("Network","모바일로 연결됨");
+            postToken();
+        }else if (status == NetworkStatus.TYPE_WIFI){
+            Log.v("Network","무선랜으로 연결됨");
+            postToken();
+        }else {
+            AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
+            View customLayout=View.inflate(getApplicationContext(),R.layout.dialog_network,null);
+            builder.setView(customLayout);
+
+            customLayout.findViewById(R.id.btn_cancel_network_dialog).setOnClickListener(this);
+            customLayout.findViewById(R.id.btn_retry_network_dialog).setOnClickListener(this);
+
+            dialog=builder.create();
+            dialog.show();
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -91,6 +116,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // TODO: 회원가입
                 intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.btn_cancel_network_dialog:
+                dialog.dismiss();
+                finish();
+                break;
+            case R.id.btn_retry_network_dialog:
+                dialog.dismiss();
+                connectNetwork();
                 break;
         }
     }

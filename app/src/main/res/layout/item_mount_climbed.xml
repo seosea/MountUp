@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_mountPanel"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     app:cardBackgroundColor="@color/colorWhite"
@@ -17,10 +17,11 @@
 
         <ImageView
             android:id="@+id/iv_mountThumbnail"
-            android:layout_width="160dp"
-            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
+            android:layout_weight="0.8"
             android:scaleType="centerCrop"
             android:src="@drawable/mountain_sample" />
 
@@ -33,7 +34,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:orientation="horizontal"
                 android:paddingRight="10dp">
@@ -54,23 +55,23 @@
                     android:layout_marginLeft="3dp"
                     android:gravity="left|bottom"
                     android:text="0.0"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_mountName"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="2dp"
                 android:paddingLeft="5dp"
                 android:text="OO산"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.2"
                 android:orientation="horizontal"
                 android:paddingLeft="5dp">
@@ -84,17 +85,17 @@
                         <TextView
                             android:id="@+id/tv_height"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="19dp"
                             android:layout_marginRight="5dp"
                             android:text="높이"
-                            android:textSize="10dp" />
+                            android:textSize="8sp" />
 
                         <TextView
                             android:id="@+id/tv_mountHeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="OOOm"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
                     </TableRow>
 
                     <TableRow>
@@ -105,14 +106,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
                             android:text="거리"
-                            android:textSize="10dp" />
+                            android:textSize="8sp" />
 
                         <TextView
                             android:id="@+id/tv_mountDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="O.Okm"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
                     </TableRow>
 
                 </TableLayout>

@@ -13,4 +13,7 @@ public class Constant {
     // 관리자 ID PW
     public static String ADMIN_ID;
     public static String ADMIN_PW;
+
+    public static String CURRENT_ADDRESS;
+    public static Double X,Y;
 }

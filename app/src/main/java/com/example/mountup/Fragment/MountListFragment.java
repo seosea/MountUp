@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.MountListRecyclerViewDecoration;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
@@ -41,11 +43,15 @@ SwipeRefreshLayout.OnRefreshListener {
     private EditText m_et_mountSearch;
 
     private ArrayList<MountVO> m_bufferItems; // 버퍼로 사용할 리스트
+    private TextView txtCurrentAddress;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mount_list, container, false);
+
+        txtCurrentAddress = view.findViewById(R.id.tv_myAddress);
+        txtCurrentAddress.setText(Constant.CURRENT_ADDRESS);
 
         m_bufferItems = new ArrayList();
 
@@ -142,6 +148,32 @@ SwipeRefreshLayout.OnRefreshListener {
         }, 2000);
     }
 
+    private static float calculateDistance(double lat2, double lon2){
+
+        double theta = Constant.Y - lon2;
+        double dist = Math.sin(deg2rad(Constant.X)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(Constant.X)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+
+        dist = dist * 1.609344;
+
+        Log.v("Distance", String.valueOf(dist));
+        Log.v("x", String.valueOf(lat2));
+        Log.v("y", String.valueOf(lon2));
+        return (float)(dist);
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
+
     @Override
     public void onLoadMore() {
         Log.d("mmee:MountListFragment", "onLoadMore");
@@ -159,9 +191,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
                 m_bufferItems.clear();
                 for (int i = start; i < end; i++) {
-
                     m_bufferItems.add(MountManager.getInstance().getItems().get(i));
-
                     /*
                     MountVO newItem = new MountVO();
                     newItem.setMount(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
@@ -199,6 +229,12 @@ SwipeRefreshLayout.OnRefreshListener {
         Log.d("mmee:MountListFragment", "loadData");
         m_bufferItems.clear();
         for (int i = 0; i < 10; i++) {
+            MountManager.getInstance().getItems().get(i).setDistance(
+                    calculateDistance(
+                            MountManager.getInstance().getItems().get(i).getLocX(),
+                            MountManager.getInstance().getItems().get(i).getLocY()
+                    )
+            );
             m_bufferItems.add(MountManager.getInstance().getItems().get(i));
             /*
             Random random = new Random();
