@@ -80,6 +80,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         btn_imageButton = findViewById(R.id.btn_review_imageButton);
         btn_submit = findViewById(R.id.btn_review_submit);
 
+
         ratingBar_review = findViewById(R.id.ratingBar_reivew);
         editText_review = findViewById(R.id.editText_review);
     }

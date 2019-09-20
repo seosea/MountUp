@@ -3,9 +3,9 @@ package com.example.mountup.VO;
 import android.graphics.Bitmap;
 
 public class ReviewVO {
-    private String m_userId;
-    private String m_cotent;
-    private Bitmap m_Image;
+    private String m_userId; // 리뷰 작성한 유저
+    private String m_cotent; // 내용
+    private Bitmap m_Image; // image
     private int m_like;
     private double m_grade;
 
