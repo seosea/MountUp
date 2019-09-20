@@ -1,5 +1,6 @@
 package com.example.mountup.Fragment;
 
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.mountup.Helper.Calculator;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.GpsInfo;
 import com.example.mountup.Helper.GpsTracker;
@@ -41,7 +43,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -58,7 +62,8 @@ import java.util.Locale;
 public class MountMapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener {
 
     private ImageView imgWeather;
     private TextView txtTemperature, txtMicroDust, txtOzone;
@@ -74,10 +79,13 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
     private GpsInfo gps;
     private LatLng latLng;
 
-    private FloatingActionButton ftnGPS;
+    private FloatingActionButton ftnGPS, ftnClimb;
 
     private GpsTracker gpsTracker;
     private TextView txtAddress;
+
+    private CircleOptions circle1KM; // 원 반경
+    private Marker selectedMarker = null; // 선택된 마커
 
     @Nullable
     @Override
@@ -107,6 +115,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         btnRefresh = view.findViewById(R.id.btn_refresh_weather);
 
         ftnGPS = view.findViewById(R.id.ftn_gps_map);
+        ftnClimb = view.findViewById(R.id.ftn_climb_map);
 
         MapsInitializer.initialize(getContext());
 
@@ -211,6 +220,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
     private void initListener(){
         btnRefresh.setOnClickListener(this);
         ftnGPS.setOnClickListener(this);
+        ftnClimb.setOnClickListener(this);
     }
 
     // 날씨 설정(재설정)
@@ -271,6 +281,25 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             case R.id.ftn_gps_map:
                 setGPS();
                 break;
+            case R.id.ftn_climb_map:
+                if(selectedMarker==null){ // 산 선택 안됨
+                  Toast.makeText(getContext(),"선택된 산이 없습니다.",Toast.LENGTH_SHORT).show();
+                } else{
+                    if(Constant.X != 0.0) {
+                        float distance = Calculator.calculateDistance(
+                                selectedMarker.getPosition().latitude,
+                                selectedMarker.getPosition().longitude);
+                        if (distance > 0.5) { // 멀 때 (500m 이상)
+                            Toast.makeText(getContext(), "거리가 너무 멉니다.", Toast.LENGTH_SHORT).show();
+                        } else { // 등산 성공
+                            Toast.makeText(getContext(), "등산하였습니다!", Toast.LENGTH_SHORT).show();
+                            //TODO: 등산 했을때,
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "위치를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
 
         }
     }
@@ -290,7 +319,11 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
+        mMap.setOnMarkerClickListener(this);
+
         setMountMarker();
+
+        circle1KM = new CircleOptions();
     }
 
     private void setMountMarker(){
@@ -302,7 +335,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             markerOptions.title(mount.getName());
             markerOptions.snippet(mount.getAddress());
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            mMap.addMarker(markerOptions);
+            mMap.addMarker(markerOptions).showInfoWindow();
         }
     }
 
@@ -339,6 +372,26 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        if((marker.getPosition().latitude != gps.getLatitude()) && (marker.getPosition().longitude != gps.getLongitude())) {
+            mMap.clear();
+            setMountMarker();
+            // 반경 1KM원
+            circle1KM.center(marker.getPosition()) //원점
+                    .radius(500)      //반지름 단위 : m
+                    .strokeWidth(0f)  //선너비 0f : 선없음
+                    .fillColor(Color.parseColor("#4D7DB249")); //배경색
+
+            mMap.addCircle(circle1KM);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),14));
+
+            selectedMarker = marker;
+        }
+        return true;
     }
 
     // 날씨 크롤링 테스크. 네트워크는 AsyncTask 를 사용, 백에서 작업
