@@ -148,6 +148,19 @@
             android:clickable="true"
             android:src="@drawable/ic_gps" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/ftn_climb_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ftn_gps_map"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="14dp"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:backgroundTint="@color/colorWhite"
+            android:src="@drawable/ic_climb" />
+
     </RelativeLayout>
 
 </LinearLayout>

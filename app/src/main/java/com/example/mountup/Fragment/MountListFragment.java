@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
+import com.example.mountup.Helper.Calculator;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.MountListRecyclerViewDecoration;
 import com.example.mountup.Listener.AsyncCallback;
@@ -125,6 +127,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
         //sortMountList(m_sortSpinner.getSelectedItem().toString());
 
+
         return view;
     }
 
@@ -142,6 +145,7 @@ SwipeRefreshLayout.OnRefreshListener {
             public void run() {
                 m_swipeRefresh.setRefreshing(false);
                 //m_mountItems.clear();
+
                 loadFirstData();
 
                 m_et_mountSearch.setText("");
@@ -149,32 +153,6 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         }, 2000);
     }
-
-    private static float calculateDistance(double lat2, double lon2){
-
-        double theta = Constant.Y - lon2;
-        double dist = Math.sin(deg2rad(Constant.X)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(Constant.X)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-
-        dist = dist * 1.609344;
-
-        Log.v("Distance", String.valueOf(dist));
-        Log.v("x", String.valueOf(lat2));
-        Log.v("y", String.valueOf(lon2));
-        return (float)(dist);
-    }
-
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
-    }
-
 
     @Override
     public void onLoadMore() {
@@ -232,12 +210,17 @@ SwipeRefreshLayout.OnRefreshListener {
             public void onSuccess(Object object) {
                 m_bufferItems.clear();
                 for (int i = 0; i < 10; i++) {
-                    MountManager.getInstance().getItems().get(i).setDistance(
-                            calculateDistance(
-                                    MountManager.getInstance().getItems().get(i).getLocX(),
-                                    MountManager.getInstance().getItems().get(i).getLocY()
-                            )
-                    );
+                    if(Constant.X != 0.0) {
+                        MountManager.getInstance().getItems().get(i).setDistance(
+                                Calculator.calculateDistance(
+                                        MountManager.getInstance().getItems().get(i).getLocX(),
+                                        MountManager.getInstance().getItems().get(i).getLocY()
+                                )
+                        );
+                    } else {
+                        MountManager.getInstance().getItems().get(i).setDistance(0);
+                        Toast.makeText(getContext(), "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
                     m_bufferItems.add(MountManager.getInstance().getItems().get(i));
                 }
                 m_adapter.addAll(m_bufferItems);
@@ -249,6 +232,24 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         });
         mountImageTask.execute();
+        Log.d("mmee:MountListFragment", "loadData");
+
+        m_bufferItems.clear();
+        for (int i = 0; i < 10; i++) {
+            if(Constant.X != 0.0) {
+                MountManager.getInstance().getItems().get(i).setDistance(
+                        Calculator.calculateDistance(
+                                MountManager.getInstance().getItems().get(i).getLocX(),
+                                MountManager.getInstance().getItems().get(i).getLocY()
+                        )
+                );
+            } else {
+                MountManager.getInstance().getItems().get(i).setDistance(0);
+                Toast.makeText(getContext(), "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+            m_bufferItems.add(MountManager.getInstance().getItems().get(i));
+        }
+        m_adapter.addAll(m_bufferItems);
     }
 
     public void sortMountList(String str) {
@@ -326,4 +327,5 @@ SwipeRefreshLayout.OnRefreshListener {
         }
         m_adapter.filterList(filterItems);
     }
+
 }
