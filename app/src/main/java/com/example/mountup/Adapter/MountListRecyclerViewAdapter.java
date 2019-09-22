@@ -168,9 +168,9 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             tv_mountName = (TextView) convertView.findViewById(R.id.tv_mountName);
             tv_mountHeight = (TextView) convertView.findViewById(R.id.tv_mountHeight);
             tv_mountDistance = (TextView) convertView.findViewById(R.id.tv_mountDistance);
-            tv_mountGrade = (TextView) convertView.findViewById(R.id.tv_mountGrade);
-            iv_isClimbed = (ImageView) convertView.findViewById(R.id.iv_climbed);
-            rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mountGrade);
+            tv_mountGrade = (TextView) convertView.findViewById(R.id.txt_mount_grade_map);
+            iv_isClimbed = (ImageView) convertView.findViewById(R.id.img_mount_climbed_map);
+            rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mount_grade_map);
             /*
             rb_mountGrade.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override

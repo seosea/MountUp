@@ -1,5 +1,6 @@
 package com.example.mountup.Fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.mountup.Activity.MountDetailActivity;
 import com.example.mountup.Helper.Calculator;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.GpsInfo;
@@ -87,6 +91,12 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
 
     private CircleOptions circle1KM; // 원 반경
     private Marker selectedMarker = null; // 선택된 마커
+    private MountVO selectedMount = null; // 선택된 산
+
+    private LinearLayout linearMountInfo;
+    private ImageView imgMount, imgIsClimbed;
+    private TextView txtMountName, txtMountDistance, txtMountHeight, txtMountGrade;
+    private RatingBar rbStar;
 
     @Nullable
     @Override
@@ -119,6 +129,18 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         ftnClimb = view.findViewById(R.id.ftn_climb_map);
 
         MapsInitializer.initialize(getContext());
+
+        linearMountInfo = view.findViewById(R.id.linear_mount_info_map);
+
+        imgMount = view.findViewById(R.id.img_mount_map);
+        imgIsClimbed = view.findViewById(R.id.img_mount_climbed_map);
+
+        txtMountDistance = view.findViewById(R.id.txt_mount_distance_map);
+        txtMountName = view.findViewById(R.id.txt_mount_name_map);
+        txtMountHeight = view.findViewById(R.id.txt_mount_height_map);
+        txtMountGrade = view.findViewById(R.id.txt_mount_grade_map);
+
+        rbStar = view.findViewById(R.id.rb_mount_grade_map);
 
     }
 
@@ -222,6 +244,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         btnRefresh.setOnClickListener(this);
         ftnGPS.setOnClickListener(this);
         ftnClimb.setOnClickListener(this);
+        linearMountInfo.setOnClickListener(this);
     }
 
     // 날씨 설정(재설정)
@@ -300,6 +323,13 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
                         Toast.makeText(getContext(), "위치를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
                     }
                 }
+                break;
+            case R.id.linear_mount_info_map:
+                Intent intent = new Intent(getContext(), MountDetailActivity.class);
+                intent.putExtra("MountID", Integer.toString(selectedMount.getID()));
+
+                getContext().startActivity(intent);
+                break;
 
 
         }
@@ -325,6 +355,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         setMountMarker();
 
         circle1KM = new CircleOptions();
+        linearMountInfo.setVisibility(View.INVISIBLE);
     }
 
     private void setMountMarker(){
@@ -378,6 +409,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+        linearMountInfo.setVisibility(View.INVISIBLE);
         if((marker.getPosition().latitude != gps.getLatitude()) && (marker.getPosition().longitude != gps.getLongitude())) {
             mMap.clear();
             setMountMarker();
@@ -391,8 +423,40 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),14));
 
             selectedMarker = marker;
+
+            viewMountInformation(marker);
         }
         return true;
+    }
+
+    private void viewMountInformation(Marker marker){
+        String name = marker.getTitle();
+        for(MountVO mount : MountManager.getInstance().getItems()){
+            if(mount.getName().equals(name)) selectedMount = mount;
+        }
+        Log.v("name", name);
+        Log.v("name", selectedMount.getName());
+
+        if(selectedMount !=null){
+            linearMountInfo.setVisibility(View.VISIBLE);
+            imgMount.setImageBitmap(selectedMount.getThumbnail());
+
+            txtMountName.setText(selectedMount.getName());
+            txtMountDistance.setText(Float.toString(selectedMount.getDistance()) + "km");
+            txtMountHeight.setText(Integer.toString(selectedMount.getHeight()) + "m");
+            txtMountGrade.setText(Float.toString(selectedMount.getGrade()));
+            rbStar.setRating(selectedMount.getGrade());
+            if (selectedMount.isClimbed()) {
+                imgIsClimbed.setVisibility(View.VISIBLE);
+            } else{
+                imgIsClimbed.setVisibility(View.INVISIBLE);
+            }
+
+        } else {
+            linearMountInfo.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(),"다시 시도해주세요.",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     // 날씨 크롤링 테스크. 네트워크는 AsyncTask 를 사용, 백에서 작업

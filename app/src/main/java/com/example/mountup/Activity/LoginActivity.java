@@ -386,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         values.put("pw", Constant.ADMIN_PW);
 
         // 산 URL 설정
-        String url = "http://15011066.iptime.org:8888/api/all";
+        String url = "http://15011066.iptime.org:8888/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
         MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
