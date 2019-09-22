@@ -1,5 +1,7 @@
 package com.example.mountup.Singleton;
 
+import android.util.Log;
+
 import com.example.mountup.VO.MountVO;
 
 import java.util.ArrayList;
@@ -21,4 +23,5 @@ public class MountManager {
     private ArrayList<MountVO> m_items;
 
     public ArrayList<MountVO> getItems() { return m_items; }
+
 }

@@ -39,7 +39,7 @@
                 android:paddingRight="10dp">
 
                 <RatingBar
-                    android:id="@+id/rb_mountGrade"
+                    android:id="@+id/rb_mount_grade_map"
                     style="@style/starRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:stepSize="0.1" />
 
                 <TextView
-                    android:id="@+id/tv_mountGrade"
+                    android:id="@+id/txt_mount_grade_map"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="3dp"
@@ -124,7 +124,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/iv_climbed"
+                        android:id="@+id/img_mount_climbed_map"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_flag_isclimbed" />
