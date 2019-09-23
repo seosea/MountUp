@@ -3,6 +3,7 @@ package com.example.mountup.ServerConnect;
 import android.content.ContentValues;
 import android.os.AsyncTask;
 
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
@@ -16,13 +17,13 @@ import java.util.Random;
 public class MountTask extends AsyncTask<Void, Void, Void> {
     AsyncCallback m_callback;
     Exception m_exception;
-    String url;
-    ContentValues values;
+    String m_url;
+    ContentValues m_values;
 
     public MountTask(String url, ContentValues values, AsyncCallback callback) {
         this.m_callback = callback;
-        this.url = url;
-        this.values = values;
+        this.m_url = url;
+        this.m_values = values;
     }
 
     @Override
@@ -35,10 +36,15 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         String mountList_json_str;
 
-        PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
-        mountList_json_str = requestHttpURLConnection.request(url, values);
+        try {
+            PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
+            mountList_json_str = requestHttpURLConnection.request(m_url, Constant.ADMIN_ID, m_values);
 
-        initMountFromJson(mountList_json_str);
+            initMountFromJson(mountList_json_str);
+        } catch(Exception e) {
+            this.m_exception = e;
+            return null;
+        }
 
         return null; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
     }
@@ -80,7 +86,7 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
                 // (임시) 거리, 등반 확인, 별점
                 newItem.setDistance(new Random().nextFloat() * 100);
                 newItem.setGrade(new Random().nextFloat() * 5);
-                newItem.setClimb(new Random().nextInt(2) > 0 ? true : false);
+                newItem.setClimb(false);
 
                 MountManager.getInstance().getItems().add(newItem);
 

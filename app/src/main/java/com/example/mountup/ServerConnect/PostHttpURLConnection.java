@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class PostHttpURLConnection {
 
-    public String request(String _url, ContentValues _params){
+    public String request(String _url, String _id, ContentValues _params){
 
         // HttpURLConnection 참조 변수.
         HttpURLConnection urlConn = null;
@@ -66,10 +66,10 @@ public class PostHttpURLConnection {
             urlConn.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
             urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;cahrset=UTF-8");
 
-            urlConn.setRequestProperty("id", Constant.ADMIN_ID);
+            urlConn.setRequestProperty("id", _id);
             urlConn.setRequestProperty("x-access-token", MyInfo.getInstance().getToken());
-            Log.d("mmee:PostConn", "id : " + Constant.ADMIN_ID);
-            Log.d("mmee:PostConn", "token : " + MyInfo.getInstance().getToken());
+            Log.d("mmee:PostRequest", "id : " + _id);
+            Log.d("mmee:PostRequest", "token : " + MyInfo.getInstance().getToken());
 
             // [2-2]. parameter 전달 및 데이터 읽어오기.
             String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;

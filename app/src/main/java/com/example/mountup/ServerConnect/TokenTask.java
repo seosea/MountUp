@@ -3,6 +3,7 @@ package com.example.mountup.ServerConnect;
 import android.content.ContentValues;
 import android.os.AsyncTask;
 
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.Singleton.MyInfo;
 
@@ -31,7 +32,7 @@ public class TokenTask extends AsyncTask<Void, Void, Void>  {
     protected Void doInBackground(Void... params) {
         String result;
         PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
-        result = requestHttpURLConnection.request(url, values); // post token
+        result = requestHttpURLConnection.request(url, Constant.ADMIN_ID, values); // post token
         // MyInfo에 토큰 설정
         try {
             JSONObject job = new JSONObject(result);

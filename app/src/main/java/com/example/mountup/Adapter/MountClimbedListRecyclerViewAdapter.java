@@ -66,8 +66,7 @@ public class MountClimbedListRecyclerViewAdapter extends RecyclerView.Adapter<Re
             ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
 
-            //((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
-            if (! mountVO.isClimbed()) {
+            if (!mountVO.isClimbed()) {
                 ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
 
@@ -76,16 +75,8 @@ public class MountClimbedListRecyclerViewAdapter extends RecyclerView.Adapter<Re
             ((MountListViewHolder) holder).layout_mountPanel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(m_context, MountDetailActivity.class);
                     intent.putExtra("MountID", Integer.toString(mountVO.getID()));
-                    //intent.putExtra("name", mountVO.getName());
-                    //intent.putExtra("height", Integer.toString(mountVO.getHeight()));
-                    //intent.putExtra("distance", Float.toString(mountVO.getDistance()));
-                    //intent.putExtra("grade", Float.toString(mountVO.getGrade()));
-                    //intent.putExtra("isClimbed", Boolean.toString(mountVO.isClimbed()));
-                    //Log.d("mee:MountListAdapter", "isClimbed : " + Boolean.toString(mountVO.isClimbed()));
-
                     m_context.startActivity(intent);
                 }
             });
@@ -171,6 +162,8 @@ public class MountClimbedListRecyclerViewAdapter extends RecyclerView.Adapter<Re
             tv_mountGrade = (TextView) convertView.findViewById(R.id.tv_mountGrade);
             iv_isClimbed = (ImageView) convertView.findViewById(R.id.iv_climbed);
             rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mountGrade);
+
+            iv_isClimbed.setVisibility(View.VISIBLE);
             /*
             rb_mountGrade.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override

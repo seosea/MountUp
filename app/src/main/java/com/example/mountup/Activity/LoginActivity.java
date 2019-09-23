@@ -12,21 +12,13 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mountup.Helper.BackPressCloseHandler;
@@ -36,23 +28,12 @@ import com.example.mountup.Helper.NetworkStatus;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.MountTask;
-import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.ServerConnect.TokenTask;
-import com.example.mountup.Singleton.MountManager;
-import com.example.mountup.Singleton.MyInfo;
-import com.example.mountup.VO.MountVO;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.mountup.ServerConnect.UserClimbedListTask;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -388,7 +369,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         values.put("pw", Constant.ADMIN_PW);
 
         // 산 URL 설정
-        String url = Constant.URL + "/api/all";
+        String url = Constant.URL + "/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
         MountTask mountTask = new MountTask(url, values, new AsyncCallback() {

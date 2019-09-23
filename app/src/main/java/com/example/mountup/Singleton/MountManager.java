@@ -32,14 +32,16 @@ public class MountManager {
     public Bitmap getMountBitmapFromURL(String url, String srcName) {
         InputStream is;
         Drawable mount_drawable = null;
+        Bitmap mount_bitmap = null;
 
         try {
             is = (InputStream) new URL(url).getContent();
             mount_drawable = Drawable.createFromStream(is, srcName);
+            mount_bitmap = ((BitmapDrawable)mount_drawable).getBitmap();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return ((BitmapDrawable)mount_drawable).getBitmap();
+        return mount_bitmap;
     }
 }

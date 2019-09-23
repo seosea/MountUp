@@ -27,13 +27,18 @@ public class MountImageTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
-        for (int i = 0; i < 10; i++) {
-            if (mountList.get(i).getThumbnail() == null) {
-                int id = mountList.get(i).getID();
-                String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
-                mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
-                Log.d("mmee:loadFirstData", "get mount resource " + id);
+        try {
+            for (int i = 0; i < 10; i++) {
+                if (mountList.get(i).getThumbnail() == null) {
+                    int id = mountList.get(i).getID();
+                    String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
+                    mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
+                    Log.d("mmee:loadFirstData", "get mount resource " + id);
+                }
             }
+        } catch(Exception e) {
+            this.m_exception = e;
+            return null;
         }
         return null; // 결과가 여기에 담깁니다. 아래 onPostExecute()의 파라미터로 전달됩니다.
     }
