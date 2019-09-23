@@ -65,9 +65,11 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             ((MountListViewHolder) holder).tv_mountHeight.setText(Integer.toString(mountVO.getHeight()) + "m");
             ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
+            ((MountListViewHolder) holder).iv_isClimbed.setImageResource(R.drawable.ic_flag_isclimbed);
 
-            //((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
-            if (! mountVO.isClimbed()) {
+            if (mountVO.isClimbed()) {
+                ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.VISIBLE);
+            } else {
                 ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
 

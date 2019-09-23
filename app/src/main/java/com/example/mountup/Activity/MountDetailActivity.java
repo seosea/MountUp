@@ -76,8 +76,8 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
         ImageView m_iv_isClimbed = (ImageView) this.findViewById(R.id.img_isClimbed);
 
-        if (! m_mount.isClimbed())
-            m_iv_isClimbed.setVisibility(View.INVISIBLE);
+        //if (! m_mount.isClimbed())
+            //m_iv_isClimbed.setVisibility(View.INVISIBLE);
 
         // rattingBar
         RatingBar rb_mountGrade = (RatingBar) this.findViewById(R.id.rb_mount_grade_map);
