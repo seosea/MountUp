@@ -370,7 +370,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
-
         // execute, 산 리스트 생성 및 저장
         MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
             @Override

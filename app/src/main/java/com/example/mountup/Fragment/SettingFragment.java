@@ -46,7 +46,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_language_setting:
-                Toast.makeText(this.getContext(),"한국어만 지원 합니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getContext(),"추후 추가예정 입니다.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_user_information_setting:
                 Intent intent = new Intent(this.getActivity(), ReviseUserInformationActivity.class);

@@ -3,6 +3,7 @@ package com.example.mountup.Singleton;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.example.mountup.VO.MountVO;
 

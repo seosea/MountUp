@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 public class MountDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MountVO m_mount;
@@ -64,7 +65,7 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
         TextView m_tv_mountDistance = (TextView) this.findViewById(R.id.tv_mountDistance);
         m_tv_mountDistance.setText(Float.toString(m_mount.getDistance()) + "km");
 
-        TextView m_tv_mountGrade = (TextView) this.findViewById(R.id.tv_mountGrade);
+        TextView m_tv_mountGrade = (TextView) this.findViewById(R.id.txt_mount_grade_map);
         m_tv_mountGrade.setText(Float.toString(m_mount.getGrade()));
 
         TextView m_tv_mountAddress = (TextView) this.findViewById(R.id.tv_mountAddress);
@@ -79,7 +80,7 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
             //m_iv_isClimbed.setVisibility(View.INVISIBLE);
 
         // rattingBar
-        RatingBar rb_mountGrade = (RatingBar) this.findViewById(R.id.rb_mountGrade);
+        RatingBar rb_mountGrade = (RatingBar) this.findViewById(R.id.rb_mount_grade_map);
         rb_mountGrade.setRating(m_mount.getGrade());
 
         // close 버튼
