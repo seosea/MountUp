@@ -14,7 +14,6 @@ public class MountVO {
     private Boolean m_isClimbed;
     private double m_x, m_y;
     private String m_address; // 주소
-    private String m_imgURL; // 이미지 URL
     private String m_intro; // 산 소개
 
     public MountVO() {
@@ -79,7 +78,7 @@ public class MountVO {
     }
 
     public float getDistance() {
-        return Math.round(m_distance * 10) / 10.0f;
+        return Math.round(m_distance * 1000) / 1000.0f;
     }
     public void setDistance(float distance) {
         this.m_distance = distance;

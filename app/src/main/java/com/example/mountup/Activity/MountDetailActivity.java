@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
@@ -63,8 +64,12 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
         m_tv_mountHeight.setText(Integer.toString(m_mount.getHeight()) + "m");
 
         TextView m_tv_mountDistance = (TextView) this.findViewById(R.id.tv_mountDistance);
-        m_tv_mountDistance.setText(Float.toString(m_mount.getDistance()) + "km");
-
+        float distance = m_mount.getDistance();
+        if (distance < 1.0f) {
+            m_tv_mountDistance.setText(Integer.toString((int)(distance * 1000)) + "m");
+        } else {
+            m_tv_mountDistance.setText(Float.toString(Math.round(distance * 10) / 10.0f) + "km");
+        }
         TextView m_tv_mountGrade = (TextView) this.findViewById(R.id.txt_mount_grade_map);
         m_tv_mountGrade.setText(Float.toString(m_mount.getGrade()));
 
@@ -76,8 +81,8 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
         ImageView m_iv_isClimbed = (ImageView) this.findViewById(R.id.img_isClimbed);
 
-        //if (! m_mount.isClimbed())
-            //m_iv_isClimbed.setVisibility(View.INVISIBLE);
+        if (! m_mount.isClimbed())
+            m_iv_isClimbed.setVisibility(View.INVISIBLE);
 
         // rattingBar
         RatingBar rb_mountGrade = (RatingBar) this.findViewById(R.id.rb_mount_grade_map);

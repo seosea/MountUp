@@ -1,8 +1,5 @@
 package com.example.mountup.Fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,7 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class MountListFragment extends Fragment implements MountListRecyclerViewAdapter.OnLoadMoreListener,
-SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView m_mountRecycleView;
     private RecyclerView.LayoutManager m_layoutManager;
@@ -88,7 +86,7 @@ SwipeRefreshLayout.OnRefreshListener {
                 // 마지막 체크, 왜 -2 인지?
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) m_mountRecycleView.getLayoutManager();
                 boolean isEditTextEmpty = m_et_mountSearch.getText().toString().equals("");
-                if(isEditTextEmpty && dy > 0 &&
+                if (isEditTextEmpty && dy > 0 &&
                         gridLayoutManager.findLastCompletelyVisibleItemPosition() > (m_adapter.getItemCount() - 2)) {
                     m_adapter.showLoading();
                 }
@@ -121,11 +119,18 @@ SwipeRefreshLayout.OnRefreshListener {
             public void onSuccess(Object object) {
                 // 정렬 스피너
                 m_sortSpinner = (Spinner) MountListFragment.super.getView().findViewById(R.id.spinner_mountSort);
+
+                String[] spinnerArray = getResources().getStringArray(R.array.mount_sort);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                        MountListFragment.super.getContext(), R.layout.spinner_item, spinnerArray);
+                spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                m_sortSpinner.setAdapter(spinnerArrayAdapter);
+
                 m_sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         // 왜 자꾸 자동으로 실행되는지
-                        Log.d("mmee:MountListFragment","Mount 정렬");
+                        Log.d("mmee:MountListFragment", "MountList 정렬");
                         sortMountList(adapterView.getItemAtPosition(i).toString());
                     }
 
@@ -135,7 +140,7 @@ SwipeRefreshLayout.OnRefreshListener {
                     }
                 });
 
-                sortMountList(m_sortSpinner.getSelectedItem().toString());
+                //sortMountList(m_sortSpinner.getSelectedItem().toString());
             }
 
             @Override
@@ -168,7 +173,7 @@ SwipeRefreshLayout.OnRefreshListener {
                 m_et_mountSearch.setText("");
                 sortMountList(m_sortSpinner.getSelectedItem().toString());
             }
-        }, 2000);
+        }, 1000);
     }
 
     @Override
@@ -188,7 +193,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
                 m_bufferItems.clear();
                 for (int i = start; i < end; i++) {
-                    if(mountList.get(i).getThumbnail() == null) {
+                    if (mountList.get(i).getThumbnail() == null) {
                         int id = mountList.get(i).getID();
                         String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
                         mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
@@ -219,8 +224,7 @@ SwipeRefreshLayout.OnRefreshListener {
 
     private void loadFirstData() {
         Log.d("mmee:MountListFragment", "LoadFirstData");
-
-        MountImageTask mountImageTask =  new MountImageTask(new AsyncCallback() {
+        MountImageTask mountImageTask = new MountImageTask(new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
 
@@ -310,13 +314,11 @@ SwipeRefreshLayout.OnRefreshListener {
             });
         }
 
-       if (!MountManager.getInstance().getItems().isEmpty()) {
-            loadFirstData();
-            m_mountRecycleView.smoothScrollToPosition(0);
-        }
-
-        //m_adapter.notifyDataSetChanged();
+        loadFirstData();
+        m_mountRecycleView.smoothScrollToPosition(0);
+        m_adapter.notifyDataSetChanged();
     }
+
 
     private void mountFilter(String text) {
         ArrayList<MountVO> filterItems = new ArrayList();
