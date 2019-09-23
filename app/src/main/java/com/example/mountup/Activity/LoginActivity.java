@@ -24,6 +24,7 @@ import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.NetworkStatus;
 import com.example.mountup.Listener.AsyncCallback;
+import com.example.mountup.Model.User;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MountManager;
@@ -159,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         values.put("pw", Constant.ADMIN_PW);
 
         // 산 URL 설정
-        String url = "http://15011066.iptime.org:8888/api/all";
+        String url = "http://15011066.iptime.org:8888/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
         MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
@@ -272,6 +273,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 JSONObject job = new JSONObject(result);
                 String token_str = job.getString("token");
                 MyInfo.getInstance().setToken(token_str);
+                //--------------------------------------
+                // -------------------------------------
+                // ------임시로 유저 넣음 --------------
+                // -------------------------------------
+                MyInfo.getInstance().setUser(new User(Constant.ADMIN_ID, Constant.ADMIN_PW, null, 1, 1, 1));
 
             } catch (JSONException e) {
                 e.printStackTrace();

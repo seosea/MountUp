@@ -22,10 +22,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activity.IntroActivity"></activity>
-        <activity android:name=".Activity.ReviewActivity" />
+        <activity android:name=".Activity.ReviewActivity"></activity>
+        <activity android:name=".Activity.ReviewWriteActivity"></activity>
         <activity android:name=".Activity.SignUpActivity"></activity>
         <activity android:name=".Activity.LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,9 +43,6 @@
             android:value="AIzaSyBOKc4ONasjWjJhINjbZnqtlz5mudH8Q0M" />
     </application>
     <!-- camera, gallery -->
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

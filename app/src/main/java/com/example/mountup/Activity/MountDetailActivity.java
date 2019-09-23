@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -105,6 +106,30 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
                 // This function closes Activity Two
                 // Hint: use Context's finish() method
                 finish();
+            }
+        });
+
+        Button reviewWriteButton = (Button) this.findViewById(R.id.btn_writeReview);
+        reviewWriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),ReviewWriteActivity.class);
+                Log.d("mountID",""+m_mount.getID());
+                intent.putExtra("mountID",""+m_mount.getID());
+                startActivity(intent);
+            }
+        });
+
+        Button reviewEnterButton = (Button) this.findViewById(R.id.btn_enterReview);
+        reviewEnterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),ReviewActivity.class);
+
+                Log.d("mountID",""+m_mount.getID());
+                intent.putExtra("mountID",""+m_mount.getID());
+                startActivity(intent);
+                overridePendingTransition(R.anim.anim_slide_in_bottom,R.anim.anim_slide_out_top);
             }
         });
     }

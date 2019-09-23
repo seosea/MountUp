@@ -1,8 +1,10 @@
 package com.example.mountup.Singleton;
 
-public class MyInfo {
+import com.example.mountup.Model.User;
 
+public class MyInfo {
     private String m_token;
+    private User m_User;
 
     private MyInfo() {}
 
@@ -22,4 +24,7 @@ public class MyInfo {
         m_token = token;
     }
 
+    public User getUser(){ return m_User; }
+
+    public void setUser(User user){ m_User = user; }
 }

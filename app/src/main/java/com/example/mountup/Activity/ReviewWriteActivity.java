@@ -16,6 +16,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -23,20 +26,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mountup.Model.User;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.GetHttpURLConnection;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.Singleton.MyInfo;
 
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class ReviewWriteActivity extends AppCompatActivity implements View.OnClickListener {
+    private String m_mountID;
+    private User m_user;
+
     private ImageButton btn_close;
     private ImageButton btn_imageButton;
 
@@ -44,13 +54,12 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
     private RatingBar ratingBar_review;
     private EditText editText_review;
-
-    private Uri m_imageCaptureUri;
-    private String absolutePath;
+    private TextView tv_review_length;
 
     private String m_URL;
 
     private NetworkTask m_networkTask;
+    private File tempFile;
 
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
@@ -61,18 +70,19 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_write);
 
+        initData();
         initView();
         initListener();
+    }
 
+    void initData(){
+        m_user = MyInfo.getInstance().getUser();
         m_URL = "http://15011066.iptime.org:8888";
 
-        ContentValues values = new ContentValues();
+        Intent intent = getIntent();
+        m_mountID = intent.getStringExtra("mountID");
 
-        values.put("id","admin00");
-        values.put("pw","123");
-
-        m_networkTask = new NetworkTask(m_URL, null);
-
+        Log.d("mountID",""+m_mountID);
     }
 
     void initView(){
@@ -83,23 +93,99 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
         ratingBar_review = findViewById(R.id.ratingBar_reivew);
         editText_review = findViewById(R.id.editText_review);
+
+        //글자수 제한
+        tv_review_length = findViewById(R.id.tv_review_length);
+        int max = 200;
+        InputFilter[] fArray = new InputFilter[1];
+        fArray[0] = new InputFilter.LengthFilter(max);
+        editText_review.setFilters(fArray);
     }
 
     void initListener() {
         btn_close.setOnClickListener(this);
         btn_imageButton.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
-        ratingBar_review.setOnRatingBarChangeListener(new Listener());
+
+        ratingBar_review.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                Log.d("rating",""+v);
+                ratingBar.setRating(v);
+                ratingBar_review.setRating(v);
+            }
+        });
+        editText_review.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String input = editText_review.getText().toString();
+                tv_review_length.setText(input.length()+" / 200");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
     }
 
-    class Listener implements RatingBar.OnRatingBarChangeListener
-    {
-        @Override
-        public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-            Log.d("rating",""+v);
-            ratingBar.setRating(v);
-            ratingBar_review.setRating(v);
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+
+//        if(requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK)
+//        {
+//            Uri uri = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+//                btn_imageButton.setImageBitmap(bitmap);
+//                Toast.makeText(this, ""+ data.getData(), Toast.LENGTH_LONG).show();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+
+        if(requestCode == PICK_FROM_ALBUM)
+        {
+            Uri photoUri = data.getData();
+            Cursor cursor = null;
+
+            try {
+                String[] proj = { MediaStore.Images.Media.DATA };
+
+                assert photoUri != null;
+                cursor = getContentResolver().query(photoUri, proj, null, null, null);
+
+                assert cursor != null;
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+                cursor.moveToFirst();
+
+                tempFile = new File(cursor.getString(column_index));
+
+
+            }finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+            setImage();
         }
+    }
+
+    void setImage(){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        Bitmap originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+
+        btn_imageButton.setImageBitmap(originalBm);
+    }
+
+    //앨범에서 이미지 가져오기
+    public void doTakeAlbumAction(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        startActivityForResult(intent,PICK_FROM_ALBUM);
     }
 
     @Override
@@ -107,15 +193,11 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()){
             case R.id.btn_review_close:
                 Log.d("button","close");
+                finish();
                 break;
             case R.id.btn_review_imageButton:
                 Log.d("button","image");
-                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        doTakePhotoAction();
-                    }
-                };
+
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -131,118 +213,34 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
                 new AlertDialog.Builder(this)
                         .setTitle("업로드할 이미지 선택")
-                        .setPositiveButton("사진촬영",cameraListener)
                         .setNeutralButton("앨범선택",albumListener)
                         .setNegativeButton("취소",cancelListenner)
                         .show();
                 break;
             case R.id.btn_review_submit:
                 Log.d("button","submit");
+                ContentValues values = new ContentValues();
+                //통신할거 저장하기
+//                Headers : {x-access-token : “token”, id : “id”}
+//                Body : {"reviewUserID ":”userid”,
+//                    "reviewMntID ":”mntid”,
+//                    "reviewString ":”reviewstring”,
+//                    "reviewStar ": “star point” }
+
+                values.put("reviewUserID","" + m_user.getID() );
+                values.put("reviewMntID","" + m_mountID);
+                values.put("reviewString", editText_review.getText().toString());
+                values.put("reviewStar", Float.toString(ratingBar_review.getRating()));
+
+                m_networkTask = new NetworkTask(m_URL, values);
 
                 m_networkTask.execute();
 
+                finish();
                 break;
         }
     }
-    public void doTakePhotoAction(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        //임시로 사용할 파일의 경로를 생성
-        String url = "tmp_" + System.currentTimeMillis() + ".png";
-        m_imageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),url));
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,m_imageCaptureUri);
-        startActivityForResult(intent,PICK_FROM_CAMERA);
-    }
-
-    //앨범에서 이미지 가져오기
-    public void doTakeAlbumAction(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,PICK_FROM_ALBUM);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-
-        Toast.makeText(getBaseContext(), "resultCode : "+resultCode,Toast.LENGTH_SHORT).show();
-
-        if(resultCode== Activity.RESULT_OK)
-        {
-            try {
-                //Uri에서 이미지 이름을 얻어온다.
-                String name_Str = getImageNameToUri(data.getData());
-
-                String str = ""+data.getData();
-
-                //이미지 데이터를 비트맵으로 받아온다.
-                //Bitmap image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-
-                Bitmap image_bitmap = resize(this,data.getData(),btn_imageButton.getHeight());
-
-
-                //배치해놓은 ImageView에 set
-                btn_imageButton.setImageBitmap(image_bitmap);
-                //btn_imageButton.setImageURI(data.getData());
-
-                Toast.makeText(getBaseContext(), "name_Str : "+name_Str , Toast.LENGTH_SHORT).show();
-
-//            } catch (FileNotFoundException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public String getImageNameToUri(Uri data)
-    {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(data, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        String imgPath = cursor.getString(column_index);
-        String imgName = imgPath.substring(imgPath.lastIndexOf("/")+1);
-
-        return imgName;
-    }
-
-    private Bitmap resize(Context context, Uri uri, int resize){
-        Bitmap resizeBitmap=null;
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        try {
-            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
-
-            int width = options.outWidth;
-            int height = options.outHeight;
-            int samplesize = 1;
-
-            while (true) {//2번width / 2 < resize ||
-                if (height / 2 < resize)
-                    break;
-                width /= 2;
-                height /= 2;
-                samplesize *= 2;
-            }
-
-            options.inSampleSize = samplesize;
-            Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); //3번
-            resizeBitmap=bitmap;
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return resizeBitmap;
-    }
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
@@ -271,7 +269,6 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
             //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
             editText_review.setText("1"+s);
-
         }
     }
 }
