@@ -80,8 +80,7 @@ public class UserClimbedListTask extends AsyncTask<Void, Void, Void> {
                 for (MountVO mount : mountList) {
                     if (mount.getID() == mntID) {
                         mount.setClimb(true);
-                        Log.d("mmee:initUserClimbed", "mount " + mount.getID() + " set " + mount.isClimbed());
-                        break;
+                       break;
                     }
                 }
             }

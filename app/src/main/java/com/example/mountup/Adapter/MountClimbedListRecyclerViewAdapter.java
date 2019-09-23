@@ -26,12 +26,9 @@ public class MountClimbedListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
     private Context m_context;
     private ArrayList<MountVO> m_mountItems;
-    private ArrayList<MountVO> m_filteredItems;
 
     private OnLoadMoreListener onLoadMoreListener;
 
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROG = 0;
     private boolean isMoreLoading = true;
 
     public interface OnLoadMoreListener {
@@ -41,56 +38,48 @@ public class MountClimbedListRecyclerViewAdapter extends RecyclerView.Adapter<Re
     public MountClimbedListRecyclerViewAdapter(Context context, OnLoadMoreListener onLoadMoreListener) {
         this.m_context = context;
         this.onLoadMoreListener = onLoadMoreListener;
-        m_filteredItems = new ArrayList();
         m_mountItems = new ArrayList();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_ITEM) {
-            return new MountListViewHolder(LayoutInflater.from(m_context).inflate(R.layout.item_mount_climbed, parent, false));
-        } else {
-            return new ProgressViewHolder(LayoutInflater.from(m_context).inflate(R.layout.item_progress, parent, false));
-        }
+        return new MountListViewHolder(LayoutInflater.from(m_context).inflate(R.layout.item_mount_climbed, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MountListViewHolder) {
-            final MountVO mountVO = m_mountItems.get(position);
+        final MountVO mountVO = m_mountItems.get(position);
 
-            ((MountListViewHolder) holder).iv_mountThumbnail.setImageBitmap(mountVO.getThumbnail());
-            ((MountListViewHolder) holder).tv_mountName.setText(mountVO.getName());
-            ((MountListViewHolder) holder).tv_mountHeight.setText(Integer.toString(mountVO.getHeight()) + "m");
-            ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
-            ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
+        ((MountListViewHolder) holder).iv_mountThumbnail.setImageBitmap(mountVO.getThumbnail());
+        ((MountListViewHolder) holder).tv_mountName.setText(mountVO.getName());
+        ((MountListViewHolder) holder).tv_mountHeight.setText(Integer.toString(mountVO.getHeight()) + "m");
+        ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
+        ((MountListViewHolder) holder).iv_isClimbed.setImageResource(R.drawable.ic_flag_isclimbed);
 
-            if (!mountVO.isClimbed()) {
-                ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
-            }
-
-            ((MountListViewHolder) holder).rb_mountGrade.setRating(mountVO.getGrade());
-
-            ((MountListViewHolder) holder).layout_mountPanel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(m_context, MountDetailActivity.class);
-                    intent.putExtra("MountID", Integer.toString(mountVO.getID()));
-                    m_context.startActivity(intent);
-                }
-            });
+        float distance = mountVO.getDistance();
+        if (distance < 1.0f) {
+            ((MountListViewHolder) holder).tv_mountDistance.setText(Integer.toString((int) (distance * 1000)) + "m");
+        } else {
+            ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(Math.round(distance * 10) / 10.0f) + "km");
         }
+
+        ((MountListViewHolder) holder).rb_mountGrade.setRating(mountVO.getGrade());
+
+        ((MountListViewHolder) holder).layout_mountPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(m_context, MountDetailActivity.class);
+                intent.putExtra("MountID", Integer.toString(mountVO.getID()));
+                m_context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         return m_mountItems.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return m_mountItems.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     public ArrayList<MountVO> getItems() {

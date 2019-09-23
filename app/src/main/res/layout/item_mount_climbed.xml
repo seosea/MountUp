@@ -11,7 +11,7 @@
     app:cardElevation="20dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -42,6 +42,8 @@
                 <RatingBar
                     android:id="@+id/rb_mount_grade_map"
                     style="@style/starRatingBar"
+                    android:transformPivotX="0dp"
+                    android:transformPivotY="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
@@ -62,9 +64,9 @@
                 android:id="@+id/tv_mountName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="2dp"
                 android:paddingLeft="5dp"
+                android:paddingTop="5dp"
                 android:text="OO산"
                 android:textSize="15sp"
                 android:textStyle="bold" />

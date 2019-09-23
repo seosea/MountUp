@@ -16,6 +16,9 @@ public class Constant {
 
     public static String URL = "http://15011066.iptime.org:8888";
 
+    public static final int FIRST_TEN = 1;
+    public static final int CLIMBED = 2;
+
     public static String CURRENT_ADDRESS;
     public static Double X,Y;
 }

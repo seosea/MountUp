@@ -224,7 +224,7 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
 
     private void loadFirstData() {
         Log.d("mmee:MountListFragment", "LoadFirstData");
-        MountImageTask mountImageTask = new MountImageTask(new AsyncCallback() {
+        MountImageTask mountImageTask = new MountImageTask(Constant.FIRST_TEN, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
 

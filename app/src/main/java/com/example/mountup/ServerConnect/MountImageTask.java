@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public class MountImageTask extends AsyncTask<Void, Void, Void> {
     AsyncCallback m_callback;
     Exception m_exception;
+    int TASK_TYPE;
 
-    public MountImageTask(AsyncCallback callback) {
+    public MountImageTask(final int TASK_TYPE, AsyncCallback callback) {
         this.m_callback = callback;
+        this.TASK_TYPE = TASK_TYPE;
     }
 
     @Override
@@ -28,13 +30,28 @@ public class MountImageTask extends AsyncTask<Void, Void, Void> {
         ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
         try {
-            for (int i = 0; i < 10; i++) {
-                if (mountList.get(i).getThumbnail() == null) {
-                    int id = mountList.get(i).getID();
-                    String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
-                    mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
-                    Log.d("mmee:loadFirstData", "get mount resource " + id);
-                }
+            switch(TASK_TYPE) {
+                case Constant.FIRST_TEN:
+                    for (int i = 0; i < 10; i++) {
+                        if (mountList.get(i).getThumbnail() == null) {
+                            int id = mountList.get(i).getID();
+                            String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
+                            mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
+                            Log.d("mmee:MountImageTask", "get mount resource " + id);
+                        }
+                    }
+                    break;
+
+                case Constant.CLIMBED:
+                    for (MountVO mount : MountManager.getInstance().getItems()) {
+                        if (mount.isClimbed()) {
+                            int id = mount.getID();
+                            String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
+                            mount.setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
+                            Log.d("mmee:MountImageTask", "get mount resource " + id);
+                        }
+                    }
+                    break;
             }
         } catch(Exception e) {
             this.m_exception = e;
