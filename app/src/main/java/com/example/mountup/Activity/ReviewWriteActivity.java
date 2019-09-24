@@ -2,17 +2,24 @@ package com.example.mountup.Activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -42,6 +49,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 
 public class ReviewWriteActivity extends AppCompatActivity implements View.OnClickListener {
     private String m_mountID;
@@ -65,6 +74,9 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_IMAGE = 2;
 
+    public final int MY_PERMISSIONS_READ_EXTERNAL_STORAGE = 1;
+    public final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +89,12 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
     void initData(){
         m_user = MyInfo.getInstance().getUser();
-        m_URL = "http://15011066.iptime.org:8888";
+        m_URL = "http://15011066.iptime.org:8888/api/review";
 
         Intent intent = getIntent();
         m_mountID = intent.getStringExtra("mountID");
+
+        checkPermission();
 
         Log.d("mountID",""+m_mountID);
     }
@@ -131,60 +145,58 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
+        Uri uri = data.getData();
 
-//        if(requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK)
-//        {
-//            Uri uri = data.getData();
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-//                btn_imageButton.setImageBitmap(bitmap);
-//                Toast.makeText(this, ""+ data.getData(), Toast.LENGTH_LONG).show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-
-        if(requestCode == PICK_FROM_ALBUM)
-        {
-            Uri photoUri = data.getData();
-            Cursor cursor = null;
-
-            try {
-                String[] proj = { MediaStore.Images.Media.DATA };
-
-                assert photoUri != null;
-                cursor = getContentResolver().query(photoUri, proj, null, null, null);
-
-                assert cursor != null;
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-                cursor.moveToFirst();
-
-                tempFile = new File(cursor.getString(column_index));
-
-
-            }finally {
-                if (cursor != null) {
-                    cursor.close();
+        if(resultCode == RESULT_OK) {
+            // result가 제대로 실행됨.
+            if (requestCode == PICK_FROM_ALBUM ) {
+                //앨범 선택
+                ExifInterface exif = null;
+                String imagePath = getRealPathFromURI(uri);
+                try {
+                    exif = new ExifInterface(imagePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = exifOrientationToDegrees(exifOrientation);
+
+                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                btn_imageButton.setImageBitmap(rotate(bitmap, exifDegree));
             }
-            setImage();
         }
     }
 
-    void setImage(){
-        BitmapFactory.Options options = new BitmapFactory.Options();
+    private int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) { return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) { return 270; }
+        return 0;
+    }
 
-        Bitmap originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
 
-        btn_imageButton.setImageBitmap(originalBm);
+    private String getRealPathFromURI(Uri contentUri) {
+        int column_index=0;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        cursor.moveToFirst();
+        column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        return cursor.getString(column_index);
+    }
+
+    private Bitmap rotate(Bitmap src, float degree) {
+        // Matrix 객체 생성
+        Matrix matrix = new Matrix();
+        // 회전 각도 셋팅
+        matrix.postRotate(degree); // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
     }
 
     //앨범에서 이미지 가져오기
     public void doTakeAlbumAction(){
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
         startActivityForResult(intent,PICK_FROM_ALBUM);
     }
 
@@ -227,20 +239,19 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 //                    "reviewString ":”reviewstring”,
 //                    "reviewStar ": “star point” }
 
-                values.put("reviewUserID","" + m_user.getID() );
-                values.put("reviewMntID","" + m_mountID);
+                values.put("reviewUserID", MyInfo.getInstance().getUser().getID() );
+                values.put("reviewMntID", m_mountID);
                 values.put("reviewString", editText_review.getText().toString());
-                values.put("reviewStar", Float.toString(ratingBar_review.getRating()));
+                values.put("reviewStar", ratingBar_review.getRating());
+                values.put("reviewID","30");
 
                 m_networkTask = new NetworkTask(m_URL, values);
 
                 m_networkTask.execute();
 
-                finish();
                 break;
         }
     }
-
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
@@ -255,9 +266,8 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         protected String doInBackground(Void... params) {
-
             String result; // 요청 결과를 저장할 변수.
-            GetHttpURLConnection postHttpURLConnection = new GetHttpURLConnection();
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
             result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
 
             return result;
@@ -266,10 +276,50 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.d("return data",s);
 
-            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
-            editText_review.setText("1"+s);
+            finish();
         }
     }
+
+    //갤러리 접근 권한 설정
+    private void checkPermission(){
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (permissionCheck!= PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(this,"권한 승인이 필요합니다",Toast.LENGTH_LONG).show();
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_READ_EXTERNAL_STORAGE);
+                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+        }
+    }
+
 }
 

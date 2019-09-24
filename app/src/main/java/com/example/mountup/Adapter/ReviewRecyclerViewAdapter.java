@@ -52,6 +52,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 //로딩중이아니고 , 전체아이템수 <= 마지막에 보이는 아이템인덱스 + 화면에보이는개수(리사이클러뷰에 아이템이 5개씩 보이므로 5로 설정함
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                     if (onLoadMoreListener != null) {
+                        Log.d("smh:scrolled","LoadMore");
+
                         onLoadMoreListener.onLoadMore();
                     }
                     isLoading = true;
@@ -107,8 +109,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 @Override
                 public void onClick(View view) {
                     int like;
-                    if(item.isMyLike() == true){
-                        item.setMyLike(false);
+                    if(item.isPic() == true){
+                        item.setPic(false);
 
                         item.setLike(item.getLike()-1);
 
@@ -117,7 +119,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
                     }
                     else{
-                        item.setMyLike(true);
+                        item.setPic(true);
                         item.setLike(item.getLike()+1);
                         ((ItemViewHolder) holder).m_textView_like.setText("like : "+item.getLike());
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart);
@@ -163,11 +165,12 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_like.setText("like : " + item.getLike());
             m_ratingbar_grade.setRating((float) item.getGrade());
             //m_imageView_user_image.setImageBitmap(item.getM_main_image());
-            if (item.isMyLike() == true) {
+            if (item.isPic() == true) {
                 m_imageButton_like.setImageResource(R.drawable.heart);
             } else {
                 m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
             }
+            m_imageView_iamge.setImageBitmap(item.getImage());
         }
     }
 

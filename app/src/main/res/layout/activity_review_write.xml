@@ -4,46 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="0"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_weight="0"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/colorWhite"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tv_reviewClose"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:text="리뷰 작성"
-            android:textSize="18sp" />
+            android:textSize="20dp" />
 
         <ImageButton
             android:id="@+id/btn_review_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:src="@drawable/ic_close"/>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/custom_gradient_layout">
+
+        </LinearLayout>
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/btn_review_imageButton"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="0"
+        android:scaleType="fitXY"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <RatingBar
         android:id="@+id/ratingBar_reivew"
+        style="@android:style/Widget.RatingBar"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="0"
         android:numStars="5"
@@ -72,11 +81,15 @@
 
     <Button
         android:id="@+id/btn_review_submit"
-        android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="30dp"
         android:layout_weight="0"
+        android:background="@color/colorMain"
         android:onClick="onClick"
-        android:text="제출하기" />
+        android:text="제출하기"
+        android:textColor="@color/colorWhite" />
 
 </LinearLayout>
