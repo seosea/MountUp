@@ -38,7 +38,7 @@ public class UserClimbedListTask extends AsyncTask<Void, Void, Void> {
         try {
             PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
             UserClimbedList_json_str = requestHttpURLConnection.
-                    request(m_url, Constant.ADMIN_ID, null);
+                    request(m_url, null);
             // 나중에 Constant.ADMIN_ID -> MyInfo.getInstance().getUserID() 로 수정
 
             initUserClimbed(UserClimbedList_json_str);

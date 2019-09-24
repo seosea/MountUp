@@ -35,13 +35,13 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        String mountList_json_str;
+        String result;
 
         try {
             PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
-            mountList_json_str = requestHttpURLConnection.request(m_url, Constant.ADMIN_ID, m_values);
+            result = requestHttpURLConnection.request(m_url, m_values);
 
-            initMountFromJson(mountList_json_str);
+            initMountFromJson(result);
         } catch(Exception e) {
             this.m_exception = e;
             return null;
@@ -60,11 +60,9 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private void initMountFromJson(String json_str) {
-        //Log.d("mmee:initMountFromJson", "json_str : " + json_str);
-
+    private void initMountFromJson(String mountList_json_str) {
         try {
-            JSONArray jsonArray = new JSONArray(json_str);
+            JSONArray jsonArray = new JSONArray(mountList_json_str);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
@@ -86,13 +84,10 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
 
                 newItem.setClimb(false);
 
-                // (임시) 등반 확인
-                newItem.setGrade(new Random().nextFloat() * 5);
+                // 임시 별점
+                // newItem.setGrade(new Random().nextFloat() * 5);
 
                 MountManager.getInstance().getItems().add(newItem);
-
-                //Log.d("mmee:createItems","mntID :  " + mntID + " / MntName : " + mntName + " / mntHeight :  " + mntHeight + "/ mntInfo :  " + mntInfo + " / mntPlace : " + mntPlace + " / mntStar :  " + mntStar
-                //                                    + "/ mntLocX : " + mntLocX + " / mntLocY : " + mntLocY);
             }
 
         } catch (JSONException e) {

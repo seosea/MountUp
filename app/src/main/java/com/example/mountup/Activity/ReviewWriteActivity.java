@@ -268,7 +268,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         protected String doInBackground(Void... params) {
             String result; // 요청 결과를 저장할 변수.
             PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
-            result = postHttpURLConnection.request(url,MyInfo.getInstance().getUser().getID(), values); // 해당 URL로 부터 결과물을 얻어온다.
+            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
 
             return result;
         }

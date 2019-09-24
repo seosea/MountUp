@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;

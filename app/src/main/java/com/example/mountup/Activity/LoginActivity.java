@@ -12,16 +12,14 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mountup.Helper.BackPressCloseHandler;
@@ -30,29 +28,18 @@ import com.example.mountup.Helper.GpsTracker;
 import com.example.mountup.Helper.NetworkStatus;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.Model.User;
+import com.example.mountup.Popup.ConfirmDialog;
 import com.example.mountup.R;
+import com.example.mountup.ServerConnect.LoginTask;
 import com.example.mountup.ServerConnect.MountTask;
-import com.example.mountup.ServerConnect.PostHttpURLConnection;
-import com.example.mountup.ServerConnect.TokenTask;
-import com.example.mountup.ServerConnect.UserClimbedListTask;
-import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
-import com.example.mountup.VO.MountVO;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.common.ErrorDialogFragment;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-
 
     private GpsTracker gpsTracker;
 
@@ -60,17 +47,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-    Button btnLogin, btnSignUp;
+    private Button btnLogin, btnSignUp;
+    private EditText editID, editPass;
 
     private BackPressCloseHandler backPressCloseHandler;
     private Dialog dialog;
+    private ConfirmDialog errDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        initUser();
+
         initView();
+        initListener();
+
+        loadMountList();
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
@@ -92,6 +86,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initView() {
         btnLogin = findViewById(R.id.btn_login);
         btnSignUp = findViewById(R.id.btn_sign_up);
+        editID = findViewById(R.id.edit_id_login);
+        editPass = findViewById(R.id.edit_password_login);
+
+        errDialog = new ConfirmDialog(this);
     }
 
     private void initListener() {
@@ -306,13 +304,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void connectNetwork(){
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
-        if(status == NetworkStatus.TYPE_MOBILE){
+        if (status == NetworkStatus.TYPE_MOBILE) {
             Log.v("Network","모바일로 연결됨");
-            postToken();
-        }else if (status == NetworkStatus.TYPE_WIFI){
+        } else if (status == NetworkStatus.TYPE_WIFI) {
             Log.v("Network","무선랜으로 연결됨");
-            postToken();
-        }else {
+        } else {
             AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
             View customLayout=View.inflate(getApplicationContext(),R.layout.dialog_network,null);
             builder.setView(customLayout);
@@ -325,27 +321,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void switchActivityToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
                 // TODO: 로그인
-                getGPS();
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                /*
-                임시 유저 세팅
-                 */
-                User user = new User(Constant.ADMIN_ID,Constant.ADMIN_PW,null,100,1,1);
-                //       String ID, String password, Bitmap profile, int totalgeight, int level, int experience
-                MyInfo.getInstance().setUser(user);
-
-                startActivity(intent);
+                postLogin();
                 break;
             case R.id.btn_sign_up:
                 // TODO: 회원가입
-                intent = new Intent(this, SignUpActivity.class);
+                Intent intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btn_cancel_network_dialog:
@@ -359,35 +350,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void postToken() {
+    private void initUser() {
+        MyInfo.getInstance().setUser(new User());
+    }
+
+    private void postLogin() {
         // ID PW 설정
         ContentValues values = new ContentValues();
-        values.put("id", Constant.ADMIN_ID);
-        values.put("pw", Constant.ADMIN_PW);
+        values.put("id", editID.getText().toString());
+        values.put("pw", editPass.getText().toString());
 
         // 로그인 URL 설정
         String url = Constant.URL + "/api/login";
 
         // execute 및 MyInfo에 토큰 저장
-        TokenTask tokenTask = new TokenTask(url, values, new AsyncCallback() {
+        LoginTask loginTask = new LoginTask(url, values, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
-                postMountList();
+                getGPS();
+                switchActivityToMain();
             }
 
             @Override
             public void onFailure(Exception e) {
-                //e.printStackTrace();
+                Log.d("mmee:LoginActivity",e.toString());
+                errDialog.setErrorMessage("아이디 또는 비밀번호가 일치하지 않습니다.\n다시 입력해 주세요.");
+                errDialog.show();
             }
         });
-        tokenTask.execute();
+        loginTask.execute();
         //tokenTask.executeOnExecutor()
     }
 
-    private void postMountList() {
+    private void loadMountList() {
         ContentValues values = new ContentValues();
-        values.put("id", Constant.ADMIN_ID);
-        values.put("pw", Constant.ADMIN_PW);
+        values.put("id", editID.getText().toString());
+        values.put("pw", editPass.getText().toString());
 
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
@@ -397,7 +395,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(Object object) {
                 Log.d("mmee:mountTask", "get mount resource success!");
-                initListener();
             }
 
             @Override
