@@ -42,11 +42,21 @@
 
     <ImageButton
         android:id="@+id/btn_review_imageButton"
+        style="@android:style/Widget.ImageButton"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="0"
-        android:scaleType="fitXY"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        android:background="@color/colorWhite"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/places_ic_search" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_border">
+
+    </LinearLayout>
 
     <RatingBar
         android:id="@+id/ratingBar_reivew"

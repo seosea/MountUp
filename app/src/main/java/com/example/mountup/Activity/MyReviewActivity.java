@@ -94,7 +94,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
                             //Generating more data
                             int index = m_reviewItems.size();
                             int end = index + 5;
-                            if (end > m_bufferList.size() - 1) {
+                            if (end > m_bufferList.size()) {
                                 end = m_bufferList.size();
                             }
                             for (int i = index; i < end; i++) {
