@@ -336,6 +336,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 getGPS();
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                /*
+                임시 유저 세팅
+                 */
+                User user = new User(Constant.ADMIN_ID,Constant.ADMIN_PW,null,100,1,1);
+                //       String ID, String password, Bitmap profile, int totalgeight, int level, int experience
+                MyInfo.getInstance().setUser(user);
+
                 startActivity(intent);
                 break;
             case R.id.btn_sign_up:
