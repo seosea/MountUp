@@ -117,10 +117,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Constant.Y = longitude;
 
         String strAddress = getCurrentAddress(latitude, longitude);
-        Log.v("latitude", latitude + "");
-        if(latitude != 0.0) {
-            String[] address = strAddress.split(" ");
-            Log.v("address", strAddress);
+        String[] address = strAddress.split(" ");
+        Log.v("address", strAddress);
+
+        if(latitude != 0.0 && longitude != 0.0 && address.length>2) {
             Constant.CURRENT_ADDRESS = address[1] + " " + address[2] + " " + address[3];
         }
         else Constant.CURRENT_ADDRESS = strAddress;
@@ -230,11 +230,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     7);
         } catch (IOException ioException) {
             //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            return "지오코더 서비스 사용불가";
+            Toast.makeText(this, "지오코더 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
-            return "잘못된 GPS 좌표";
+            Toast.makeText(this, "잘못된 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 좌표";
         }
 
         if (addresses == null || addresses.size() == 0) {
