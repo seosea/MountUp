@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initView();
         initListener();
 
-        loadMountList();
+        //loadMountData();
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
@@ -382,16 +382,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //tokenTask.executeOnExecutor()
     }
 
-    private void loadMountList() {
-        ContentValues values = new ContentValues();
-        values.put("id", editID.getText().toString());
-        values.put("pw", editPass.getText().toString());
-
+    private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
-        MountTask mountTask = new MountTask(url, values, new AsyncCallback() {
+        MountTask mountTask = new MountTask(url, null, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
                 Log.d("mmee:mountTask", "get mount resource success!");
@@ -402,7 +398,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //e.printStackTrace();
             }
         });
-
         mountTask.execute();
     }
 }
