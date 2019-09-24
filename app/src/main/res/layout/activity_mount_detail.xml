@@ -143,7 +143,7 @@
                             android:weightSum="1">
 
                             <RatingBar
-                                android:id="@+id/rb_mountGrade"
+                                android:id="@+id/rb_mount_grade_map"
                                 style="@style/starRatingBar"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                                 android:numStars="5" />
 
                             <TextView
-                                android:id="@+id/tv_mountGrade"
+                                android:id="@+id/txt_mount_grade_map"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"

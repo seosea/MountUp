@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
+import com.example.mountup.Helper.Calculator;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.MountListRecyclerViewDecoration;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
+import com.example.mountup.ServerConnect.MountImageTask;
+import com.example.mountup.ServerConnect.UserClimbedListTask;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
 
@@ -33,7 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class MountListFragment extends Fragment implements MountListRecyclerViewAdapter.OnLoadMoreListener,
-SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView m_mountRecycleView;
     private RecyclerView.LayoutManager m_layoutManager;
@@ -80,7 +86,7 @@ SwipeRefreshLayout.OnRefreshListener {
                 // 마지막 체크, 왜 -2 인지?
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) m_mountRecycleView.getLayoutManager();
                 boolean isEditTextEmpty = m_et_mountSearch.getText().toString().equals("");
-                if(isEditTextEmpty && dy > 0 &&
+                if (isEditTextEmpty && dy > 0 &&
                         gridLayoutManager.findLastCompletelyVisibleItemPosition() > (m_adapter.getItemCount() - 2)) {
                     m_adapter.showLoading();
                 }
@@ -106,22 +112,43 @@ SwipeRefreshLayout.OnRefreshListener {
             }
         });
 
-        // 정렬 스피너
-        m_sortSpinner = (Spinner) view.findViewById(R.id.spinner_mountSort);
-        m_sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // User 등반 리스트 갱신
+        String url_userClimbedList = Constant.URL + "/api/mntuplist";
+        UserClimbedListTask userClimbedListTask = new UserClimbedListTask(url_userClimbedList, new AsyncCallback() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("mmee:MountListFrament","Mount 정렬");
-                sortMountList(adapterView.getItemAtPosition(i).toString());
+            public void onSuccess(Object object) {
+                // 정렬 스피너
+                m_sortSpinner = (Spinner) MountListFragment.super.getView().findViewById(R.id.spinner_mountSort);
+
+                String[] spinnerArray = getResources().getStringArray(R.array.mount_sort);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                        MountListFragment.super.getContext(), R.layout.spinner_item, spinnerArray);
+                spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                m_sortSpinner.setAdapter(spinnerArrayAdapter);
+
+                m_sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        // 왜 자꾸 자동으로 실행되는지
+                        Log.d("mmee:MountListFragment", "MountList 정렬");
+                        sortMountList(adapterView.getItemAtPosition(i).toString());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+                //sortMountList(m_sortSpinner.getSelectedItem().toString());
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onFailure(Exception e) {
 
             }
         });
-
-        //sortMountList(m_sortSpinner.getSelectedItem().toString());
+        userClimbedListTask.execute();
 
         return view;
     }
@@ -140,39 +167,14 @@ SwipeRefreshLayout.OnRefreshListener {
             public void run() {
                 m_swipeRefresh.setRefreshing(false);
                 //m_mountItems.clear();
-                loadFirstData();
+
+                //loadFirstData();
 
                 m_et_mountSearch.setText("");
                 sortMountList(m_sortSpinner.getSelectedItem().toString());
             }
-        }, 2000);
+        }, 1000);
     }
-
-    private static float calculateDistance(double lat2, double lon2){
-
-        double theta = Constant.Y - lon2;
-        double dist = Math.sin(deg2rad(Constant.X)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(Constant.X)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-
-        dist = dist * 1.609344;
-
-        Log.v("Distance", String.valueOf(dist));
-        Log.v("x", String.valueOf(lat2));
-        Log.v("y", String.valueOf(lon2));
-        return (float)(dist);
-    }
-
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
-    }
-
 
     @Override
     public void onLoadMore() {
@@ -180,31 +182,26 @@ SwipeRefreshLayout.OnRefreshListener {
         new AsyncTask<Void, Void, ArrayList<MountVO>>() {
             @Override
             protected ArrayList<MountVO> doInBackground(Void... voids) {
+                ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
                 // 목록 10개 추가
                 int start = m_adapter.getItemCount() - 1;
                 int end = start + 10;
-                if (end > MountManager.getInstance().getItems().size() - 1) {
-                    end = MountManager.getInstance().getItems().size() - 1;
+                if (end > mountList.size() - 1) {
+                    end = mountList.size() - 1;
                 }
-                ArrayList<MountVO> items = new ArrayList<>();
 
                 m_bufferItems.clear();
                 for (int i = start; i < end; i++) {
-                    m_bufferItems.add(MountManager.getInstance().getItems().get(i));
-                    /*
-                    MountVO newItem = new MountVO();
-                    newItem.setMount(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
-                            i + 1 + "번산", random.nextInt(900) + 100,
-                            Math.round(random.nextFloat() * 1000) / (float)10.0,
-                            Math.round(random.nextFloat() * 50) / (float)10.0,
-                            random.nextInt(2) > 0 ? true : false);
-                            */
-
+                    if (mountList.get(i).getThumbnail() == null) {
+                        int id = mountList.get(i).getID();
+                        String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
+                        mountList.get(i).setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
+                        Log.d("mmee:loadMore", "get mount resource " + id);
+                    }
+                    m_bufferItems.add(mountList.get(i));
                 }
-
                 // 1초 sleep
-
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {
@@ -226,27 +223,38 @@ SwipeRefreshLayout.OnRefreshListener {
     }
 
     private void loadFirstData() {
-        Log.d("mmee:MountListFragment", "loadData");
-        m_bufferItems.clear();
-        for (int i = 0; i < 10; i++) {
-            MountManager.getInstance().getItems().get(i).setDistance(
-                    calculateDistance(
-                            MountManager.getInstance().getItems().get(i).getLocX(),
-                            MountManager.getInstance().getItems().get(i).getLocY()
-                    )
-            );
-            m_bufferItems.add(MountManager.getInstance().getItems().get(i));
-            /*
-            Random random = new Random();
+        Log.d("mmee:MountListFragment", "LoadFirstData");
+        MountImageTask mountImageTask = new MountImageTask(Constant.FIRST_TEN, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
 
-            m_bufferItems.add(new MountVO(ContextCompat.getDrawable(getContext(), R.drawable.mountain_sample),
-                    i + 1 + "번산", random.nextInt(900) + 100,
-                    Math.round(random.nextFloat() * 1000) / (float)10.0,
-                    Math.round(random.nextFloat() * 50) / (float)10.0,
-                    random.nextInt(2) > 0 ? true : false));
-                    */
-        }
-        m_adapter.addAll(m_bufferItems);
+                ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
+
+                // 이미지 10개 view 출력
+                m_bufferItems.clear();
+                for (int i = 0; i < 10; i++) {
+                    if (Constant.X != 0.0) {
+                        mountList.get(i).setDistance(
+                                Calculator.calculateDistance(
+                                        mountList.get(i).getLocX(),
+                                        mountList.get(i).getLocY()
+                                )
+                        );
+                    } else {
+                        mountList.get(i).setDistance(0);
+                        Toast.makeText(getContext(), "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    m_bufferItems.add(MountManager.getInstance().getItems().get(i));
+                }
+                m_adapter.addAll(m_bufferItems);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+        mountImageTask.execute();
     }
 
     public void sortMountList(String str) {
@@ -306,13 +314,11 @@ SwipeRefreshLayout.OnRefreshListener {
             });
         }
 
-        if (!MountManager.getInstance().getItems().isEmpty()) {
-            loadFirstData();
-            m_mountRecycleView.smoothScrollToPosition(0);
-        }
-
-        //m_adapter.notifyDataSetChanged();
+        loadFirstData();
+        m_mountRecycleView.smoothScrollToPosition(0);
+        m_adapter.notifyDataSetChanged();
     }
+
 
     private void mountFilter(String text) {
         ArrayList<MountVO> filterItems = new ArrayList();
@@ -324,4 +330,5 @@ SwipeRefreshLayout.OnRefreshListener {
         }
         m_adapter.filterList(filterItems);
     }
+
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
 
 public class IntroActivity extends AppCompatActivity {
@@ -12,6 +13,7 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_intro);
         startLoading();
     }

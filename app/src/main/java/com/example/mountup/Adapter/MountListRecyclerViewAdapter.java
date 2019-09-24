@@ -63,11 +63,19 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             ((MountListViewHolder) holder).iv_mountThumbnail.setImageBitmap(mountVO.getThumbnail());
             ((MountListViewHolder) holder).tv_mountName.setText(mountVO.getName());
             ((MountListViewHolder) holder).tv_mountHeight.setText(Integer.toString(mountVO.getHeight()) + "m");
-            ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(mountVO.getDistance()) + "km");
             ((MountListViewHolder) holder).tv_mountGrade.setText(Float.toString(mountVO.getGrade()));
+            ((MountListViewHolder) holder).iv_isClimbed.setImageResource(R.drawable.ic_flag_isclimbed);
 
-            //((MountListViewHolder) holder).isClimbed = mountVO.isClimbed();
-            if (! mountVO.isClimbed()) {
+            float distance = mountVO.getDistance();
+            if (distance < 1.0f) {
+                ((MountListViewHolder) holder).tv_mountDistance.setText(Integer.toString((int)(distance * 1000)) + "m");
+            } else {
+                ((MountListViewHolder) holder).tv_mountDistance.setText(Float.toString(Math.round(distance * 10) / 10.0f) + "km");
+            }
+
+            if (mountVO.isClimbed()) {
+                ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.VISIBLE);
+            } else {
                 ((MountListViewHolder) holder).iv_isClimbed.setVisibility(View.INVISIBLE);
             }
 
@@ -168,9 +176,9 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             tv_mountName = (TextView) convertView.findViewById(R.id.tv_mountName);
             tv_mountHeight = (TextView) convertView.findViewById(R.id.tv_mountHeight);
             tv_mountDistance = (TextView) convertView.findViewById(R.id.tv_mountDistance);
-            tv_mountGrade = (TextView) convertView.findViewById(R.id.tv_mountGrade);
-            iv_isClimbed = (ImageView) convertView.findViewById(R.id.iv_climbed);
-            rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mountGrade);
+            tv_mountGrade = (TextView) convertView.findViewById(R.id.txt_mount_grade_map);
+            iv_isClimbed = (ImageView) convertView.findViewById(R.id.img_mount_climbed_map);
+            rb_mountGrade = (RatingBar) convertView.findViewById(R.id.rb_mount_grade_map);
             /*
             rb_mountGrade.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override

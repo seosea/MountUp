@@ -11,7 +11,7 @@
     app:cardElevation="20dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -40,8 +40,10 @@
                 android:paddingRight="10dp">
 
                 <RatingBar
-                    android:id="@+id/rb_mountGrade"
+                    android:id="@+id/rb_mount_grade_map"
                     style="@style/starRatingBar"
+                    android:transformPivotX="0dp"
+                    android:transformPivotY="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
@@ -49,7 +51,7 @@
                     android:stepSize="0.1" />
 
                 <TextView
-                    android:id="@+id/tv_mountGrade"
+                    android:id="@+id/txt_mount_grade_map"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="3dp"
@@ -62,9 +64,9 @@
                 android:id="@+id/tv_mountName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="2dp"
                 android:paddingLeft="5dp"
+                android:paddingTop="5dp"
                 android:text="OO산"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -125,7 +127,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/iv_climbed"
+                        android:id="@+id/img_mount_climbed_map"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_flag_isclimbed" />

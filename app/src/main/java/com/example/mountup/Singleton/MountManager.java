@@ -1,7 +1,15 @@
 package com.example.mountup.Singleton;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+
 import com.example.mountup.VO.MountVO;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MountManager {
@@ -21,4 +29,20 @@ public class MountManager {
     private ArrayList<MountVO> m_items;
 
     public ArrayList<MountVO> getItems() { return m_items; }
+
+    public Bitmap getMountBitmapFromURL(String url, String srcName) {
+        InputStream is;
+        Drawable mount_drawable = null;
+        Bitmap mount_bitmap = null;
+
+        try {
+            is = (InputStream) new URL(url).getContent();
+            mount_drawable = Drawable.createFromStream(is, srcName);
+            mount_bitmap = ((BitmapDrawable)mount_drawable).getBitmap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return mount_bitmap;
+    }
 }

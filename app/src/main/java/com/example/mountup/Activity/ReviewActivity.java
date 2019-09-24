@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
 import com.example.mountup.R;
 
@@ -217,7 +218,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 
             String result; // 요청 결과를 저장할 변수.
             PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
-            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
+            result = postHttpURLConnection.request(url, MyInfo.getInstance().getUserID(),values); // 해당 URL로 부터 결과물을 얻어온다.
             Log.d("smh:result",result);
 
             receiveReview(result);
