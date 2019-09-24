@@ -2,6 +2,7 @@ package com.example.mountup.ServerConnect;
 
 import android.content.ContentValues;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
@@ -79,9 +80,9 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
                 MountVO newItem = new MountVO();
                 newItem.setMount(mntID, mntName, mntHeight, mntInfo, mntPlace, (float)mntStar, mntLocX, mntLocY);
 
-                //String url_img = Constant.URL + "/basicImages/" + (i + 1) + ".jpg";
-                //newItem.setThumbnail(MountManager.getInstance().getMountBitmapFromURL("url_img","mount" + (i + 1)));
-                //Log.d("mmee:mountTask", "get mount resource " + (i + 1));
+                String url_img = Constant.URL + "/basicImages/" + (i + 1) + ".jpg";
+                newItem.setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img,"mount" + (i + 1)));
+                Log.d("mmee:mountTask", "get mount resource " + (i + 1));
 
                 // (임시) 거리, 등반 확인, 별점
                 newItem.setDistance(new Random().nextFloat() * 100);

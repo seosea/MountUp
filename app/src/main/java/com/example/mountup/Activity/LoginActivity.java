@@ -74,9 +74,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        Constant.ADMIN_ID = "admin";
-        Constant.ADMIN_PW = "1234";
-
         connectNetwork();
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
 
