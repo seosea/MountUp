@@ -22,6 +22,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activity.IntroActivity"></activity>
+        <activity android:name=".Activity.LikeReviewActivity"></activity>
+        <activity android:name=".Activity.MyReviewActivity"></activity>
         <activity android:name=".Activity.ReviewActivity"></activity>
         <activity android:name=".Activity.ReviewWriteActivity"></activity>
         <activity android:name=".Activity.SignUpActivity"></activity>

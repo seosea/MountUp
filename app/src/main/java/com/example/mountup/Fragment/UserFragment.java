@@ -1,5 +1,6 @@
 package com.example.mountup.Fragment;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
+import com.example.mountup.Activity.LikeReviewActivity;
+import com.example.mountup.Activity.MyReviewActivity;
+import com.example.mountup.Activity.ReviewActivity;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
@@ -31,7 +35,7 @@ import com.example.mountup.VO.MountVO;
 import java.util.ArrayList;
 
 public class UserFragment extends Fragment implements MountClimbedListRecyclerViewAdapter.OnLoadMoreListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView m_mountRecycleView;
     private RecyclerView.LayoutManager m_layoutManager;
@@ -41,6 +45,8 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
     private TextView txtCount1, txtCount2, txtTotalHeight;
     private int nCount=0;
     private int nTotalHeight=0;
+
+    private Button btnMyReview, btnLikeReview;
 
     @Nullable
     @Override
@@ -69,6 +75,12 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         txtCount1 = view.findViewById(R.id.txt_count_1_user);
         txtCount2 = view.findViewById(R.id.txt_count_2_user);
         txtTotalHeight = view.findViewById(R.id.txt_height_user);
+
+        btnMyReview = view.findViewById(R.id.btn_user_my_review);
+        btnLikeReview = view.findViewById(R.id.btn_user_like_review);
+
+        btnMyReview.setOnClickListener(this);
+        btnLikeReview.setOnClickListener(this);
 
         return view;
     }
@@ -110,5 +122,21 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
     @Override
     public void onLoadMore() {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_user_my_review:
+                Intent intent = new Intent(getContext(), MyReviewActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.anim_slide_in_bottom,R.anim.anim_slide_out_top);
+                break;
+            case R.id.btn_user_like_review:
+                intent = new Intent(getContext(), LikeReviewActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.anim_slide_in_bottom,R.anim.anim_slide_out_top);
+                break;
+        }
     }
 }

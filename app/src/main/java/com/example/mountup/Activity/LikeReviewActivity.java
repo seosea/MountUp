@@ -1,12 +1,6 @@
 package com.example.mountup.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.ContentValues;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -17,11 +11,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
+import com.example.mountup.Helper.Constant;
+import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
-import com.example.mountup.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
+public class LikeReviewActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
     private ArrayList<ReviewVO> m_reviewItems; //리뷰 리스트
     private ArrayList<ReviewVO> m_bufferList;  //맨처음 모든 리뷰를 받아옴
 
@@ -50,15 +50,12 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review);
+        setContentView(R.layout.activity_like_review);
 
         initView();
-        m_url = "http://15011066.iptime.org:8888/api/reviewmnt";
-        Intent intent = getIntent();
-        m_mountID = intent.getStringExtra("mountID");
+        m_url = "http://15011066.iptime.org:8888/api/likelist";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("mntID",m_mountID);
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();
@@ -105,7 +102,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                         }
                     }, 2000);
                 } else {
-                    Toast.makeText(ReviewActivity.this, "Loading data completed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LikeReviewActivity.this, "Loading data completed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
