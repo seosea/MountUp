@@ -12,11 +12,11 @@ import java.util.ArrayList;
 public class MountImageTask extends AsyncTask<Void, Void, Void> {
     AsyncCallback m_callback;
     Exception m_exception;
-    int TASK_TYPE;
+    int taskType;
 
     public MountImageTask(final int TASK_TYPE, AsyncCallback callback) {
         this.m_callback = callback;
-        this.TASK_TYPE = TASK_TYPE;
+        this.taskType = TASK_TYPE;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class MountImageTask extends AsyncTask<Void, Void, Void> {
         ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
 
         try {
-            switch(TASK_TYPE) {
+            switch(taskType) {
                 case Constant.FIRST_TEN:
                     for (int i = 0; i < 10; i++) {
                         if (mountList.get(i).getThumbnail() == null) {
