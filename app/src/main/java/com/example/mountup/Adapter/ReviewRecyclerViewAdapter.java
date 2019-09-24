@@ -115,13 +115,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         item.setLike(item.getLike()-1);
 
                         Log.d("like",""+item.getLike());
-                        ((ItemViewHolder) holder).m_textView_like.setText("like : "+item.getLike());
+                        ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
                     }
                     else{
                         item.setPic(true);
                         item.setLike(item.getLike()+1);
-                        ((ItemViewHolder) holder).m_textView_like.setText("like : "+item.getLike());
+                        ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart);
                         Log.d("like",""+item.getLike());
                     }
@@ -162,7 +162,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public void setItem(final ReviewVO item) {
             m_textView_user_id.setText(item.getUserId());
             m_textView_coment.setText(item.getCotent());
-            m_textView_like.setText("like : " + item.getLike());
+            m_textView_like.setText(String.valueOf(item.getLike()));
             m_ratingbar_grade.setRating((float) item.getGrade());
             //m_imageView_user_image.setImageBitmap(item.getM_main_image());
             if (item.isPic() == true) {

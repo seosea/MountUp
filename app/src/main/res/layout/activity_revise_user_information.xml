@@ -72,8 +72,8 @@
             android:layout_marginTop="178dp"
             android:text="아이디" />
 
-        <EditText
-            android:id="@+id/edit_email_revise_user_information"
+        <TextView
+            android:id="@+id/txt_id_revise_user_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView5"
@@ -82,11 +82,7 @@
             android:layout_marginTop="14dp"
             android:layout_marginEnd="42dp"
             android:background="@drawable/box_round_gray_border"
-            android:editable="false"
-            android:ems="10"
-            android:inputType="textEmailAddress"
             android:padding="10dp"
-            android:singleLine="true"
             android:text="id"
             android:textSize="14sp" />
 

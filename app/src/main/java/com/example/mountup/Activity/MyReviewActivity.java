@@ -57,6 +57,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
         m_url = "http://15011066.iptime.org:8888/api/reviewuser";
 
         ContentValues contentValues = new ContentValues();
+        //TODO : 본인 id로 변경
         contentValues.put("id", Constant.ADMIN_ID);
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);

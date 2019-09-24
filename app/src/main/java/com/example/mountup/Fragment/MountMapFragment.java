@@ -1,5 +1,6 @@
 package com.example.mountup.Fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,7 +33,9 @@ import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.GpsInfo;
 import com.example.mountup.Helper.GpsTracker;
 import com.example.mountup.R;
+import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -54,6 +57,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -97,6 +102,8 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
     private ImageView imgMount, imgIsClimbed;
     private TextView txtMountName, txtMountDistance, txtMountHeight, txtMountGrade;
     private RatingBar rbStar;
+
+    private String m_url;
 
     @Nullable
     @Override
@@ -317,7 +324,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
                             Toast.makeText(getContext(), "거리가 너무 멉니다.", Toast.LENGTH_SHORT).show();
                         } else { // 등산 성공
                             Toast.makeText(getContext(), "등산하였습니다!", Toast.LENGTH_SHORT).show();
-                            //TODO: 등산 했을때,
+                            connectNetwork();
                         }
                     } else {
                         Toast.makeText(getContext(), "위치를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
@@ -332,6 +339,58 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
                 break;
 
 
+        }
+    }
+
+    public void receiveResult(String result){
+        try {
+            JSONObject jsonObj = new JSONObject(result);
+
+            int code = jsonObj.getInt("code");
+            String msg = jsonObj.getString("msg");
+
+            Log.v(String.valueOf(code), msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void connectNetwork(){
+        m_url = "http://15011066.iptime.org:8888/api/mntup";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("mntID",selectedMount.getID());
+
+        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        networkTask.execute();
+    }
+
+    public class NetworkTask extends AsyncTask<Void, Void, String> {
+
+        private String url;
+        private ContentValues values;
+
+        public NetworkTask(String url, ContentValues values) {
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result; // 요청 결과를 저장할 변수.
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
+            result = postHttpURLConnection.request(url, MyInfo.getInstance().getUser().getID(),values); // 해당 URL로 부터 결과물을 얻어온다.
+            Log.d("exp result",result);
+
+            receiveResult(result);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
         }
     }
 

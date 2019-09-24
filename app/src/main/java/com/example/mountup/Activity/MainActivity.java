@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -53,11 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getDisplaySize(){
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        Constant.WIDTH = size.x;
-        Constant.HEIGHT = size.y;
+        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+
+        Constant.WIDTH  = dm.widthPixels;
+        Constant.HEIGHT = dm.heightPixels;
+
     }
 
     private void initFragment(){

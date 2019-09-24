@@ -12,6 +12,12 @@ public class User {
     int experience;
 
     public User() {
+        ID = null;
+        password = null;
+        profile = null;
+        totalHeight = 0;
+        level = 0;
+        experience = 0;
     }
 
     public User(String ID, String password, Bitmap profile, int totalgeight, int level, int experience) {

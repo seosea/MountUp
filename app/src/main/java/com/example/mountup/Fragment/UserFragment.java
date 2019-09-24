@@ -1,13 +1,24 @@
 package com.example.mountup.Fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,10 +39,21 @@ import com.example.mountup.Adapter.MountClimbedListRecyclerViewAdapter;
 import com.example.mountup.Helper.MountListRecyclerViewDecoration;
 
 import com.example.mountup.ServerConnect.MountImageTask;
+import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
+import com.example.mountup.VO.ReviewVO;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class UserFragment extends Fragment implements MountClimbedListRecyclerViewAdapter.OnLoadMoreListener,
@@ -47,6 +69,16 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
     private int nTotalHeight=0;
 
     private Button btnMyReview, btnLikeReview;
+
+    private TextView txtID, txtLevel;
+    private ImageView imgProfile;
+
+    private String userID, userPW, userPIC;
+    private int totalheight, exp;
+    private Drawable userDrawable;
+    private View vExp;
+
+    private String m_url;
 
     @Nullable
     @Override
@@ -82,8 +114,132 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         btnMyReview.setOnClickListener(this);
         btnLikeReview.setOnClickListener(this);
 
+        txtID = view.findViewById(R.id.txt_id_user);
+        txtLevel = view.findViewById(R.id.txt_level_user);
+        imgProfile = view.findViewById(R.id.img_profile_user);
+        vExp = view.findViewById(R.id.view_exp_user);
+
+        m_url = "http://15011066.iptime.org:8888/api/exp";
+
+        ContentValues contentValues = new ContentValues();
+
+        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        networkTask.execute();
+
+        m_url = "http://15011066.iptime.org:8888/api/userinfo";
+
+        ContentValues contentValuesUser = new ContentValues();
+
+        NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
+        networkTaskUser.execute();
+
+
         return view;
     }
+
+    public class NetworkTask extends AsyncTask<Void, Void, String> {
+
+        private String url;
+        private ContentValues values;
+
+        public NetworkTask(String url, ContentValues values) {
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result; // 요청 결과를 저장할 변수.
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
+            result = postHttpURLConnection.request(url, MyInfo.getInstance().getUser().getID(),values); // 해당 URL로 부터 결과물을 얻어온다.
+            Log.d("user result",result);
+
+            receiveResult(result);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    public void receiveResult(String result){
+        try {
+
+            JSONArray jsonArray = new JSONArray(result);
+            Log.d("smh:length",""+jsonArray.length());
+
+            for(int i =0;i<jsonArray.length();i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                userID = jsonObj.getString("userID");
+                userPW = jsonObj.getString("userPW");
+                userPIC = jsonObj.getString("userPIC");
+                totalheight = jsonObj.getInt("totalheight");
+                exp = jsonObj.getInt("exp");
+
+                Message msgUser = handlerUser.obtainMessage();
+                handlerUser.sendMessage(msgUser);
+
+                if(userPIC != null){
+                    String url_img = "http://15011066.iptime.org:8888/userimages/" + userPIC;
+                    InputStream is = null;
+                    try {
+                        is = (InputStream) new URL(url_img).getContent();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    userDrawable = Drawable.createFromStream(is, "userPIC");
+
+                    Message msgProfile = handlerImg.obtainMessage();
+                    handlerImg.sendMessage(msgProfile);
+                } else {
+                    Log.v("user profile", "null");
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    final Handler handlerImg = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            if(userDrawable!=null) {
+                imgProfile.setImageBitmap(((BitmapDrawable) userDrawable).getBitmap());
+                MyInfo.getInstance().getUser().setProfile(((BitmapDrawable) userDrawable).getBitmap());
+            }
+        }
+
+    };
+
+    final Handler handlerUser = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            txtID.setText(userID);
+
+            String strExp = String.valueOf((exp/1000) + 1);
+            txtLevel.setText(strExp);
+
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vExp.getLayoutParams();
+            int nExp = exp%1000;
+            lp.width = (int)((double)Constant.WIDTH/1000 * nExp);
+            vExp.setLayoutParams(lp);
+
+            MyInfo.getInstance().getUser().setID(userID);
+            MyInfo.getInstance().getUser().setPassword(userPW);
+            MyInfo.getInstance().getUser().setExperience(exp);
+            MyInfo.getInstance().getUser().setLevel((exp/1000) + 1);
+            MyInfo.getInstance().getUser().setTotalgeight(totalheight);
+        }
+
+    };
 
     private void loadAll() {
         MountImageTask mountImageTask = new MountImageTask(Constant.CLIMBED, new AsyncCallback() {
