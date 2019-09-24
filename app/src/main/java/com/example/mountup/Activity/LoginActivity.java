@@ -390,7 +390,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         values.put("pw", Constant.ADMIN_PW);
 
         // 산 URL 설정
-
         String url = Constant.URL + "/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
@@ -406,6 +405,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //e.printStackTrace();
             }
         });
+
         mountTask.execute();
     }
 }

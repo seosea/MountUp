@@ -93,6 +93,20 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
             }
         });
 
+        ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
+        for(MountVO mount : mountList){
+            if (Constant.X != 0.0) {
+                mount.setDistance(
+                        Calculator.calculateDistance(
+                                mount.getLocX(),
+                                mount.getLocY()
+                        )
+                );
+            } else {
+                mount.setDistance(0);
+            }
+        }
+
         // EditText 필터
         m_et_mountSearch = (EditText) view.findViewById(R.id.et_mountSearch);
         m_et_mountSearch.addTextChangedListener(new TextWatcher() {
@@ -228,22 +242,9 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
             @Override
             public void onSuccess(Object object) {
 
-                ArrayList<MountVO> mountList = MountManager.getInstance().getItems();
-
                 // 이미지 10개 view 출력
                 m_bufferItems.clear();
                 for (int i = 0; i < 10; i++) {
-                    if (Constant.X != 0.0) {
-                        mountList.get(i).setDistance(
-                                Calculator.calculateDistance(
-                                        mountList.get(i).getLocX(),
-                                        mountList.get(i).getLocY()
-                                )
-                        );
-                    } else {
-                        mountList.get(i).setDistance(0);
-                        Toast.makeText(getContext(), "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                    }
                     m_bufferItems.add(MountManager.getInstance().getItems().get(i));
                 }
                 m_adapter.addAll(m_bufferItems);
