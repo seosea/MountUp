@@ -440,7 +440,6 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         if(selectedMount !=null){
             linearMountInfo.setVisibility(View.VISIBLE);
             imgMount.setImageBitmap(selectedMount.getThumbnail());
-
             txtMountName.setText(selectedMount.getName());
             txtMountDistance.setText(Float.toString(selectedMount.getDistance()) + "km");
             txtMountHeight.setText(Integer.toString(selectedMount.getHeight()) + "m");

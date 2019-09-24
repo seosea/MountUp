@@ -83,8 +83,7 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
                 //newItem.setThumbnail(MountManager.getInstance().getMountBitmapFromURL("url_img","mount" + (i + 1)));
                 //Log.d("mmee:mountTask", "get mount resource " + (i + 1));
 
-                // (임시) 거리, 등반 확인, 별점
-                newItem.setDistance(new Random().nextFloat() * 100);
+                // (임시) 등반 확인, 별점
                 newItem.setGrade(new Random().nextFloat() * 5);
                 newItem.setClimb(false);
 
