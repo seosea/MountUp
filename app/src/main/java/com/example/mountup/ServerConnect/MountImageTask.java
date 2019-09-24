@@ -44,7 +44,7 @@ public class MountImageTask extends AsyncTask<Void, Void, Void> {
 
                 case Constant.CLIMBED:
                     for (MountVO mount : MountManager.getInstance().getItems()) {
-                        if (mount.isClimbed()) {
+                        if (mount.isClimbed() && mount.getThumbnail() == null) {
                             int id = mount.getID();
                             String url_img = Constant.URL + "/basicImages/" + id + ".jpg";
                             mount.setThumbnail(MountManager.getInstance().getMountBitmapFromURL(url_img, "mount" + id));
