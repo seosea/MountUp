@@ -14,8 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
+import com.example.mountup.Popup.ConfirmDialog;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +30,8 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
     private MountVO m_mount;
     private GoogleMap mMap;
+
+    private ConfirmDialog errDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,14 +108,21 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
             }
         });
 
+        errDialog = new ConfirmDialog(this);
+
         Button reviewWriteButton = (Button) this.findViewById(R.id.btn_writeReview);
         reviewWriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),ReviewWriteActivity.class);
-                Log.d("mountID",""+m_mount.getID());
-                intent.putExtra("mountID",""+m_mount.getID());
-                startActivity(intent);
+                if (m_mount.isClimbed()) {
+                    Intent intent = new Intent(view.getContext(), ReviewWriteActivity.class);
+                    Log.d("mountID", "" + m_mount.getID());
+                    intent.putExtra("mountID", "" + m_mount.getID());
+                    startActivity(intent);
+                } else {
+                    errDialog.setErrorMessage("산을 등반한 후에\n리뷰를 작성해주세요.");
+                    errDialog.show();
+                }
             }
         });
 

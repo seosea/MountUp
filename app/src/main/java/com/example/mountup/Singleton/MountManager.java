@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class MountManager {
 
+    private int loadPercent;
+
     private MountManager() {
         m_items = new ArrayList();
     }
@@ -43,5 +45,13 @@ public class MountManager {
         }
 
         return mount_bitmap;
+    }
+
+    public void setLoadPercent(int percent) {
+        loadPercent = percent;
+    }
+
+    public int getLoadPercent() {
+        return loadPercent;
     }
 }
