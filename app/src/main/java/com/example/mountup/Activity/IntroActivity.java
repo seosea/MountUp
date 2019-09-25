@@ -37,6 +37,7 @@ public class IntroActivity extends AppCompatActivity {
 
         startLoading();
     }
+
     private void startLoading() {
         final Handler handler = new Handler();
         new Thread(new Runnable() {
@@ -50,7 +51,8 @@ public class IntroActivity extends AppCompatActivity {
                             tv_loadPercent.setText(MountManager.getInstance().getLoadPercent() + " %");
                         }
                     });
-                } try {
+                }
+                try {
                     // Sleep for 100 milliseconds to show the progress slowly.
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -63,7 +65,8 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
-      
+    }
+
     private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
