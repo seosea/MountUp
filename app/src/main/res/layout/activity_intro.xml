@@ -9,7 +9,7 @@
     tools:context=".Activity.IntroActivity">
 
     <ImageView
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="400dp"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"

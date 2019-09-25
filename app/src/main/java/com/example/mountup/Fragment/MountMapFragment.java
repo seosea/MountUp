@@ -442,6 +442,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         protected String doInBackground(Void... params) {
 
             String result; // 요청 결과를 저장할 변수.
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
             result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
             Log.d("mount up result",result);
 
