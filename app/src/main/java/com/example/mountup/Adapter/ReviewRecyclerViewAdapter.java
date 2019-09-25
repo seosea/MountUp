@@ -1,6 +1,9 @@
 package com.example.mountup.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -180,6 +183,11 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
             }
             m_imageView_iamge.setImageBitmap(item.getImage());
+
+            m_imageView_iamge.setBackground(new ShapeDrawable(new OvalShape()));
+            if(Build.VERSION.SDK_INT >= 21) {
+                m_imageView_iamge.setClipToOutline(true);
+            }
         }
     }
 
