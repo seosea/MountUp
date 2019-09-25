@@ -63,7 +63,8 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
-      
+    }
+
     private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
