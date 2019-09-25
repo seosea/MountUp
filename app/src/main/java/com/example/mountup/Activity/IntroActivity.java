@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
@@ -32,10 +33,14 @@ public class IntroActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar_intro);
         tv_loadPercent = (TextView) findViewById(R.id.tv_loadPercent);
 
-        loadMountData();
-        //startLoading();
-
+        initMountList();
         startLoading();
+    }
+
+    private void initMountList() {
+        MountManager.getInstance().setLoadPercent(0);
+        MountManager.getInstance().getItems().clear();
+        loadMountData();
     }
 
     private void startLoading() {
@@ -77,6 +82,9 @@ public class IntroActivity extends AppCompatActivity {
             public void onSuccess(Object object) {
                 Log.d("mmee:mountTask", "get mount resource success!");
                 finish();
+                Toast.makeText(IntroActivity.this,
+                        "리소스 로딩 완료", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override

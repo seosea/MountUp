@@ -136,14 +136,29 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
         networkTaskUser.execute();
 
-
         // User 등반 리스트 갱신
-        String url_userClimbedList = Constant.URL + "/api/mntuplist";
-
-        UserClimbedListTask userClimbedListTask = new UserClimbedListTask(url_userClimbedList, null);
-        userClimbedListTask.execute();
+        refreshUserClimbedList();
 
         return view;
+    }
+
+    private void refreshUserClimbedList() {
+
+        String url_userClimbedList = Constant.URL + "/api/mntuplist";
+
+        UserClimbedListTask userClimbedListTask = new UserClimbedListTask(
+                url_userClimbedList, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+        userClimbedListTask.execute();
     }
 
 
