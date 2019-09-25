@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
@@ -20,6 +21,7 @@ public class IntroActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView tv_loadPercent;
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,10 @@ public class IntroActivity extends AppCompatActivity {
         }).start();
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
+      
     private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
@@ -77,4 +83,5 @@ public class IntroActivity extends AppCompatActivity {
         });
         mountTask.execute();
     }
+
 }
