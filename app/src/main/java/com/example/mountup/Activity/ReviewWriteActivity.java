@@ -145,12 +145,12 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        Uri uri = data.getData();
 
         if(resultCode == RESULT_OK) {
             // result가 제대로 실행됨.
             if (requestCode == PICK_FROM_ALBUM ) {
                 //앨범 선택
+                Uri uri = data.getData();
                 ExifInterface exif = null;
                 String imagePath = getRealPathFromURI(uri);
                 try {

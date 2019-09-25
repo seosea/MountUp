@@ -109,12 +109,13 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        uri = data.getData();
 
         if(resultCode == RESULT_OK) {
             // result가 제대로 실행됨.
             if (requestCode == PICK_FROM_ALBUM ) {
                 //앨범 선택
+                uri = data.getData();
+
                 ExifInterface exif = null;
                 String imagePath = getRealPathFromURI(uri);
                 try {

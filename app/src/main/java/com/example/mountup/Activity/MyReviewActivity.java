@@ -21,6 +21,7 @@ import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
 
@@ -118,6 +119,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
 
     private void getData(){
         Log.d("smh:get","data");
+        m_reviewItems.clear();
         int end = 5;
         if(m_bufferList.size() < 5){
             end = m_bufferList.size();
