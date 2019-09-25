@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
@@ -15,6 +16,8 @@ import com.example.mountup.ServerConnect.MountTask;
 import com.example.mountup.Singleton.MountManager;
 
 public class IntroActivity extends AppCompatActivity {
+
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,10 @@ public class IntroActivity extends AppCompatActivity {
         }, 3000);
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
+      
     private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
@@ -54,4 +61,5 @@ public class IntroActivity extends AppCompatActivity {
         });
         mountTask.execute();
     }
+
 }

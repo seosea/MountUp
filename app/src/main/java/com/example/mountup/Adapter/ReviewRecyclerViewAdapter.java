@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.VO.MountVO;
 import com.example.mountup.VO.ReviewVO;
 import com.example.mountup.R;
 
@@ -139,7 +141,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         TextView m_textView_user_id; // user id
         TextView m_textView_coment; // review coment
         TextView m_textView_like; // review how many people like review
-
+        TextView m_textView_mount_name;
         ImageView m_imageView_user_image;
         ImageView m_imageView_iamge; // review main image
         ImageButton m_imageButton_like;
@@ -152,6 +154,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_user_id = itemView.findViewById(R.id.tv_user_id);
             m_textView_coment = itemView.findViewById(R.id.tv_review_content);
             m_textView_like = itemView.findViewById(R.id.tv_review_like);
+            m_textView_mount_name = itemView.findViewById(R.id.txt_mount_name_review);
 
             //m_imageView_user_image = itemView.findViewById(R.id.iv_review_user_profile);
             m_imageView_iamge = itemView.findViewById(R.id.iv_review_image);
@@ -163,6 +166,12 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_user_id.setText(item.getUserId());
             m_textView_coment.setText(item.getCotent());
             m_textView_like.setText(String.valueOf(item.getLike()));
+            for(MountVO mount : MountManager.getInstance().getItems()){
+                if(mount.getID() == item.getM_mntID()){
+                    m_textView_mount_name.setText(String.valueOf(item.getM_mntID()));
+                }
+            }
+
             m_ratingbar_grade.setRating((float) item.getGrade());
             //m_imageView_user_image.setImageBitmap(item.getM_main_image());
             if (item.isPic() == true) {
