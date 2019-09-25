@@ -66,6 +66,18 @@
             app:srcCompat="@drawable/image"
             android:adjustViewBounds="true" />
 
+        <TextView
+            android:id="@+id/txt_mount_name_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:gravity="right"
+            android:text="산"
+            android:textColor="@color/colorGray"
+            android:textSize="12sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="20dp"

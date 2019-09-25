@@ -119,13 +119,6 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         imgProfile = view.findViewById(R.id.img_profile_user);
         vExp = view.findViewById(R.id.view_exp_user);
 
-        m_url = "http://15011066.iptime.org:8888/api/exp";
-
-        ContentValues contentValues = new ContentValues();
-
-        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
-        networkTask.execute();
-
         m_url = "http://15011066.iptime.org:8888/api/userinfo";
 
         ContentValues contentValuesUser = new ContentValues();
