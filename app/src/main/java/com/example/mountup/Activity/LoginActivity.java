@@ -32,6 +32,7 @@ import com.example.mountup.Popup.ConfirmDialog;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.LoginTask;
 import com.example.mountup.ServerConnect.MountTask;
+import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.google.android.gms.common.ErrorDialogFragment;
 
@@ -58,6 +59,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        MountManager.getInstance().setLoadPercent(0);
+        MountManager.getInstance().getItems().clear();
 
         initUser();
 
