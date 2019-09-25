@@ -82,9 +82,6 @@ public class IntroActivity extends AppCompatActivity {
             public void onSuccess(Object object) {
                 Log.d("mmee:mountTask", "get mount resource success!");
                 finish();
-                Toast.makeText(IntroActivity.this,
-                        "리소스 로딩 완료", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override

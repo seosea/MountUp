@@ -1,9 +1,12 @@
 package com.example.mountup.Adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +21,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mountup.Fragment.MountMapFragment;
+import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
 import com.example.mountup.VO.ReviewVO;
 import com.example.mountup.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +46,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+
+    private String m_url;
 
     public int getItemViewType(int position) { //null값인 경우 로딩타입
         return m_reivewItems.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
@@ -115,6 +126,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View view) {
                     int like;
                     if(item.isPic() == true){
+                        /*
                         item.setPic(false);
 
                         item.setLike(item.getLike()-1);
@@ -122,6 +134,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         Log.d("like",""+item.getLike());
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
+                        */
                     }
                     else{
                         item.setPic(true);
@@ -129,6 +142,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart);
                         Log.d("like",""+item.getLike());
+                        connectNetworkLike(item);
                     }
                 }
             });
@@ -139,6 +153,59 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }//position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
 
+
+    private void connectNetworkLike(ReviewVO item){
+        m_url = "http://15011066.iptime.org:8888/api/like";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("reviewID",item.getM_reivewID());
+
+        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        networkTask.execute();
+    }
+
+
+    public class NetworkTask extends AsyncTask<Void, Void, String> {
+
+        private String url;
+        private ContentValues values;
+
+        public NetworkTask(String url, ContentValues values) {
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result; // 요청 결과를 저장할 변수.
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
+            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
+            Log.d("review like result",result);
+
+            receiveResult(result);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    public void receiveResult(String result){
+        try {
+            JSONObject jsonObj = new JSONObject(result);
+
+            int code = jsonObj.getInt("code");
+
+            Log.v("Code", code+"");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     static class ItemViewHolder extends ViewHolder {
         TextView m_textView_user_id; // user id
@@ -159,7 +226,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_like = itemView.findViewById(R.id.tv_review_like);
             m_textView_mount_name = itemView.findViewById(R.id.txt_mount_name_review);
 
-            //m_imageView_user_image = itemView.findViewById(R.id.iv_review_user_profile);
+            m_imageView_user_image = itemView.findViewById(R.id.iv_review_user_profile);
             m_imageView_iamge = itemView.findViewById(R.id.iv_review_image);
             m_imageButton_like = itemView.findViewById(R.id.btn_review_heart_button);
             m_ratingbar_grade = itemView.findViewById(R.id.rb_review_grade);
@@ -172,6 +239,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             for(MountVO mount : MountManager.getInstance().getItems()){
                 if(mount.getID() == item.getM_mntID()){
                     m_textView_mount_name.setText(String.valueOf(item.getM_mntID()));
+                    m_textView_mount_name.setText(mount.getName());
                 }
             }
 
@@ -184,9 +252,11 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
             m_imageView_iamge.setImageBitmap(item.getImage());
 
-            m_imageView_iamge.setBackground(new ShapeDrawable(new OvalShape()));
-            if(Build.VERSION.SDK_INT >= 21) {
-                m_imageView_iamge.setClipToOutline(true);
+            if(m_imageView_user_image != null) {
+                m_imageView_user_image.setBackground(new ShapeDrawable(new OvalShape()));
+                if (Build.VERSION.SDK_INT >= 21) {
+                    m_imageView_user_image.setClipToOutline(true);
+                }
             }
         }
     }

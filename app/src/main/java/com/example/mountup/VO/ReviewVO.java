@@ -37,6 +37,17 @@ public class ReviewVO {
         this.m_Pic = m_Pic;
     }
 
+    public ReviewVO(int m_reivewID, String m_userID, int m_mntID, String m_cotent, boolean m_Pic) {
+        this.m_reivewID = m_reivewID;
+        this.m_userID = m_userID;
+        this.m_mntID = m_mntID;
+        this.m_cotent = m_cotent;
+        this.m_Image = null;
+        this.m_like = 0;
+        this.m_grade = 0;
+        this.m_Pic = m_Pic;
+    }
+
     public int getM_reivewID() { return m_reivewID; }
     public void setM_reivewID(int m_reivewID) { this.m_reivewID = m_reivewID; }
 

@@ -144,15 +144,16 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng SEOUL = new LatLng(m_mount.getLocX(), m_mount.getLocY());
+        LatLng mount = new LatLng(m_mount.getLocX(), m_mount.getLocY());
 
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(SEOUL);
+        markerOptions.position(mount);
         markerOptions.title(m_mount.getName());
         markerOptions.snippet(m_mount.getAddress());
         mMap.addMarker(markerOptions);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mount));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(mount));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
 }

@@ -118,6 +118,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 
     private void getData(){
         Log.d("smh:get","data");
+        m_reviewItems.clear();
         int end = 5;
         if(m_bufferList.size() < 5){
             end = m_bufferList.size();

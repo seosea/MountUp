@@ -245,7 +245,8 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             mMap.addMarker(markerOptions);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         }
     }
 
@@ -470,6 +471,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         mMap.addMarker(markerOptions);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
         mMap.setOnMarkerClickListener(this);
