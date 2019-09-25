@@ -57,7 +57,9 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
         ContentValues contentValues = new ContentValues();
 
-        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
+
+        NetworkTask networkTask = new NetworkTask(m_url, contentValues);
         networkTask.execute();
     }
 
@@ -207,7 +209,7 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
             String result; // 요청 결과를 저장할 변수.
             PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
-            result = postHttpURLConnection.request(url, MyInfo.getInstance().getUser().getID(),values); // 해당 URL로 부터 결과물을 얻어온다.
+            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
             Log.d("smh:result",result);
 
             receiveReview(result);

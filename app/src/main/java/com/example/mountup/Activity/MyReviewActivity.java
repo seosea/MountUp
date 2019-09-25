@@ -58,7 +58,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
 
         ContentValues contentValues = new ContentValues();
         //TODO : 본인 id로 변경
-        contentValues.put("id", Constant.ADMIN_ID);
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();
@@ -94,7 +94,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
                             //Generating more data
                             int index = m_reviewItems.size();
                             int end = index + 5;
-                            if (end > m_bufferList.size() - 1) {
+                            if (end > m_bufferList.size()) {
                                 end = m_bufferList.size();
                             }
                             for (int i = index; i < end; i++) {
@@ -210,7 +210,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
 
             String result; // 요청 결과를 저장할 변수.
             PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
-            result = postHttpURLConnection.request(url, MyInfo.getInstance().getUser().getID(),values); // 해당 URL로 부터 결과물을 얻어온다.
+            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
             Log.d("smh:result",result);
 
             receiveReview(result);
