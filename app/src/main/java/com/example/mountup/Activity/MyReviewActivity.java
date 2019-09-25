@@ -58,7 +58,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
 
         ContentValues contentValues = new ContentValues();
         //TODO : 본인 id로 변경
-        contentValues.put("id", Constant.ADMIN_ID);
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();

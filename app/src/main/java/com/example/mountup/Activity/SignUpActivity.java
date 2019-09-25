@@ -51,12 +51,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         btnBack.setOnClickListener(this);
     }
 
-    private void switchToLoginActivity() {
+    private void BackToLoginActivity() {
+        onBackPressed();
         // TODO: 회원가입 완료
+        /*
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(intent);
+        */
     }
 
     private void postSignUp() {
@@ -69,7 +72,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         SignUpTask signUpTask = new SignUpTask(url, values, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
-                switchToLoginActivity();
+                BackToLoginActivity();
             }
 
             @Override

@@ -12,6 +12,7 @@ import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.MountTask;
+import com.example.mountup.Singleton.MountManager;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -20,7 +21,8 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_intro);
-        loadMountData();
+        if (MountManager.getInstance().getItems().isEmpty())
+            loadMountData();
         //startLoading();
     }
     private void startLoading() {

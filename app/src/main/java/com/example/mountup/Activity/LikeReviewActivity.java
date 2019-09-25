@@ -57,7 +57,9 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
         ContentValues contentValues = new ContentValues();
 
-        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
+
+        NetworkTask networkTask = new NetworkTask(m_url, contentValues);
         networkTask.execute();
     }
 
