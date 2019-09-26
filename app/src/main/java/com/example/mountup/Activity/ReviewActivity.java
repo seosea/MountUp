@@ -167,16 +167,12 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                     Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
                     newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
                 }else{
-                    String url_img = "http://15011066.iptime.org:8888/reviewimages/1569147222264.jpg";
-                    InputStream is = (InputStream) new URL(url_img).getContent();
-                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
-                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
+
                 }
 
                 Log.d("smh:review",reviewUserID);
                 m_bufferList.add(newReview);
             }
-            Log.d("smh:length2",""+m_bufferList.size());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -214,7 +210,6 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
             Log.d("smh:result",result);
 
             receiveReview(result);
-
             return result;
         }
 

@@ -6,9 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,15 +16,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,44 +29,31 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.mountup.Model.User;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
-import com.example.mountup.ServerConnect.GetHttpURLConnection;
-import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.ServerConnect.WriteImageTask;
+import com.example.mountup.ServerConnect.WriteTask;
 import com.example.mountup.Singleton.MyInfo;
-
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
 
 public class ReviewWriteActivity extends AppCompatActivity implements View.OnClickListener {
-    private String m_mountID;
-    private User m_user;
-
     private ImageButton btn_close;
     private ImageButton btn_imageButton;
-
     private Button btn_submit;
 
     private RatingBar ratingBar_review;
     private EditText editText_review;
     private TextView tv_review_length;
+    //view part
+    private String m_mountID;
+    private String m_reviewSentURL;
+    private String m_reviewImageUploadURL;
+    private Uri m_uri;
 
-    private String m_URL;
-
-    private NetworkTask m_networkTask;
-    private File tempFile;
-
-    private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_IMAGE = 2;
 
     public final int MY_PERMISSIONS_READ_EXTERNAL_STORAGE = 1;
     public final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
@@ -88,15 +69,14 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     }
 
     void initData(){
-        m_user = MyInfo.getInstance().getUser();
-        m_URL = "http://15011066.iptime.org:8888/api/review";
+        m_reviewSentURL = "http://15011066.iptime.org:8888/api/review";
+        m_reviewImageUploadURL = "http://15011066.iptime.org:8888/reviewimageup";
 
         Intent intent = getIntent();
         m_mountID = intent.getStringExtra("mountID");
 
         checkPermission();
-
-        Log.d("mountID",""+m_mountID);
+        //권한 체크
     }
 
     void initView(){
@@ -146,6 +126,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         Uri uri = data.getData();
+        m_uri = uri;
 
         if(resultCode == RESULT_OK) {
             // result가 제대로 실행됨.
@@ -174,13 +155,14 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         return 0;
     }
 
-
     private String getRealPathFromURI(Uri contentUri) {
         int column_index=0;
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         cursor.moveToFirst();
         column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        Log.d("smh:getRealPathFromURI", cursor.getString(column_index));
         return cursor.getString(column_index);
     }
 
@@ -204,82 +186,94 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_review_close:
-                Log.d("button","close");
+                Log.d("smh:button","close");
                 finish();
                 break;
             case R.id.btn_review_imageButton:
-                Log.d("button","image");
-
-                DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        doTakeAlbumAction();
-                    }
-                };
-                DialogInterface.OnClickListener cancelListenner = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                };
-
-                new AlertDialog.Builder(this)
-                        .setTitle("업로드할 이미지 선택")
-                        .setNeutralButton("앨범선택",albumListener)
-                        .setNegativeButton("취소",cancelListenner)
-                        .show();
+                Log.d("smh:button","image");
+                pushImageButton();
                 break;
             case R.id.btn_review_submit:
-                Log.d("button","submit");
-                ContentValues values = new ContentValues();
-                //통신할거 저장하기
-//                Headers : {x-access-token : “token”, id : “id”}
-//                Body : {"reviewUserID ":”userid”,
-//                    "reviewMntID ":”mntid”,
-//                    "reviewString ":”reviewstring”,
-//                    "reviewStar ": “star point” }
-
-                values.put("reviewUserID", MyInfo.getInstance().getUser().getID() );
-                values.put("reviewMntID", m_mountID);
-                values.put("reviewString", editText_review.getText().toString());
-                values.put("reviewStar", ratingBar_review.getRating());
-                values.put("reviewID","30");
-
-                m_networkTask = new NetworkTask(m_URL, values);
-
-                m_networkTask.execute();
-
+                Log.d("smh:button","submit");
+                pushSubmitButton();
                 break;
         }
     }
 
-    public class NetworkTask extends AsyncTask<Void, Void, String> {
+    public void pushImageButton(){
+        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                doTakeAlbumAction();
+            }
+        };
+        DialogInterface.OnClickListener cancelListenner = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
 
-        private String url;
-        private ContentValues values;
+        new AlertDialog.Builder(this)
+                .setTitle("업로드할 이미지 선택")
+                .setNeutralButton("앨범선택",albumListener)
+                .setNegativeButton("취소",cancelListenner)
+                .show();
+    }
 
-        public NetworkTask(String url, ContentValues values) {
+    public void pushSubmitButton(){
+        btn_submit.setEnabled(false);
 
-            this.url = url;
-            this.values = values;
-        }
+        ContentValues values = new ContentValues();
 
-        @Override
-        protected String doInBackground(Void... params) {
-            String result; // 요청 결과를 저장할 변수.
-            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
-            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
+        values.put("reviewUserID", MyInfo.getInstance().getUser().getID() );
+        values.put("reviewMntID", m_mountID);
+        values.put("reviewString", editText_review.getText().toString());
+        values.put("reviewStar", ratingBar_review.getRating());
 
-            return result;
-        }
+        WriteTask writeTask = new WriteTask(m_reviewSentURL, values, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                String result = object.toString();
+                String reviewID = null;
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    reviewID = jsonObj.getString("reviewID");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d("return data",s);
+                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,reviewID,getRealfilepath(m_uri),new AsyncCallback(){
+                    @Override
+                    public void onSuccess(Object object) {
+                        finish();
+                    }
+                    @Override
+                    public void onFailure(Exception e) { }
+                    });
+                imageTask.execute();
+            }
+            @Override
+            public void onFailure(Exception e) {
+            }
+        });
+        writeTask.execute();
+    }
 
-            finish();
-        }
+    public String getRealfilepath(Uri contentUri) {
+
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Log.d("smh:uri",""+contentUri.toString());
+
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        cursor.moveToNext();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+        Uri uri = Uri.fromFile(new File(path));
+
+        Log.d("smh:", "getRealfilepath(), path : " + uri.toString());
+
+        cursor.close();
+        return path;
     }
 
     //갤러리 접근 권한 설정
@@ -320,6 +314,5 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
         }
     }
-
 }
 

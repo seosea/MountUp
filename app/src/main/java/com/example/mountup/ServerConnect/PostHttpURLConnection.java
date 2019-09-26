@@ -64,6 +64,8 @@ public class PostHttpURLConnection {
             urlConn.setRequestMethod("POST"); // URL 요청에 대한 메소드 설정 : POST.
             urlConn.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
             urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;cahrset=UTF-8");
+            urlConn.setDoInput(true);
+            urlConn.setDoOutput(true);
 
             urlConn.setRequestProperty("id", MyInfo.getInstance().getUser().getID());
             urlConn.setRequestProperty("x-access-token", MyInfo.getInstance().getToken());
