@@ -88,6 +88,9 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
                 // newItem.setGrade(new Random().nextFloat() * 5);
 
                 MountManager.getInstance().getItems().add(newItem);
+
+                int loadPercent = (int)((i + 1) / (float)jsonArray.length() * 100.0f);
+                MountManager.getInstance().setLoadPercent(loadPercent);
             }
 
         } catch (JSONException e) {

@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.main_fragment, new MountListFragment())
                         .addToBackStack(null)
+                        .detach(fragment)
+                        .attach(fragment)
                         .commit();
 
                 selectedMountList.setVisibility(View.VISIBLE);
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.main_fragment, new MountMapFragment())
                         .addToBackStack(null)
+                        .detach(fragment)
+                        .attach(fragment)
                         .commit();
 
                 selectedMountList.setVisibility(View.INVISIBLE);
@@ -121,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.main_fragment, new UserFragment())
                         .addToBackStack(null)
+                        .detach(fragment)
+                        .attach(fragment)
                         .commit();
 
                 selectedMountList.setVisibility(View.INVISIBLE);
@@ -133,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.main_fragment, new SettingFragment())
                         .addToBackStack(null)
+                        .detach(fragment)
+                        .attach(fragment)
                         .commit();
 
                 selectedMountList.setVisibility(View.INVISIBLE);

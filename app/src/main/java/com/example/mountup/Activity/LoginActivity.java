@@ -32,6 +32,7 @@ import com.example.mountup.Popup.ConfirmDialog;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.LoginTask;
 import com.example.mountup.ServerConnect.MountTask;
+import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.google.android.gms.common.ErrorDialogFragment;
 
@@ -71,9 +72,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         connectNetwork();
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
 
-        Intent intent = new Intent(this, IntroActivity.class);
-        startActivity(intent);
-        //initListener();
+        if (MountManager.getInstance().getItems().isEmpty()) {
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivity(intent);
+            //initListener();
+        }
 
         getGPS();
     }

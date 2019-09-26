@@ -20,6 +20,7 @@ import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
 
@@ -57,7 +58,9 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
         ContentValues contentValues = new ContentValues();
 
-        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
+
+        NetworkTask networkTask = new NetworkTask(m_url, contentValues);
         networkTask.execute();
     }
 
@@ -153,7 +156,7 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
                 Double reviewStar  = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
 
-                ReviewVO  newReview = new ReviewVO();
+                ReviewVO newReview = new ReviewVO();
                 newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar);
                 //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
                 //비트맵 설정 안됨
@@ -169,6 +172,8 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
                     Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
                     newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
                 }
+
+                LikeReviewManager.getInstance().getItems().add(newReview);
 
                 Log.d("smh:review",reviewUserID);
                 m_bufferList.add(newReview);

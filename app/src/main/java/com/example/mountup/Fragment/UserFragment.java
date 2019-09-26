@@ -2,10 +2,16 @@ package com.example.mountup.Fragment;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,10 +19,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +49,7 @@ import com.example.mountup.Helper.MountListRecyclerViewDecoration;
 
 import com.example.mountup.ServerConnect.MountImageTask;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.ServerConnect.UserClimbedListTask;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
@@ -119,13 +129,6 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         imgProfile = view.findViewById(R.id.img_profile_user);
         vExp = view.findViewById(R.id.view_exp_user);
 
-        m_url = "http://15011066.iptime.org:8888/api/exp";
-
-        ContentValues contentValues = new ContentValues();
-
-        NetworkTask networkTask = new NetworkTask(m_url,contentValues);
-        networkTask.execute();
-
         m_url = "http://15011066.iptime.org:8888/api/userinfo";
 
         ContentValues contentValuesUser = new ContentValues();
@@ -133,9 +136,31 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
         networkTaskUser.execute();
 
+        // User 등반 리스트 갱신
+        refreshUserClimbedList();
 
         return view;
     }
+
+    private void refreshUserClimbedList() {
+
+        String url_userClimbedList = Constant.URL + "/api/mntuplist";
+
+        UserClimbedListTask userClimbedListTask = new UserClimbedListTask(
+                url_userClimbedList, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+        userClimbedListTask.execute();
+    }
+
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
@@ -213,6 +238,11 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
             if(userDrawable!=null) {
                 imgProfile.setImageBitmap(((BitmapDrawable) userDrawable).getBitmap());
                 MyInfo.getInstance().getUser().setProfile(((BitmapDrawable) userDrawable).getBitmap());
+                imgProfile.setBackground(new ShapeDrawable(new OvalShape()));
+                if(Build.VERSION.SDK_INT >= 21) {
+                    imgProfile.setClipToOutline(true);
+                }
+
             }
         }
 

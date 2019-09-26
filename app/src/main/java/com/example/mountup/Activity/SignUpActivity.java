@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
@@ -51,12 +52,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         btnBack.setOnClickListener(this);
     }
 
-    private void switchToLoginActivity() {
+    private void BackToLoginActivity() {
+        onBackPressed();
         // TODO: 회원가입 완료
+        /*
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(intent);
+        */
     }
 
     private void postSignUp() {
@@ -69,7 +73,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         SignUpTask signUpTask = new SignUpTask(url, values, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
-                switchToLoginActivity();
+                Toast.makeText(SignUpActivity.this,
+                        "회원 가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                BackToLoginActivity();
             }
 
             @Override

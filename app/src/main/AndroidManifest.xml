@@ -21,22 +21,32 @@
 
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.IntroActivity"></activity>
-        <activity android:name=".Activity.LikeReviewActivity"></activity>
-        <activity android:name=".Activity.MyReviewActivity"></activity>
-        <activity android:name=".Activity.ReviewActivity"></activity>
-        <activity android:name=".Activity.ReviewWriteActivity"></activity>
-        <activity android:name=".Activity.SignUpActivity"></activity>
-        <activity android:name=".Activity.LoginActivity">
+        <activity android:name=".Activity.IntroActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.LikeReviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.MyReviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.ReviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.ReviewWriteActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.SignUpActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.ReviseUserInformationActivity" />
-        <activity android:name=".Activity.MainActivity"></activity>
-        <activity android:name=".Activity.MountDetailActivity" />
+        <activity android:name=".Activity.ReviseUserInformationActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.MountDetailActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!--Google map-->
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>

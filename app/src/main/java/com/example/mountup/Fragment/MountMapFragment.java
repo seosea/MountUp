@@ -12,6 +12,8 @@ import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -243,7 +245,8 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             mMap.addMarker(markerOptions);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         }
     }
 
@@ -323,7 +326,6 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
                         if (distance > 0.5) { // 멀 때 (500m 이상)
                             Toast.makeText(getContext(), "거리가 너무 멉니다.", Toast.LENGTH_SHORT).show();
                         } else { // 등산 성공
-                            Toast.makeText(getContext(), "등산하였습니다!", Toast.LENGTH_SHORT).show();
                             connectNetwork();
                         }
                     } else {
@@ -347,13 +349,48 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             JSONObject jsonObj = new JSONObject(result);
 
             int code = jsonObj.getInt("code");
-            String msg = jsonObj.getString("msg");
 
-            Log.v(String.valueOf(code), msg);
+            Log.v("Code", code+"");
+
+            if(code==200){
+                m_url = "http://15011066.iptime.org:8888/api/exp";
+
+                ContentValues contentValues = new ContentValues();
+
+                NetworkTaskExp networkTaskExp = new NetworkTaskExp(m_url,contentValues);
+                networkTaskExp.execute();
+
+                Message msgProfile = handlerMountUp.obtainMessage();
+                handlerMountUp.sendMessage(msgProfile);
+
+            } else {
+                Message msgProfile = handlerAlreadyUp.obtainMessage();
+                handlerAlreadyUp.sendMessage(msgProfile);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    final Handler handlerMountUp = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Toast.makeText(getContext(), "등산하였습니다!", Toast.LENGTH_SHORT).show();
+        }
+
+    };
+
+
+    final Handler handlerAlreadyUp = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Toast.makeText(getContext(), "이미 등산하였습니다", Toast.LENGTH_SHORT).show();
+        }
+
+    };
 
     private void connectNetwork(){
         m_url = "http://15011066.iptime.org:8888/api/mntup";
@@ -363,6 +400,33 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();
+    }
+
+    public class NetworkTaskExp extends AsyncTask<Void, Void, String> {
+
+        private String url;
+        private ContentValues values;
+
+        public NetworkTaskExp(String url, ContentValues values) {
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result; // 요청 결과를 저장할 변수.
+            PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
+            result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
+            Log.d("exp result",result);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
@@ -381,7 +445,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
             String result; // 요청 결과를 저장할 변수.
             PostHttpURLConnection postHttpURLConnection = new PostHttpURLConnection();
             result = postHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-            Log.d("exp result",result);
+            Log.d("mount up result",result);
 
             receiveResult(result);
 
@@ -407,6 +471,7 @@ public class MountMapFragment extends Fragment implements View.OnClickListener, 
         mMap.addMarker(markerOptions);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
         mMap.setOnMarkerClickListener(this);

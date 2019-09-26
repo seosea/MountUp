@@ -50,6 +50,7 @@
             android:layout_weight="0.8"
             android:drawableLeft="@drawable/ic_marker_gray"
             android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:text="OO시 OO구"
             android:textSize="12sp" />
 

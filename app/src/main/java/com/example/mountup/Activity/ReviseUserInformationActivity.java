@@ -14,9 +14,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,6 +28,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,14 +39,25 @@ import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.MyInfo;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReviseUserInformationActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -94,12 +109,13 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        uri = data.getData();
 
         if(resultCode == RESULT_OK) {
             // result가 제대로 실행됨.
             if (requestCode == PICK_FROM_ALBUM ) {
                 //앨범 선택
+                uri = data.getData();
+
                 ExifInterface exif = null;
                 String imagePath = getRealPathFromURI(uri);
                 try {
@@ -188,10 +204,95 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
         }
     }
 
-    @Override
+    /*
+    private void connectNetwork() {
+        URL url = null;
+        try {
+            url = new URL("http://15011066.iptime.org:8888/userimageup");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        final String boundary = "SpecificString";
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+        //읽기 쓰기
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        try {
+            con.setRequestMethod("POST");
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        }
+
+        //캐시를 사용하지 않게 설정
+        con.setUseCaches(false);
+
+        final URLConnection finalCon = con;
+        new Thread() {
+            public void run() {
+
+                try {
+                    DataOutputStream wr = new DataOutputStream(finalCon.getOutputStream());
+                    wr.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + Constant.ADMIN_ID);
+                    wr.writeBytes("\r\n--" + boundary + "\r\n");
+                    wr.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n");
+                    wr.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+
+                    // Bitmap을 ByteBuffer로 전환
+                    Drawable d = imgProfile.getDrawable();
+                    Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+                    byte[] pixels = new byte[bitmap.getWidth() * bitmap.getHeight()];
+                    for (int i = 0; i < bitmap.getWidth(); ++i) {
+                        for (int j = 0; j < bitmap.getHeight(); ++j) {
+                            //we're interested only in the MSB of the first byte,
+                            //since the other 3 bytes are identical for B&W images
+                            pixels[i + j] = (byte) ((bitmap.getPixel(i, j) & 0x80) >> 7);
+                        }
+                    }
+                    wr.write(pixels);
+
+                    wr.writeBytes("\r\n--" + boundary + "--\r\n");
+                    wr.flush();
+                    wr.close();
+
+                    BufferedReader rd = null;
+                    // Response받기
+                    InputStream responseStream = new
+                            BufferedInputStream(finalCon.getInputStream());
+                    BufferedReader responseStreamReader =
+                            new BufferedReader(new InputStreamReader(responseStream));
+                    String line = "";
+                    StringBuilder stringBuilder = new StringBuilder();
+                    while ((line = responseStreamReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    responseStreamReader.close();
+                    String response = stringBuilder.toString();
+
+
+                    //Response stream종료
+                    responseStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.start();
+    }
+    */
+    
+   @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_complete_revise_user_information:
+                //connectNetwork();
             case R.id.btn_close_revise_user_information:
                 onBackPressed();
                 break;
