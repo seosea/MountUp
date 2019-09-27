@@ -2,15 +2,11 @@ package com.example.mountup.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.mountup.Helper.BackPressCloseHandler;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
@@ -23,6 +19,7 @@ public class IntroActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tv_loadPercent;
     private BackPressCloseHandler backPressCloseHandler;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +41,8 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     private void startLoading() {
-        final Handler handler = new Handler();
-        new Thread(new Runnable() {
+        handler = new Handler();
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (MountManager.getInstance().getLoadPercent() < 100) {
@@ -56,15 +53,16 @@ public class IntroActivity extends AppCompatActivity {
                             tv_loadPercent.setText(MountManager.getInstance().getLoadPercent() + " %");
                         }
                     });
-                }
-                try {
-                    // Sleep for 100 milliseconds to show the progress slowly.
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        // Sleep for 100 milliseconds to show the progress slowly.
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }).start();
+        });
+        thread.start();
     }
 
     @Override

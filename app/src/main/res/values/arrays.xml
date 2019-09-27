@@ -2,6 +2,7 @@
 <resources>
     <string-array name="mount_sort">
         <item>별점 순</item>
+        <item>가나다 순</item>
         <item>가까운 순</item>
         <item>높은 순</item>
         <item>낮은 순</item>

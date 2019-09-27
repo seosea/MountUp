@@ -1,14 +1,20 @@
 package com.example.mountup.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.InputMethod;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -50,6 +56,8 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
 
     private ArrayList<MountVO> m_bufferItems; // 버퍼로 사용할 리스트
     private TextView txtCurrentAddress;
+
+    private InputMethodManager imm;
 
     @Nullable
     @Override
@@ -107,8 +115,18 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
             }
         }
 
+        imm = (InputMethodManager)super.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         // EditText 필터
         m_et_mountSearch = (EditText) view.findViewById(R.id.et_mountSearch);
+        m_et_mountSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    imm.hideSoftInputFromWindow(m_et_mountSearch.getWindowToken(), 0 );
+                }
+                return true;
+            }
+        });
         m_et_mountSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -307,6 +325,21 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                     if (o1.getHeight() > o2.getHeight()) {
                         return 1;
                     } else if (o1.getHeight() < o2.getHeight()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+        } else if (str.equals("가나다 순")) {
+            Collections.sort(MountManager.getInstance().getItems(), new Comparator<MountVO>() {
+                @Override
+                public int compare(MountVO o1, MountVO o2) {
+                    if (o1.getName().toString().
+                            compareTo(o2.getName().toString()) > 0) {
+                        return 1;
+                    } else if (o1.getName().toString().
+                            compareTo(o2.getName().toString()) < 0) {
                         return -1;
                     } else {
                         return 0;

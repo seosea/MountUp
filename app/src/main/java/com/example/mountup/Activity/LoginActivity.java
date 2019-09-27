@@ -61,6 +61,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         initUser();
+        if (MountManager.getInstance().getItems().isEmpty()) {
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivity(intent);
+        }
 
         initView();
         initListener();
@@ -71,12 +75,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         connectNetwork();
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
-
-        if (MountManager.getInstance().getItems().isEmpty()) {
-            Intent intent = new Intent(this, IntroActivity.class);
-            startActivity(intent);
-            //initListener();
-        }
 
         getGPS();
     }
