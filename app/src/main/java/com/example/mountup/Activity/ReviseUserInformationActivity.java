@@ -1,5 +1,6 @@
 package com.example.mountup.Activity;
 
+import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -35,14 +36,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mountup.Helper.Constant;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.ServerConnect.WriteImageTask;
 import com.example.mountup.Singleton.MyInfo;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,6 +133,21 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
                 Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                 imgProfile.setImageBitmap(rotate(bitmap, exifDegree));
                 setImageRound();
+
+                //유저 이미지 업로드
+                String imageUploadURL = "http://15011066.iptime.org:8888/userimageup";
+                String key = "id";
+                String value = MyInfo.getInstance().getUser().getID();
+
+                WriteImageTask writeImageTask = new WriteImageTask(imageUploadURL,key,value, getRealFilePath(uri), new AsyncCallback(){
+                    @Override
+                    public void onSuccess(Object object) {
+                        Log.d("smh:user_image_upload","success");
+                    }
+                    @Override
+                    public void onFailure(Exception e) { }
+                });
+                writeImageTask.execute();
             }
         }
     }
@@ -202,6 +221,22 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
             }
 
         }
+    }
+
+    public String getRealFilePath(Uri contentUri) {
+
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Log.d("smh:uri",""+contentUri.toString());
+
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        cursor.moveToNext();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+        Uri uri = Uri.fromFile(new File(path));
+
+        Log.d("smh:", "getRealfilepath(), path : " + uri.toString());
+
+        cursor.close();
+        return path;
     }
 
     /*
@@ -287,7 +322,7 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
         }.start();
     }
     */
-    
+
    @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -317,6 +352,7 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
                         .setNeutralButton("앨범선택",albumListener)
                         .setNegativeButton("취소",cancelListenner)
                         .show();
+
                 break;
         }
     }

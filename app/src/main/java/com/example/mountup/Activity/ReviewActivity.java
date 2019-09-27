@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +19,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
+import com.example.mountup.Listener.AsyncCallback;
+import com.example.mountup.Model.User;
+import com.example.mountup.ServerConnect.MountImageTask;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.ServerConnect.ReviewImageTask;
+import com.example.mountup.ServerConnect.UserImageTask;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
 import com.example.mountup.R;
@@ -158,29 +164,50 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                 String reviewPic = jsonObj.getString("reviewPic");
                 int reviewLike =jsonObj.getInt("LIKE");
 
-                ReviewVO  newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewLike);
+                final ReviewVO  newReview = new ReviewVO();
+                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike);
                 //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
                 //비트맵 설정 안됨
 
-                if(reviewPic != "null") {
-                    String url_img = "http://15011066.iptime.org:8888/reviewimages/" + reviewPic;
-                    InputStream is = (InputStream) new URL(url_img).getContent();
-                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
-                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
-                }else{
+                Log.d("smh:image","");
 
-                }
+                //유저 이미지와 리뷰 이미지를 가져옴.
+                ReviewImageTask reviewImageTask = new ReviewImageTask(newReview, new AsyncCallback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Log.d("smh:review",newReview.getUserId());
+                        UserImageTask userImageTask = new UserImageTask(newReview, new AsyncCallback() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                m_bufferList.add(newReview);
+                                getData();
+                            }
 
-                Log.d("smh:review",reviewUserID);
-                m_bufferList.add(newReview);
-                
+                            @Override
+                            public void onFailure(Exception e) {
+                                m_bufferList.add(newReview);
+                                getData();
+                            }
+                        });
+                        userImageTask.execute();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
+                reviewImageTask.execute();
+//                if(reviewPic != "null") {
+//                    String url_img = "http://15011066.iptime.org:8888/reviewimages/" + reviewPic;
+//                    InputStream is = (InputStream) new URL(url_img).getContent();
+//                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
+//                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
+//                }
+//
+//                Log.d("smh:review",reviewUserID);
+//                m_bufferList.add(newReview);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

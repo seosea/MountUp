@@ -246,11 +246,10 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                     e.printStackTrace();
                 }
 
-                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,reviewID,getRealfilepath(m_uri),new AsyncCallback(){
+                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,"reviewID",reviewID,getRealFilePath(m_uri),new AsyncCallback(){
                     @Override
                     public void onSuccess(Object object) {
                         ContentValues values = new ContentValues();
-
                         values.put("reviewMntID", m_mountID);
 
                         StarTask starTask = new StarTask(m_reviewStarURL, values, new AsyncCallback() {
@@ -278,7 +277,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         writeTask.execute();
     }
 
-    public String getRealfilepath(Uri contentUri) {
+    public String getRealFilePath(Uri contentUri) {
 
         String[] proj = { MediaStore.Images.Media.DATA };
         Log.d("smh:uri",""+contentUri.toString());

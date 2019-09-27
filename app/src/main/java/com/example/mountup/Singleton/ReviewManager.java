@@ -6,13 +6,14 @@ public class ReviewManager {
 
     private ArrayList<ReviewVO> m_items;
 
+    private ReviewManager() {
+        m_items = new ArrayList();
+    }
+
     private static class ReviewManagerHolder {
         public static final ReviewManager instance = new ReviewManager();
     }
 
-    private ReviewManager() {
-        m_items = new ArrayList();
-    }
 
     public static ReviewManager getInstance() {
         return ReviewManagerHolder.instance;
