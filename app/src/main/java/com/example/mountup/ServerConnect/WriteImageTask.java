@@ -25,15 +25,19 @@ public class WriteImageTask extends AsyncTask<Void, Void, String> {
     private Exception m_exception;
 
     private String m_url;
-    private String m_reviewID;
+    private String key;
+    private String value;
     private String m_filePath;
 
-    public WriteImageTask(String m_url,String reviewID,String filePath, AsyncCallback m_callback) {
+    public WriteImageTask(String m_url,String key, String value,String filePath, AsyncCallback m_callback) {
         this.m_url = m_url;
-        this.m_reviewID = reviewID;
+        this.key = key;
+        this.value = value;
         this.m_filePath = filePath;
         this.m_callback = m_callback;
     }
+
+
 
     @Override
     protected void onPreExecute() {
@@ -77,7 +81,7 @@ public class WriteImageTask extends AsyncTask<Void, Void, String> {
             OutputStream os = con.getOutputStream();
             DataOutputStream wr = new DataOutputStream(os);
             wr.writeBytes("\r\n--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"reviewID\"\r\n\r\n" + m_reviewID);
+            wr.writeBytes("Content-Disposition: form-data; name=\""+ key +"\"\r\n\r\n" + value);
             wr.writeBytes("\r\n--" + boundary + "\r\n");
             wr.writeBytes("Content-Disposition: form-data; name=\"img\"; filename=\"image.jpg\"\r\n");
             wr.writeBytes("Content-Type: application/octet-stream\r\n\r\n");

@@ -8,10 +8,13 @@ public class ReviewVO {
     private int m_mntID;
     private String m_cotent; // 내용
     private Bitmap m_Image; // image
+    private Bitmap m_userImage;
     private int m_like;
     private double m_grade;
 
     private boolean m_Pic;
+
+    private String m_ImageName;
 
     public ReviewVO(){ }
 
@@ -48,13 +51,13 @@ public class ReviewVO {
         this.m_Pic = m_Pic;
     }
 
-    public int getM_reivewID() { return m_reivewID; }
+    public int getReivewID() { return m_reivewID; }
     public void setM_reivewID(int m_reivewID) { this.m_reivewID = m_reivewID; }
 
     public String getUserId() { return m_userID; }
     public void setUserId(String m_userId) { this.m_userID = m_userId; }
 
-    public int getM_mntID() { return m_mntID; }
+    public int getMntID() { return m_mntID; }
     public void setM_mntID(int m_mntID) { this.m_mntID = m_mntID; }
 
     public String getCotent() { return m_cotent; }
@@ -72,14 +75,19 @@ public class ReviewVO {
     public boolean isPic() { return m_Pic; }
     public void setPic(boolean m_Pic) { this.m_Pic = m_Pic; }
 
+    public Bitmap getUserImage() { return m_userImage; }
+    public void setUserImage(Bitmap m_userImage) { this.m_userImage = m_userImage; }
 
+    public String getImageName(){ return m_ImageName;}
+    public void setM_ImageName(String imageName ){ m_ImageName = imageName; }
 
-    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade, int m_like){
+    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade, String imageName,int m_like){
         this.m_reivewID = m_reivewID;
         this.m_userID = m_userID;
         this.m_mntID = m_mntID;
         this.m_cotent = m_cotent;
         this.m_grade = m_grade;
+        this.m_ImageName = imageName;
         this.m_like = m_like;
     }
 }

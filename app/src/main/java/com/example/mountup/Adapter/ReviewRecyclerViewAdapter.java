@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mountup.Fragment.MountMapFragment;
+import com.example.mountup.ServerConnect.LikeTask;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MountManager;
@@ -158,7 +159,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         m_url = "http://15011066.iptime.org:8888/api/like";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("reviewID",item.getM_reivewID());
+        contentValues.put("reviewID",item.getReivewID());
 
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();
@@ -237,14 +238,15 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_coment.setText(item.getCotent());
             m_textView_like.setText(String.valueOf(item.getLike()));
             for(MountVO mount : MountManager.getInstance().getItems()){
-                if(mount.getID() == item.getM_mntID()){
-                    m_textView_mount_name.setText(String.valueOf(item.getM_mntID()));
+                if(mount.getID() == item.getMntID()){
+                    m_textView_mount_name.setText(String.valueOf(item.getMntID()));
                     m_textView_mount_name.setText(mount.getName());
                 }
             }
 
             m_ratingbar_grade.setRating((float) item.getGrade());
 
+            //좋아요 버튼 클릭시
             if (item.isPic() == true) {
                 m_imageButton_like.setImageResource(R.drawable.heart);
             } else {
@@ -258,6 +260,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     m_imageView_user_image.setClipToOutline(true);
                 }
             }
+            m_imageView_user_image.setImageBitmap(item.getUserImage());
         }
     }
 
