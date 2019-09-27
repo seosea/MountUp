@@ -13,18 +13,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MountTask extends AsyncTask<Void, Void, Void> {
-    AsyncCallback m_callback;
-    Exception m_exception;
-    String m_url;
-    ContentValues m_values;
+    private int taskType;
+    private AsyncCallback m_callback;
+    private Exception m_exception;
+    private String m_url;
+    private ContentValues m_values;
 
-    public MountTask(String url, ContentValues values, AsyncCallback callback) {
+    public MountTask(int taskType, String url, ContentValues values, AsyncCallback callback) {
         this.m_callback = callback;
         this.m_url = url;
         this.m_values = values;
+        this.taskType = taskType;
     }
 
     @Override
@@ -41,7 +44,11 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
             PostHttpURLConnection requestHttpURLConnection = new PostHttpURLConnection();
             result = requestHttpURLConnection.request(m_url, m_values);
 
-            initMountFromJson(result);
+            if (taskType == Constant.GET_NEW)
+                initMountFromJson(result);
+            else if (taskType == Constant.UPDATE_STAR) {
+                updateStarFromJson(result);
+            }
         } catch(Exception e) {
             this.m_exception = e;
             return null;
@@ -57,6 +64,30 @@ public class MountTask extends AsyncTask<Void, Void, Void> {
             m_callback.onSuccess(true);
         } else {
             m_callback.onFailure(m_exception);
+        }
+    }
+
+    private void updateStarFromJson(String mountList_json_str) {
+        try {
+            ArrayList<MountVO> MountList = MountManager.getInstance().getItems();
+
+            JSONArray jsonArray = new JSONArray(mountList_json_str);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                int mntID = jsonObj.getInt("mntID");
+                double mntStar = jsonObj.getDouble("mntStar");
+                for (MountVO mount : MountList) {
+                    if (mount.getID() == mntID) {
+                        mount.setGrade((float)mntStar);
+                        break;
+                    }
+                }
+            }
+
+            //MountManager.getInstance().sortMountList(MountManager.getInstance().getCurrentSort());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

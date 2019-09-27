@@ -29,16 +29,23 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
+import com.example.mountup.ServerConnect.MountTask;
 import com.example.mountup.ServerConnect.StarTask;
 import com.example.mountup.ServerConnect.WriteImageTask;
 import com.example.mountup.ServerConnect.WriteTask;
+import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
+import com.example.mountup.VO.MountVO;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ReviewWriteActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton btn_close;
@@ -49,7 +56,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     private EditText editText_review;
     private TextView tv_review_length;
     //view part
-    private String m_mountID;
+    private int m_mountID;
     private Uri m_uri;
 
     private String m_reviewSentURL;
@@ -77,7 +84,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         m_reviewStarURL = "http://15011066.iptime.org:8888/api/star";
 
         Intent intent = getIntent();
-        m_mountID = intent.getStringExtra("mountID");
+        m_mountID = Integer.parseInt(intent.getStringExtra("mountID"));
 
         checkPermission();
         //권한 체크
@@ -87,7 +94,6 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         btn_close = findViewById(R.id.btn_review_close);
         btn_imageButton = findViewById(R.id.btn_review_imageButton);
         btn_submit = findViewById(R.id.btn_review_submit);
-
 
         ratingBar_review = findViewById(R.id.ratingBar_reivew);
         editText_review = findViewById(R.id.editText_review);
@@ -256,7 +262,19 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                         StarTask starTask = new StarTask(m_reviewStarURL, values, new AsyncCallback() {
                             @Override
                             public void onSuccess(Object object) {
-                                finish();
+                                String url = Constant.URL + "/api/mntall";
+                                MountTask mountTask = new MountTask(Constant.UPDATE_STAR, url, null, new AsyncCallback() {
+                                    @Override
+                                    public void onSuccess(Object object) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                    }
+                                });
+                                mountTask.execute();
                             }
 
                             @Override
@@ -265,7 +283,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                             }
                         });
                         starTask.execute();
-                    }
+                }
                     @Override
                     public void onFailure(Exception e) { }
                     });

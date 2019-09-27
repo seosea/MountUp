@@ -383,12 +383,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //tokenTask.executeOnExecutor()
     }
 
+    /*
     private void loadMountData() {
         // 산 URL 설정
         String url = Constant.URL + "/api/mntall";
 
         // execute, 산 리스트 생성 및 저장
-        MountTask mountTask = new MountTask(url, null, new AsyncCallback() {
+        MountTask mountTask = new MountTask(Constant.GET_NEW, url, null, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
                 Log.d("mmee:mountTask", "get mount resource success!");
@@ -401,4 +402,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
         mountTask.execute();
     }
+    */
 }

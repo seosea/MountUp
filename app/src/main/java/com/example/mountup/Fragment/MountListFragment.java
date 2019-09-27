@@ -36,6 +36,7 @@ import com.example.mountup.Helper.MountListRecyclerViewDecoration;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.MountImageTask;
+import com.example.mountup.ServerConnect.MountTask;
 import com.example.mountup.ServerConnect.UserClimbedListTask;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
@@ -163,7 +164,10 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         // 왜 자꾸 자동으로 실행되는지
                         Log.d("mmee:MountListFragment", "MountList 정렬");
-                        sortMountList(adapterView.getItemAtPosition(i).toString());
+                        MountManager.getInstance().sortMountList(adapterView.getItemAtPosition(i).toString());
+                        loadFirstData();
+                        m_mountRecycleView.smoothScrollToPosition(0);
+                        //m_adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -171,7 +175,6 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
 
                     }
                 });
-
                 //sortMountList(m_sortSpinner.getSelectedItem().toString());
             }
 
@@ -203,7 +206,11 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                 //loadFirstData();
 
                 m_et_mountSearch.setText("");
-                sortMountList(m_sortSpinner.getSelectedItem().toString());
+                //MountManager.getInstance().sortMountList(m_sortSpinner.getSelectedItem().toString());
+
+                loadFirstData();
+                m_mountRecycleView.smoothScrollToPosition(0);
+                //m_adapter.notifyDataSetChanged();
             }
         }, 1000);
     }
@@ -276,7 +283,8 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
         mountImageTask.execute();
     }
 
-    public void sortMountList(String str) {
+    public void sortMountList(String str, boolean isRefresh) {
+        /*
         Log.d("mmee:MountListFragment", "spinner changed : " + str);
 
         if (str.equals("별점 순")) {
@@ -346,11 +354,13 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                     }
                 }
             });
-        }
+        }*/
 
-        loadFirstData();
-        m_mountRecycleView.smoothScrollToPosition(0);
-        m_adapter.notifyDataSetChanged();
+        if (isRefresh) {
+            loadFirstData();
+            m_mountRecycleView.smoothScrollToPosition(0);
+            m_adapter.notifyDataSetChanged();
+        }
     }
 
 
