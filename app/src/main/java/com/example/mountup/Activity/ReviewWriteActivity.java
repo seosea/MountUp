@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
-import com.example.mountup.ServerConnect.StarTask;
 import com.example.mountup.ServerConnect.WriteImageTask;
 import com.example.mountup.ServerConnect.WriteTask;
 import com.example.mountup.Singleton.MyInfo;
@@ -50,11 +49,9 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_review_length;
     //view part
     private String m_mountID;
-    private Uri m_uri;
-
     private String m_reviewSentURL;
     private String m_reviewImageUploadURL;
-    private String m_reviewStarURL;
+    private Uri m_uri;
 
     private static final int PICK_FROM_ALBUM = 1;
 
@@ -74,7 +71,6 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     void initData(){
         m_reviewSentURL = "http://15011066.iptime.org:8888/api/review";
         m_reviewImageUploadURL = "http://15011066.iptime.org:8888/reviewimageup";
-        m_reviewStarURL = "http://15011066.iptime.org:8888/api/star";
 
         Intent intent = getIntent();
         m_mountID = intent.getStringExtra("mountID");
@@ -249,22 +245,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                 WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,reviewID,getRealfilepath(m_uri),new AsyncCallback(){
                     @Override
                     public void onSuccess(Object object) {
-                        ContentValues values = new ContentValues();
-
-                        values.put("reviewMntID", m_mountID);
-
-                        StarTask starTask = new StarTask(m_reviewStarURL, values, new AsyncCallback() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                finish();
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-
-                            }
-                        });
-                        starTask.execute();
+                        finish();
                     }
                     @Override
                     public void onFailure(Exception e) { }

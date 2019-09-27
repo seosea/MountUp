@@ -74,12 +74,11 @@ public class ReviewVO {
 
 
 
-    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade, int m_like){
+    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade){
         this.m_reivewID = m_reivewID;
         this.m_userID = m_userID;
         this.m_mntID = m_mntID;
         this.m_cotent = m_cotent;
         this.m_grade = m_grade;
-        this.m_like = m_like;
     }
 }
