@@ -155,19 +155,15 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
                 String reviewString = jsonObj.getString("reviewString");
                 Double reviewStar  = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
+                int reviewLike = jsonObj.getInt("LIKE");
 
                 ReviewVO newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar);
+                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewLike);
                 //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
                 //비트맵 설정 안됨
 
                 if(reviewPic != "null") {
                     String url_img = "http://15011066.iptime.org:8888/reviewimages/" + reviewPic;
-                    InputStream is = (InputStream) new URL(url_img).getContent();
-                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
-                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
-                }else{
-                    String url_img = "http://15011066.iptime.org:8888/reviewimages/1569147222264.jpg";
                     InputStream is = (InputStream) new URL(url_img).getContent();
                     Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
                     newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());

@@ -242,9 +242,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     m_textView_mount_name.setText(mount.getName());
                 }
             }
-
             m_ratingbar_grade.setRating((float) item.getGrade());
-            //m_imageView_user_image.setImageBitmap(item.getM_main_image());
+
             if (item.isPic() == true) {
                 m_imageButton_like.setImageResource(R.drawable.heart);
             } else {
