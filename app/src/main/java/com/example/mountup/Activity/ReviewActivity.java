@@ -171,6 +171,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                 }
                 Log.d("smh:review",reviewUserID);
                 m_bufferList.add(newReview);
+                
             }
         } catch (JSONException e) {
             e.printStackTrace();
