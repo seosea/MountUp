@@ -1,13 +1,11 @@
 package com.example.mountup.Activity;
 
-import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,7 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,39 +26,20 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
-import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.ServerConnect.WriteImageTask;
 import com.example.mountup.Singleton.MyInfo;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReviseUserInformationActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -86,6 +64,18 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
 
         if(MyInfo.getInstance().getUser().getID() != null)
             txtID.setText(MyInfo.getInstance().getUser().getID());
+
+        String url = "http://15011066.iptime.org:8888/userimages/";
+        NetworkTask networkTask = new NetworkTask(url, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                imgProfile.setImageBitmap(MyInfo.getInstance().getUser().getProfile());
+                setImageRound();
+            }
+            @Override
+            public void onFailure(Exception e) {}
+        });
+        networkTask.execute();
     }
 
     private void initView(){
@@ -354,6 +344,44 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
                         .show();
 
                 break;
+        }
+    }
+
+    public class NetworkTask extends AsyncTask<Void, Void, Void> {
+        private String url;
+        private AsyncCallback m_callback;
+        private Exception m_exception;
+
+        public NetworkTask(String url,AsyncCallback callback) {
+            this.url = url;
+            this.m_callback = callback;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String user_img = url + MyInfo.getInstance().getUser().getID()+".jpg";
+            InputStream is_user = null;
+            try {
+                is_user = (InputStream) new URL(user_img).getContent();
+            } catch (IOException e) {
+                e.printStackTrace();
+                m_exception = e;
+            }
+
+            if(is_user != null) {
+                Drawable user_drawable = Drawable.createFromStream(is_user, "mount" + MyInfo.getInstance().getUser().getID());
+                MyInfo.getInstance().getUser().setProfile(((BitmapDrawable) user_drawable).getBitmap());
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (m_callback != null && m_exception == null) {
+                m_callback.onSuccess(result);
+            } else {
+                m_callback.onFailure(m_exception);
+            }
         }
     }
 }

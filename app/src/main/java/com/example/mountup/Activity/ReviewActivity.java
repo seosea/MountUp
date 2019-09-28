@@ -221,6 +221,12 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         overridePendingTransition(R.anim.anim_slide_in_top,R.anim.anim_slide_out_bottom);
     }
 
+    /*********************************
+
+            나중에 수정 필요함.
+
+    ************************************* */
+
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
         private String url;
