@@ -29,15 +29,25 @@
 
                 <ImageView
                     android:id="@+id/img_profile_user"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     app:srcCompat="@drawable/ic_user_main" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="right"
+                    android:layout_marginTop="7dp"
+                    android:gravity="left|center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -55,32 +65,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBlack"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:gravity="left|center_vertical"
-                android:orientation="vertical">
 
                 <TableLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="left|center_vertical">
 
                     <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorMain"
                             android:text="총 등산 높이"
+                            android:textColor="@color/colorMain"
                             android:textSize="12sp" />
 
                         <TextView
@@ -101,8 +104,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorMain"
                             android:text="등산 횟수"
+                            android:textColor="@color/colorMain"
                             android:textSize="12sp" />
 
                         <TextView
@@ -118,7 +121,6 @@
                 </TableLayout>
             </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="10dp"
@@ -153,15 +155,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dp"
             android:text="개 산 정복"
-            android:textSize="12sp"
-            android:textColor="@color/colorGray" />
+            android:textColor="@color/colorGray"
+            android:textSize="12sp" />
     </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -183,7 +187,7 @@
     <Button
         android:id="@+id/btn_user_my_review"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@color/colorWhite"
         android:text="내 리뷰"
         android:textAlignment="textStart"
@@ -200,7 +204,7 @@
     <Button
         android:id="@+id/btn_user_like_review"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@color/colorWhite"
         android:text="좋아요 누른 리뷰"
         android:textAlignment="textStart"

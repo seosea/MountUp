@@ -17,6 +17,8 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -266,6 +268,8 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                                     @Override
                                     public void onSuccess(Object object) {
                                         finish();
+                                        Message msgProfile = handlerToast.obtainMessage();
+                                        handlerToast.sendMessage(msgProfile);
                                     }
 
                                     @Override
@@ -294,6 +298,15 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         });
         writeTask.execute();
     }
+
+    final Handler handlerToast = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Toast.makeText(ReviewWriteActivity.this, "리뷰를 등록하였습니다", Toast.LENGTH_SHORT).show();
+        }
+
+    };
 
     public String getRealFilePath(Uri contentUri) {
 
