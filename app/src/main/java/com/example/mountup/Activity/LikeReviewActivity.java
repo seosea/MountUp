@@ -1,6 +1,7 @@
 package com.example.mountup.Activity;
 
 import android.content.ContentValues;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -62,7 +63,18 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
         contentValues.put("id", MyInfo.getInstance().getUser().getID());
 
-        NetworkTask networkTask = new NetworkTask(m_url, contentValues);
+        NetworkTask networkTask = new NetworkTask(m_url, contentValues, new AsyncCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                Log.d("mmee:ReviewActivity","get review success");
+                getData();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.d("mmee:ReviewActivity","get review fail");
+            }
+        });
         networkTask.execute();
     }
 
@@ -149,50 +161,69 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
             JSONArray jsonArray = new JSONArray(result);
             Log.d("smh:length",""+jsonArray.length());
 
-            for(int i =0;i<jsonArray.length();i++){
+            for(int i =0;i<jsonArray.length();i++) {
+                Log.d("mmee:ReviewActivity","1 review");
+
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
                 int reviewID = jsonObj.getInt("reviewID");
                 String reviewUserID = jsonObj.getString("reviewUserID");
                 int reviewMntID = jsonObj.getInt("reviewMntID");
                 String reviewString = jsonObj.getString("reviewString");
-                Double reviewStar  = jsonObj.getDouble("reviewStar");
+                Double reviewStar = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
                 int reviewLike = jsonObj.getInt("LIKE");
+                final ReviewVO newReview = new ReviewVO();
 
-                final ReviewVO  newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,true);
+                newReview.setReview(reviewID, reviewUserID, reviewMntID, reviewString, reviewStar, reviewPic, reviewLike, true);
 
-                ReviewImageTask reviewImageTask = new ReviewImageTask(newReview, new AsyncCallback() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        Log.d("smh:review",newReview.getUserId());
-                        UserImageTask userImageTask = new UserImageTask(newReview, new AsyncCallback() {
-                            @Override
-                            public void onSuccess(Object object) {
-                                m_bufferList.add(newReview);
-                                getData();
-                            }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                m_bufferList.add(newReview);
-                                getData();
-                            }
-                        });
-                        userImageTask.execute();
-                    }
+                getReviewImage(newReview);
+                getUserImage(newReview);
 
-                    @Override
-                    public void onFailure(Exception e) {
-                    }
-                });
-                reviewImageTask.execute();
+                m_bufferList.add(newReview);
             }
-            Log.d("smh:length2",""+m_bufferList.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getReviewImage(ReviewVO newReview) {
+        InputStream is = null;
+        try {
+            String reviewImg_url = "http://15011066.iptime.org:8888/reviewimages/" + newReview.getImageName();
+            //Log.d("mmee:ReviewActivity", "url : " + reviewImg_url + "\nininputStream : " + is.toString());
+            is = (InputStream) new URL(reviewImg_url).getContent();
+        } catch (IOException e) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_mountain_ranking_main);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            newReview.setImage(bitmap);
+            e.printStackTrace();
+            return;
+        }
+
+        Drawable review_drawable = Drawable.createFromStream(is, "mount" + newReview.getReivewID());
+        newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
+        Log.d("mmee:ReviewActivity", "Get review image");
+    }
+
+    public void getUserImage(ReviewVO newReview) {
+        InputStream is = null;
+        try {
+            String userImg_url = "http://15011066.iptime.org:8888/userimages/" + newReview.getUserId() + ".jpg";
+            is = (InputStream) new URL(userImg_url).getContent();
+
+        } catch (IOException e) {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_mountain_ranking_main);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            newReview.setImage(bitmap);
+            e.printStackTrace();
+            return;
+        }
+
+        Drawable user_drawable = Drawable.createFromStream(is, "mount" + newReview.getUserId());
+        newReview.setUserImage(((BitmapDrawable) user_drawable).getBitmap());
+        Log.d("mmee:ReviewActivity", "Get user image");
     }
 
     @Override
@@ -206,10 +237,14 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
+        private AsyncCallback callback;
+        private Exception exception;
         private String url;
         private ContentValues values;
 
-        public NetworkTask(String url, ContentValues values) {
+        public NetworkTask(String url, ContentValues values, AsyncCallback callback) {
+            this.exception = null;
+            this.callback = callback;
             this.url = url;
             this.values = values;
         }
@@ -223,14 +258,17 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
             Log.d("smh:result",result);
 
             receiveReview(result);
-
             return result;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            getData();
+            if (callback != null && exception == null) {
+                callback.onSuccess(true);
+            } else {
+                callback.onFailure(exception);
+            }
         }
     }
 }
