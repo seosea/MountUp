@@ -163,9 +163,14 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                 Double reviewStar  = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
                 int reviewLike =jsonObj.getInt("LIKE");
-
+                int reviewIFLIKE = jsonObj.getInt("IFLIKE");
                 final ReviewVO  newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike);
+                if(reviewIFLIKE == 1){
+                    newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,true);
+                }
+                else{
+                    newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,false);
+                }
                 //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
                 //비트맵 설정 안됨
 

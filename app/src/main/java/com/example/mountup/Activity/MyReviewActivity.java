@@ -158,9 +158,10 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
                 Double reviewStar  = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
                 int reviewLike = jsonObj.getInt("LIKE");
+                boolean reviewIFLIKE = jsonObj.getBoolean("IFLIKE");
 
                 ReviewVO  newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike);
+                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,reviewIFLIKE);
                 //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
                 //비트맵 설정 안됨
 

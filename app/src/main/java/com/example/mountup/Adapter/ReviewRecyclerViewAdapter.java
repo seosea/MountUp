@@ -26,6 +26,7 @@ import com.example.mountup.ServerConnect.LikeTask;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
 import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MountManager;
+import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
 import com.example.mountup.VO.ReviewVO;
 import com.example.mountup.R;
@@ -127,15 +128,11 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View view) {
                     int like;
                     if(item.isPic() == true){
-                        /*
                         item.setPic(false);
-
                         item.setLike(item.getLike()-1);
-
-                        Log.d("like",""+item.getLike());
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
-                        */
+                        connectNetworkLike("http://15011066.iptime.org:8888/api/likecancel",item);
                     }
                     else{
                         item.setPic(true);
@@ -143,7 +140,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart);
                         Log.d("like",""+item.getLike());
-                        connectNetworkLike(item);
+                        connectNetworkLike("http://15011066.iptime.org:8888/api/like",item);
                     }
                 }
             });
@@ -155,12 +152,14 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }//position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
 
 
-    private void connectNetworkLike(ReviewVO item){
-        m_url = "http://15011066.iptime.org:8888/api/like";
+    private void connectNetworkLike(String url,ReviewVO item){
+        m_url = url;
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("reviewID",item.getReivewID());
+        contentValues.put("id", MyInfo.getInstance().getUser().getID());
 
+        Log.d("smh:리뷰보낸거",""+item.getReivewID()+MyInfo.getInstance().getUser().getID());
         NetworkTask networkTask = new NetworkTask(m_url,contentValues);
         networkTask.execute();
     }
@@ -214,7 +213,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         TextView m_textView_like; // review how many people like review
         TextView m_textView_mount_name;
         ImageView m_imageView_user_image;
-        ImageView m_imageView_iamge; // review main image
+        ImageView m_imageView_image; // review main image
         ImageButton m_imageButton_like;
 
         RatingBar m_ratingbar_grade;
@@ -228,7 +227,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             m_textView_mount_name = itemView.findViewById(R.id.txt_mount_name_review);
 
             m_imageView_user_image = itemView.findViewById(R.id.iv_review_user_profile);
-            m_imageView_iamge = itemView.findViewById(R.id.iv_review_image);
+            m_imageView_image = itemView.findViewById(R.id.iv_review_image);
             m_imageButton_like = itemView.findViewById(R.id.btn_review_heart_button);
             m_ratingbar_grade = itemView.findViewById(R.id.rb_review_grade);
         }
@@ -252,7 +251,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
             }
-            m_imageView_iamge.setImageBitmap(item.getImage());
+            m_imageView_image.setImageBitmap(item.getImage());
 
             if(m_imageView_user_image != null) {
                 m_imageView_user_image.setBackground(new ShapeDrawable(new OvalShape()));

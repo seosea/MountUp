@@ -81,7 +81,7 @@ public class ReviewVO {
     public String getImageName(){ return m_ImageName;}
     public void setM_ImageName(String imageName ){ m_ImageName = imageName; }
 
-    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade, String imageName,int m_like){
+    public void setReview(int m_reivewID, String m_userID, int m_mntID, String m_cotent, double m_grade, String imageName,int m_like,boolean m_Pic){
         this.m_reivewID = m_reivewID;
         this.m_userID = m_userID;
         this.m_mntID = m_mntID;
@@ -89,5 +89,6 @@ public class ReviewVO {
         this.m_grade = m_grade;
         this.m_ImageName = imageName;
         this.m_like = m_like;
+        this.m_Pic = m_Pic;
     }
 }
