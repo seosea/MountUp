@@ -18,6 +18,7 @@ public class MountManager {
 
     private int loadPercent;
     private String currentSort;
+    private int seletedMountID;
 
     private MountManager() {
         m_items = new ArrayList();
@@ -51,6 +52,17 @@ public class MountManager {
         return mount_bitmap;
     }
 
+    public MountVO getMountDataFromID(int mountID) {
+        MountVO mount = new MountVO();
+        for (MountVO item : MountManager.getInstance().getItems()) {
+            if (item.getID() == mountID) {
+                mount = item;
+                break;
+            }
+        }
+        return mount;
+    }
+
     public void setLoadPercent(int percent) {
         loadPercent = percent;
     }
@@ -58,6 +70,10 @@ public class MountManager {
     public int getLoadPercent() {
         return loadPercent;
     }
+
+    public void setSeletedMountID(int id) { seletedMountID = id; }
+
+    public int getSeletedMountID() { return seletedMountID; }
 
     public void setCurrentSort(String sort) {
         currentSort = sort;

@@ -206,7 +206,7 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                 //loadFirstData();
 
                 m_et_mountSearch.setText("");
-                //MountManager.getInstance().sortMountList(m_sortSpinner.getSelectedItem().toString());
+                MountManager.getInstance().sortMountList(m_sortSpinner.getSelectedItem().toString());
 
                 loadFirstData();
                 m_mountRecycleView.smoothScrollToPosition(0);

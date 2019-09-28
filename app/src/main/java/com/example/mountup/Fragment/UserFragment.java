@@ -131,13 +131,12 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
 
         m_url = "http://15011066.iptime.org:8888/api/userinfo";
 
-        ContentValues contentValuesUser = new ContentValues();
-
-        NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
-        networkTaskUser.execute();
-
         // User 등반 리스트 갱신
         refreshUserClimbedList();
+
+        ContentValues contentValuesUser = new ContentValues();
+        NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
+        networkTaskUser.execute();
 
         return view;
     }

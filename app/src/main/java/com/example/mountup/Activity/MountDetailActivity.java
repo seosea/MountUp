@@ -3,6 +3,7 @@ package com.example.mountup.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
 import com.example.mountup.Popup.ConfirmDialog;
+import com.example.mountup.Popup.MountImagePopup;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
@@ -33,36 +35,39 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
     private ConfirmDialog errDialog;
 
+    private MountImagePopup mountImagePopup;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_mount_detail);
 
-        initActivityWidget();
+        initActivity();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mountImagePopup = new MountImagePopup(this);
     }
 
-    public MountVO getMountDataFromID(int mountID) {
-        MountVO mount = new MountVO();
-        for (MountVO item : MountManager.getInstance().getItems()) {
-            //Log.d("mmee:MountDetail","item.getID() : " + item.getID() + " / intent : " + Integer.parseInt(intent.getStringExtra("MountID")));
-            if (item.getID() == mountID) {
-                mount = item;
-                break;
-            }
-        }
-        return mount;
-    }
+    public void initActivity() {
+        m_mount = MountManager.getInstance().getMountDataFromID
+                (Integer.parseInt(getIntent().getStringExtra("MountID")));
 
-    public void initActivityWidget() {
-        m_mount = getMountDataFromID(Integer.parseInt(getIntent().getStringExtra("MountID")));
+        MountManager.getInstance().setSeletedMountID(m_mount.getID());
 
         //Log.d("mmee:initActivityWidget","Thumbnail : " + m_mount.getThumbnail());
         ImageView m_iv_mountThumbnail = (ImageView) this.findViewById(R.id.iv_mountThumbnail);
         m_iv_mountThumbnail.setImageBitmap(m_mount.getThumbnail());
+
+        m_iv_mountThumbnail.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mountImagePopup.show();
+                return false;
+            }
+        });
 
         TextView m_tv_mountName = (TextView) this.findViewById(R.id.tv_mountName);
         m_tv_mountName.setText(m_mount.getName());
