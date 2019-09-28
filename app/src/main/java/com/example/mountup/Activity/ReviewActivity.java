@@ -171,10 +171,6 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                 else{
                     newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,false);
                 }
-                //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
-                //비트맵 설정 안됨
-
-                Log.d("smh:image","");
 
                 //유저 이미지와 리뷰 이미지를 가져옴.
                 ReviewImageTask reviewImageTask = new ReviewImageTask(newReview, new AsyncCallback() {
@@ -202,15 +198,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                     }
                 });
                 reviewImageTask.execute();
-//                if(reviewPic != "null") {
-//                    String url_img = "http://15011066.iptime.org:8888/reviewimages/" + reviewPic;
-//                    InputStream is = (InputStream) new URL(url_img).getContent();
-//                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
-//                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
-//                }
-//
-//                Log.d("smh:review",reviewUserID);
-//                m_bufferList.add(newReview);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

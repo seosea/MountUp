@@ -41,7 +41,7 @@ import static androidx.recyclerview.widget.RecyclerView.*;
 
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ArrayList<ReviewVO> m_reivewItems;
-    private OnLoadMoreListener onLoadMoreListener;
+
     private boolean isLoading;
     private int lastVisibleItem, totalItemCount;
     private int visibleThreshold = 2;
@@ -50,6 +50,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private final int VIEW_TYPE_LOADING = 1;
 
     private String m_url;
+
+    private OnLoadMoreListener onLoadMoreListener;
 
     public int getItemViewType(int position) { //null값인 경우 로딩타입
         return m_reivewItems.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
@@ -132,7 +134,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         item.setLike(item.getLike()-1);
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart_uncheck);
-                        connectNetworkLike("http://15011066.iptime.org:8888/api/likecancel",item);
+                        connectNetworkLike("http://15011066.iptime.org:8888/api/likecancel/",item);
                     }
                     else{
                         item.setPic(true);
@@ -140,7 +142,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         ((ItemViewHolder) holder).m_textView_like.setText(String.valueOf(item.getLike()));
                         ((ItemViewHolder) holder).m_imageButton_like.setImageResource(R.drawable.heart);
                         Log.d("like",""+item.getLike());
-                        connectNetworkLike("http://15011066.iptime.org:8888/api/like",item);
+                        connectNetworkLike("http://15011066.iptime.org:8888/api/like/",item);
                     }
                 }
             });

@@ -45,20 +45,20 @@
 
         <ImageView
             android:id="@+id/img_profile_revise_user_information"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             app:srcCompat="@drawable/ic_user_main" />
 
         <ImageButton
             android:id="@+id/btn_upload_image_revise_user_information"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/img_profile_revise_user_information"
             android:layout_marginStart="-30dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/img_profile_revise_user_information"
             android:background="@drawable/box_round_black_border"
             android:src="@drawable/ic_camera" />
@@ -69,27 +69,35 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="207dp"
-            android:textStyle="bold"
-            android:text="아이디 : "
-            android:textSize="16sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="300dp"
+            android:gravity="center"
+            android:text="아이디"
+            android:textColor="@color/colorGray"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
         <TextView
             android:id="@+id/txt_id_revise_user_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="95dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="204dp"
-            android:layout_marginEnd="42dp"
-            android:layout_toRightOf="@+id/textView5"
+            android:layout_below="@+id/textView5"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_alignEnd="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="0dp"
+            android:gravity="center"
             android:padding="3dp"
             android:text="id"
-            android:textSize="16sp" />
+            android:textColor="@color/colorMain"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
 
         <Button

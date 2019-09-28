@@ -18,8 +18,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
 import com.example.mountup.Helper.Constant;
+import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.R;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
+import com.example.mountup.ServerConnect.ReviewImageTask;
+import com.example.mountup.ServerConnect.UserImageTask;
 import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.ReviewVO;
@@ -46,7 +49,6 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
     private Button btn_reviewExit;
 
     private String m_url;
-    private String m_mountID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,30 +158,38 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
                 Double reviewStar  = jsonObj.getDouble("reviewStar");
                 String reviewPic = jsonObj.getString("reviewPic");
                 int reviewLike = jsonObj.getInt("LIKE");
-                boolean reviewIFLIKE = jsonObj.getBoolean("IFLIKE");
 
-                ReviewVO newReview = new ReviewVO();
-                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,reviewIFLIKE);
-                //설정 안된게 좋아요 수, 이 리뷰를 좋아요 했는지
-                //비트맵 설정 안됨
+                final ReviewVO  newReview = new ReviewVO();
+                newReview.setReview(reviewID,reviewUserID,reviewMntID,reviewString,reviewStar,reviewPic,reviewLike,true);
 
-                if(reviewPic != "null") {
-                    String url_img = "http://15011066.iptime.org:8888/reviewimages/" + reviewPic;
-                    InputStream is = (InputStream) new URL(url_img).getContent();
-                    Drawable review_drawable = Drawable.createFromStream(is, "mount" + (i + 1));
-                    newReview.setImage(((BitmapDrawable) review_drawable).getBitmap());
-                }
-                LikeReviewManager.getInstance().getItems().add(newReview);
+                ReviewImageTask reviewImageTask = new ReviewImageTask(newReview, new AsyncCallback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Log.d("smh:review",newReview.getUserId());
+                        UserImageTask userImageTask = new UserImageTask(newReview, new AsyncCallback() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                m_bufferList.add(newReview);
+                                getData();
+                            }
 
-                Log.d("smh:review",reviewUserID);
-                m_bufferList.add(newReview);
+                            @Override
+                            public void onFailure(Exception e) {
+                                m_bufferList.add(newReview);
+                                getData();
+                            }
+                        });
+                        userImageTask.execute();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
+                reviewImageTask.execute();
             }
             Log.d("smh:length2",""+m_bufferList.size());
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
