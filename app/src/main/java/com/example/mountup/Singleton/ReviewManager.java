@@ -14,7 +14,6 @@ public class ReviewManager {
         public static final ReviewManager instance = new ReviewManager();
     }
 
-
     public static ReviewManager getInstance() {
         return ReviewManagerHolder.instance;
     }
