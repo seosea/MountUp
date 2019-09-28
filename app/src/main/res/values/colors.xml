@@ -12,4 +12,5 @@
     <color name="colorBlack">#000000</color>
     <color name="colorGold">#FFCC33</color>
     <color name="colorMain">#7DB249</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

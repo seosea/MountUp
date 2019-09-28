@@ -41,6 +41,7 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/main_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
@@ -49,13 +50,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <Button
                     android:id="@+id/btn_writeReview"
@@ -76,9 +77,9 @@
                     android:id="@+id/iv_mountThumbnail"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:src="@drawable/mountain_sample" />
 
@@ -100,8 +101,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
                                 android:text="높이"
-                                android:textSize="15dp"
-                                android:textColor="@color/colorMain" />
+                                android:textColor="@color/colorMain"
+                                android:textSize="15dp" />
 
                             <TextView
                                 android:id="@+id/tv_mountHeight"
@@ -119,8 +120,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
                                 android:text="거리"
-                                android:textSize="15dp"
-                                android:textColor="@color/colorMain"/>
+                                android:textColor="@color/colorMain"
+                                android:textSize="15dp" />
 
                             <TextView
                                 android:id="@+id/tv_mountDistance"
@@ -140,8 +141,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal"
                             android:layout_gravity="right"
+                            android:orientation="horizontal"
                             android:weightSum="1">
 
                             <RatingBar
@@ -149,9 +150,9 @@
                                 style="@style/starRatingBar"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:stepSize="0.1"
                                 android:isIndicator="true"
-                                android:numStars="5" />
+                                android:numStars="5"
+                                android:stepSize="0.1" />
 
                             <TextView
                                 android:id="@+id/txt_mount_grade_map"
@@ -179,8 +180,8 @@
                 android:id="@+id/tv_mountIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="20dp"
+                android:layout_weight="1"
                 android:text="아름답고 푸른 백두산입니다." />
 
             <LinearLayout
@@ -198,12 +199,25 @@
                     android:drawableLeft="@drawable/ic_marker_gray"
                     android:text="OO시 OO구" />
 
-                <fragment
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                <RelativeLayout
+                    android:id="@+id/map_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    tools:context=".MapsActivity" />
+                    android:layout_height="200dp">
+
+                    <fragment
+                        android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        tools:context=".MapsActivity" />
+
+                    <ImageView
+                        android:id="@+id/transparent_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@color/transparent" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 

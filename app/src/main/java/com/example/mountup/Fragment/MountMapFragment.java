@@ -2,6 +2,7 @@ package com.example.mountup.Fragment;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mountup.Activity.MainActivity;
 import com.example.mountup.Activity.MountDetailActivity;
+import com.example.mountup.Activity.ReviewWriteActivity;
 import com.example.mountup.Helper.Calculator;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Helper.GpsInfo;
@@ -148,6 +150,8 @@ public class MountMapFragment extends Fragment
     private RatingBar rbStar;
 
     private String m_url;
+
+    private Dialog dialog;
 
     @Nullable
     @Override
@@ -455,7 +459,29 @@ public class MountMapFragment extends Fragment
     {
         public void handleMessage(Message msg)
         {
-            Toast.makeText(getContext(), "등산하였습니다!", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+            View customLayout=View.inflate(getContext(),R.layout.dialog_mountup,null);
+            builder.setView(customLayout);
+
+            customLayout.findViewById(R.id.btn_cancel_network_dialog).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            customLayout.findViewById(R.id.btn_retry_network_dialog).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(view.getContext(), ReviewWriteActivity.class);
+                    intent.putExtra("mountID", "" + selectedMount.getID());
+                    startActivity(intent);
+                }
+            });
+
+            dialog=builder.create();
+            dialog.show();
         }
 
     };
@@ -547,19 +573,9 @@ public class MountMapFragment extends Fragment
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
 
-        //mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener(){
-
-            @Override
-            public boolean onMyLocationButtonClick() {
-
-                Log.d( TAG, "onMyLocationButtonClick : 위치에 따른 카메라 이동 활성화");
-                mMoveMapByAPI = true;
-                return true;
-            }
-        });
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+        //mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -601,7 +617,7 @@ public class MountMapFragment extends Fragment
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
         mMap.setOnMarkerClickListener(this);
 

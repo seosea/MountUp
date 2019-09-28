@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="프로필사진 수정"
+            android:text="프로필 사진 수정"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
     </RelativeLayout>
