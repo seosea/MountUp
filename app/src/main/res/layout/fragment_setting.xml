@@ -40,23 +40,6 @@
         android:background="#EBEDEF"/>
 
     <Button
-        android:id="@+id/btn_logout_setting"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorWhite"
-        android:text="로그아웃"
-        android:textAlignment="textStart"
-        style="?android:attr/borderlessButtonStyle"
-        android:paddingLeft="20dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#EBEDEF"/>
-
-    <Button
         android:id="@+id/btn_question_setting"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
@@ -81,6 +64,23 @@
         android:paddingLeft="20dp"
         android:text="ABOUT"
         android:textAlignment="textStart" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#EBEDEF"/>
+
+    <Button
+        android:id="@+id/btn_logout_setting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorWhite"
+        android:text="로그아웃"
+        android:textAlignment="textStart"
+        style="?android:attr/borderlessButtonStyle"
+        android:paddingLeft="20dp"/>
 
     <View
         android:layout_width="match_parent"

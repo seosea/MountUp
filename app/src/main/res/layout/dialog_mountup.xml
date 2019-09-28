@@ -17,7 +17,7 @@ android:layout_height="match_parent">
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
-        android:text="경험치 +300을 획득하였습니다"
+        android:text="경험치 300을 획득하였습니다"
         android:textColor="@color/colorGray" />
 
     <TextView
