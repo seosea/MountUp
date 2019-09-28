@@ -45,20 +45,20 @@
 
         <ImageView
             android:id="@+id/img_profile_revise_user_information"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             app:srcCompat="@drawable/ic_user_main" />
 
         <ImageButton
             android:id="@+id/btn_upload_image_revise_user_information"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/img_profile_revise_user_information"
             android:layout_marginStart="-30dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/img_profile_revise_user_information"
             android:background="@drawable/box_round_black_border"
             android:src="@drawable/ic_camera" />
@@ -70,11 +70,12 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="207dp"
-            android:text="아이디"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="300dp"
             android:gravity="center"
+            android:text="아이디"
+            android:textColor="@color/colorGray"
             android:textSize="16sp"
             android:textStyle="bold" />
 
