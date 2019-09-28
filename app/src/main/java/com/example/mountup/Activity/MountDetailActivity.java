@@ -191,7 +191,7 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mount));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(mount));
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mount, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mount, 13);
         mMap.moveCamera(cameraUpdate);
 
     }
