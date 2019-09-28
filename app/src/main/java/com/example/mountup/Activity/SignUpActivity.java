@@ -114,9 +114,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String pw = editPass.getText().toString();
         for (int i = 0; i < pw.length(); i++){
             char ch = pw.charAt(i);
-            if ('0' < ch && ch < '9') {
+            if ('0' <= ch && ch <= '9') {
                 cntNum++;
-            } else if (('A' < ch && ch < 'Z') || ('a' < ch && ch < 'z')) {
+            } else if (('A' <= ch && ch <= 'Z') || ('a' <= ch && ch <= 'z')) {
                 cntEng++;
             }
         }

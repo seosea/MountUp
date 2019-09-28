@@ -17,7 +17,7 @@
         android:drawableRight="@drawable/ic_up_black"
         android:drawablePadding="20dp"
         android:paddingLeft="20dp"
-        android:text="좋아요"
+        android:text="좋아요 누른 리뷰"
         android:textAlignment="textStart" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

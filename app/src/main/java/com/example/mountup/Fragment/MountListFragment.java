@@ -226,8 +226,8 @@ public class MountListFragment extends Fragment implements MountListRecyclerView
                 // 목록 10개 추가
                 int start = m_adapter.getItemCount() - 1;
                 int end = start + 10;
-                if (end > mountList.size() - 1) {
-                    end = mountList.size() - 1;
+                if (end > mountList.size()) {
+                    end = mountList.size();
                 }
 
                 m_bufferItems.clear();
