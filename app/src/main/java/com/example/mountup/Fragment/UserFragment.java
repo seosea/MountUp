@@ -111,8 +111,6 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         m_mountRecycleView.setLayoutManager(m_layoutManager);
         m_mountRecycleView.addItemDecoration(new MountListRecyclerViewDecoration(getActivity()));
 
-        loadAll();
-
         // 어뎁터 연결
         m_adapter = new MountClimbedListRecyclerViewAdapter(getContext(), this);
         m_mountRecycleView.setAdapter(m_adapter);
@@ -132,14 +130,16 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
         imgProfile = view.findViewById(R.id.img_profile_user);
         vExp = view.findViewById(R.id.view_exp_user);
 
-        m_url = "http://15011066.iptime.org:8888/api/userinfo";
-
         // User 등반 리스트 갱신
         refreshUserClimbedList();
+
+        m_url = "http://15011066.iptime.org:8888/api/userinfo";
 
         ContentValues contentValuesUser = new ContentValues();
         NetworkTask networkTaskUser = new NetworkTask(m_url,contentValuesUser);
         networkTaskUser.execute();
+
+        loadAll();
 
         return view;
     }
