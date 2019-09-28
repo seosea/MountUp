@@ -87,7 +87,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
                             android:text="높이"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"
+                            android:textColor="@color/colorMain" />
 
                         <TextView
                             android:id="@+id/tv_mountHeight"
@@ -105,7 +106,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
                             android:text="거리"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"
+                            android:textColor="@color/colorMain" />
 
                         <TextView
                             android:id="@+id/tv_mountDistance"

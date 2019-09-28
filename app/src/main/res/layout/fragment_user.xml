@@ -199,7 +199,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorWhite"
-        android:text="좋아요"
+        android:text="좋아요 누른 리뷰"
         android:textAlignment="textStart"
         style="?android:attr/borderlessButtonStyle"
         android:drawableRight="@drawable/ic_down_black"

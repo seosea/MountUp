@@ -16,8 +16,13 @@ public class Constant {
 
     public static String URL = "http://15011066.iptime.org:8888";
 
-    // Server Task 타입
+    // Fragment Type
+    public static final int FRAGMENT_LIST = 1;
+    public static final int FRAGMENT_MAP = 2;
+    public static final int FRAGMENT_USER = 3;
+    public static final int FRAGMENT_SETTING = 4;
 
+    // Server Task 타입
     // 산 데이터 Task Type
     public static final int GET_NEW = 1;
     public static final int UPDATE_STAR = 2;

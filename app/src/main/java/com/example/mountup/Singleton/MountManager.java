@@ -96,7 +96,7 @@ public class MountManager {
                     }
                 }
             });
-        } else if (str.equals("높은 순")) {
+        } else if (str.equals("산 높이 ↑")) {
             Collections.sort(MountManager.getInstance().getItems(), new Comparator<MountVO>() {
                 @Override
                 public int compare(MountVO o1, MountVO o2) {
@@ -109,7 +109,7 @@ public class MountManager {
                     }
                 }
             });
-        } else if (str.equals("낮은 순")) {
+        } else if (str.equals("산 높이 ↓")) {
             Collections.sort(MountManager.getInstance().getItems(), new Comparator<MountVO>() {
                 @Override
                 public int compare(MountVO o1, MountVO o2) {

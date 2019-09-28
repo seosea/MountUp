@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     FragmentManager fragmentManager;
     Fragment fragment;
+    private int curFragment;
 
     ImageButton btnMountList, btnMountMap, btnUser, btnSetting;
     View selectedMountList, selectedMountMap, selectedUser, selectedSetting;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentTransaction.replace( R.id.main_fragment, fragment );
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        curFragment = Constant.FRAGMENT_LIST;
     }
 
     private void initView(){
@@ -91,62 +93,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_mount_list:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, new MountListFragment())
-                        .addToBackStack(null)
-                        .detach(fragment)
-                        .attach(fragment)
-                        .commit();
+                if (curFragment != Constant.FRAGMENT_LIST) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_fragment, new MountListFragment())
+                            .addToBackStack(null)
+                            .detach(fragment)
+                            .attach(fragment)
+                            .commit();
 
-                selectedMountList.setVisibility(View.VISIBLE);
-                selectedMountMap.setVisibility(View.INVISIBLE);
-                selectedUser.setVisibility(View.INVISIBLE);
-                selectedSetting.setVisibility(View.INVISIBLE);
+                    selectedMountList.setVisibility(View.VISIBLE);
+                    selectedMountMap.setVisibility(View.INVISIBLE);
+                    selectedUser.setVisibility(View.INVISIBLE);
+                    selectedSetting.setVisibility(View.INVISIBLE);
+                    curFragment = Constant.FRAGMENT_LIST;
+                }
                 break;
-            case R.id.btn_mount_map:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, new MountMapFragment())
-                        .addToBackStack(null)
-                        .detach(fragment)
-                        .attach(fragment)
-                        .commit();
 
-                selectedMountList.setVisibility(View.INVISIBLE);
-                selectedMountMap.setVisibility(View.VISIBLE);
-                selectedUser.setVisibility(View.INVISIBLE);
-                selectedSetting.setVisibility(View.INVISIBLE);
+            case R.id.btn_mount_map:
+                if (curFragment != Constant.FRAGMENT_MAP) {
+
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_fragment, new MountMapFragment())
+                            .addToBackStack(null)
+                            .detach(fragment)
+                            .attach(fragment)
+                            .commit();
+
+                    selectedMountList.setVisibility(View.INVISIBLE);
+                    selectedMountMap.setVisibility(View.VISIBLE);
+                    selectedUser.setVisibility(View.INVISIBLE);
+                    selectedSetting.setVisibility(View.INVISIBLE);
+                    curFragment = Constant.FRAGMENT_MAP;
+                }
                 break;
             case R.id.btn_user:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, new UserFragment())
-                        .addToBackStack(null)
-                        .detach(fragment)
-                        .attach(fragment)
-                        .commit();
+                if (curFragment != Constant.FRAGMENT_USER) {
 
-                selectedMountList.setVisibility(View.INVISIBLE);
-                selectedMountMap.setVisibility(View.INVISIBLE);
-                selectedUser.setVisibility(View.VISIBLE);
-                selectedSetting.setVisibility(View.INVISIBLE);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_fragment, new UserFragment())
+                            .addToBackStack(null)
+                            .detach(fragment)
+                            .attach(fragment)
+                            .commit();
+
+                    selectedMountList.setVisibility(View.INVISIBLE);
+                    selectedMountMap.setVisibility(View.INVISIBLE);
+                    selectedUser.setVisibility(View.VISIBLE);
+                    selectedSetting.setVisibility(View.INVISIBLE);
+                    curFragment = Constant.FRAGMENT_USER;
+                }
                 break;
             case R.id.btn_setting:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, new SettingFragment())
-                        .addToBackStack(null)
-                        .detach(fragment)
-                        .attach(fragment)
-                        .commit();
+                if (curFragment != Constant.FRAGMENT_SETTING) {
 
-                selectedMountList.setVisibility(View.INVISIBLE);
-                selectedMountMap.setVisibility(View.INVISIBLE);
-                selectedUser.setVisibility(View.INVISIBLE);
-                selectedSetting.setVisibility(View.VISIBLE);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_fragment, new SettingFragment())
+                            .addToBackStack(null)
+                            .detach(fragment)
+                            .attach(fragment)
+                            .commit();
+
+                    selectedMountList.setVisibility(View.INVISIBLE);
+                    selectedMountMap.setVisibility(View.INVISIBLE);
+                    selectedUser.setVisibility(View.INVISIBLE);
+                    selectedSetting.setVisibility(View.VISIBLE);
+                    curFragment = Constant.FRAGMENT_SETTING;
+                }
                 break;
         }
     }

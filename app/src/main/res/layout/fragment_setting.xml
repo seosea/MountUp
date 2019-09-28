@@ -28,7 +28,7 @@
         android:layout_height="60dp"
         android:background="@color/colorWhite"
         android:paddingLeft="20dp"
-        android:text="회원정보 수정"
+        android:text="프로필사진 수정"
         style="?android:attr/borderlessButtonStyle"
         android:textAlignment="textStart" />
 

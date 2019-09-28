@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="회원정보 수정"
+            android:text="프로필사진 수정"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
     </RelativeLayout>
@@ -40,7 +40,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:id="@+id/img_profile_revise_user_information"
@@ -68,23 +69,27 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="42dp"
-            android:layout_marginTop="178dp"
-            android:text="아이디" />
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="207dp"
+            android:textStyle="bold"
+            android:text="아이디 : "
+            android:textSize="16sp" />
+
 
         <TextView
             android:id="@+id/txt_id_revise_user_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView5"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="42dp"
-            android:layout_marginTop="14dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="204dp"
             android:layout_marginEnd="42dp"
-            android:background="@drawable/box_round_gray_border"
-            android:padding="10dp"
+            android:layout_toRightOf="@+id/textView5"
+            android:padding="3dp"
             android:text="id"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
 
         <Button
