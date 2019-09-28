@@ -233,14 +233,23 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void pushSubmitButton(){
-        btn_submit.setEnabled(false);
+        if(m_uri == null){
+            Toast.makeText(this,"사진을 등록해주세요.",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        if(editText_review.getText().length()==0){
+            Toast.makeText(this,"리뷰를 작성해주세요.",Toast.LENGTH_SHORT).show();
+            return;
+        }
         ContentValues values = new ContentValues();
 
         values.put("reviewUserID", MyInfo.getInstance().getUser().getID() );
         values.put("reviewMntID", m_mountID);
         values.put("reviewString", editText_review.getText().toString());
         values.put("reviewStar", ratingBar_review.getRating());
+
+        btn_submit.setEnabled(false);
 
         WriteTask writeTask = new WriteTask(m_reviewSentURL, values, new AsyncCallback() {
             @Override
