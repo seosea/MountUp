@@ -24,12 +24,45 @@
 
     <Button
         android:id="@+id/btn_user_information_setting"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorWhite"
         android:paddingLeft="20dp"
-        android:text="프로필사진 수정"
+        android:text="프로필 사진 수정"
+        android:textAlignment="textStart" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#EBEDEF"/>
+
+    <Button
+        android:id="@+id/btn_question_setting"
         style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="20dp"
+        android:text="문의하기"
+        android:textAlignment="textStart" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#EBEDEF"/>
+
+    <Button
+        android:id="@+id/btn_about_setting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorWhite"
+        android:paddingLeft="20dp"
+        android:text="ABOUT"
         android:textAlignment="textStart" />
 
     <View

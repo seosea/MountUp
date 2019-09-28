@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.example.mountup.Popup.FullImagePopup;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.VO.MountVO;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,6 +35,10 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mMap;
 
     private ConfirmDialog errDialog;
+    boolean mMoveMapByAPI = true;
+
+    private ScrollView mainScrollView;
+    private ImageView transparentImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,6 +145,35 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
                 overridePendingTransition(R.anim.anim_slide_in_bottom,R.anim.anim_slide_out_top);
             }
         });
+
+        mainScrollView = (ScrollView) findViewById(R.id.main_scrollview);
+        transparentImageView = (ImageView) findViewById(R.id.transparent_image);
+        transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        mainScrollView.requestDisallowInterceptTouchEvent(true);
+                        // Disable touch on transparent view
+                        return false;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        mainScrollView.requestDisallowInterceptTouchEvent(false);
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        mainScrollView.requestDisallowInterceptTouchEvent(true);
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }
+        });
     }
 
     @Override
@@ -155,6 +190,9 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mount));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(mount));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mount, 15);
+        mMap.moveCamera(cameraUpdate);
+
     }
 }

@@ -57,6 +57,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="32dp"
             android:text="미세먼지"
+            android:textColor="@color/colorMain"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/textView1"
             app:layout_constraintTop_toTopOf="parent" />
@@ -68,6 +69,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="2dp"
             android:text="오존"
+            android:textColor="@color/colorMain"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/textView1"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -143,11 +145,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="14dp"
-            app:backgroundTint="@color/colorWhite"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:clickable="true"
-            android:src="@drawable/ic_gps" />
+            android:src="@drawable/ic_gps"
+            app:backgroundTint="@color/colorWhite" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/ftn_climb_map"
@@ -156,11 +158,11 @@
             android:layout_below="@+id/ftn_gps_map"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="14dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginEnd="4dp"
             android:clickable="true"
-            app:fabSize="normal"
+            android:src="@drawable/ic_climb"
             app:backgroundTint="@color/colorWhite"
-            android:src="@drawable/ic_climb" />
+            app:fabSize="normal" />
 
         <LinearLayout
             android:visibility="gone"
