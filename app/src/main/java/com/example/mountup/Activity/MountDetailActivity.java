@@ -1,6 +1,7 @@
 package com.example.mountup.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,12 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mountup.Adapter.MountListRecyclerViewAdapter;
 import com.example.mountup.Popup.ConfirmDialog;
-import com.example.mountup.Popup.MountImagePopup;
+import com.example.mountup.Popup.FullImagePopup;
 import com.example.mountup.R;
 import com.example.mountup.Singleton.MountManager;
-import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,8 +34,6 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
 
     private ConfirmDialog errDialog;
 
-    private MountImagePopup mountImagePopup;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,15 +44,13 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mountImagePopup = new MountImagePopup(this);
     }
 
     public void initActivity() {
         m_mount = MountManager.getInstance().getMountDataFromID
                 (Integer.parseInt(getIntent().getStringExtra("MountID")));
 
-        MountManager.getInstance().setSeletedMountID(m_mount.getID());
+        MountManager.getInstance().setSelectedMountID(m_mount.getID());
 
         //Log.d("mmee:initActivityWidget","Thumbnail : " + m_mount.getThumbnail());
         ImageView m_iv_mountThumbnail = (ImageView) this.findViewById(R.id.iv_mountThumbnail);
@@ -64,7 +59,8 @@ public class MountDetailActivity extends AppCompatActivity implements OnMapReady
         m_iv_mountThumbnail.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mountImagePopup.show();
+                FullImagePopup fullImagePopup = new FullImagePopup(MountDetailActivity.this, m_mount.getThumbnail());
+                fullImagePopup.show();
                 return false;
             }
         });

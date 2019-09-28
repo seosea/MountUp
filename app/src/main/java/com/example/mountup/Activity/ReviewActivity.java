@@ -139,7 +139,6 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
     }
 
     @Override
-
     public void onRefresh() {
         // 새로고침 코드
         m_adapter.clear();

@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,10 +39,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.example.mountup.Activity.LikeReviewActivity;
+import com.example.mountup.Activity.MountDetailActivity;
 import com.example.mountup.Activity.MyReviewActivity;
 import com.example.mountup.Activity.ReviewActivity;
 import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
+import com.example.mountup.Popup.FullImagePopup;
 import com.example.mountup.R;
 import com.example.mountup.Adapter.MountClimbedListRecyclerViewAdapter;
 
@@ -241,6 +244,16 @@ public class UserFragment extends Fragment implements MountClimbedListRecyclerVi
                 if(Build.VERSION.SDK_INT >= 21) {
                     imgProfile.setClipToOutline(true);
                 }
+
+                imgProfile.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        FullImagePopup fullImagePopup =
+                                new FullImagePopup(UserFragment.super.getContext(), ((BitmapDrawable) userDrawable).getBitmap());
+                        fullImagePopup.show();
+                        return false;
+                    }
+                });
 
             }
         }

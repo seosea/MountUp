@@ -2,11 +2,13 @@ package com.example.mountup.Adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mountup.Fragment.MountMapFragment;
-import com.example.mountup.ServerConnect.LikeTask;
+import com.example.mountup.Popup.FullImagePopup;
 import com.example.mountup.ServerConnect.PostHttpURLConnection;
-import com.example.mountup.Singleton.LikeReviewManager;
 import com.example.mountup.Singleton.MountManager;
 import com.example.mountup.Singleton.MyInfo;
 import com.example.mountup.VO.MountVO;
@@ -42,12 +42,15 @@ import static androidx.recyclerview.widget.RecyclerView.*;
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ArrayList<ReviewVO> m_reivewItems;
 
+    private Context m_context;
+
     private boolean isLoading;
     private int lastVisibleItem, totalItemCount;
     private int visibleThreshold = 2;
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+
 
     private String m_url;
 
@@ -58,6 +61,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public ReviewRecyclerViewAdapter(Context context,RecyclerView recyclerView, ArrayList<ReviewVO> reviewItems, OnLoadMoreListener onLoadMoreListener1) {
+        this.m_context = context;
         this.m_reivewItems = reviewItems;
         this.onLoadMoreListener = onLoadMoreListener1;
 
@@ -144,6 +148,28 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         Log.d("like",""+item.getLike());
                         connectNetworkLike("http://15011066.iptime.org:8888/api/like/",item);
                     }
+                }
+            });
+
+            ((ItemViewHolder) holder).m_imageView_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
+
+                    Drawable drawable = ((ItemViewHolder) holder).m_imageView_image.getDrawable();
+                    FullImagePopup fullImagePopup = new FullImagePopup(m_context, ((BitmapDrawable)drawable).getBitmap());
+                    fullImagePopup.show();
+                }
+            });
+
+            ((ItemViewHolder) holder).m_imageView_user_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
+
+                    Drawable drawable = ((ItemViewHolder) holder).m_imageView_user_image.getDrawable();
+                    FullImagePopup fullImagePopup = new FullImagePopup(m_context, ((BitmapDrawable)drawable).getBitmap());
+                    fullImagePopup.show();
                 }
             });
 

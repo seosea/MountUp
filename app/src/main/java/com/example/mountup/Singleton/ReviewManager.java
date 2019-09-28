@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ReviewManager {
 
     private ArrayList<ReviewVO> m_items;
+    private int selectedReviewID;
 
     private ReviewManager() {
         m_items = new ArrayList();
@@ -20,4 +21,12 @@ public class ReviewManager {
     }
 
     public ArrayList<ReviewVO> getItems() { return m_items; }
+
+    public int getSelectedReviewID() {
+        return selectedReviewID;
+    }
+
+    public void setSelectedReviewID(int id) {
+        selectedReviewID = id;
+    }
 }

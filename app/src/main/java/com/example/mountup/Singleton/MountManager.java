@@ -18,7 +18,7 @@ public class MountManager {
 
     private int loadPercent;
     private String currentSort;
-    private int seletedMountID;
+    private int selectedMountID;
 
     private MountManager() {
         m_items = new ArrayList();
@@ -71,9 +71,9 @@ public class MountManager {
         return loadPercent;
     }
 
-    public void setSeletedMountID(int id) { seletedMountID = id; }
+    public void setSelectedMountID(int id) { selectedMountID = id; }
 
-    public int getSeletedMountID() { return seletedMountID; }
+    public int getSelectedMountID() { return selectedMountID; }
 
     public void setCurrentSort(String sort) {
         currentSort = sort;

@@ -87,12 +87,6 @@ public class MountListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                     //Toast.makeText(m_context, mountVO.getName(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(m_context, MountDetailActivity.class);
                     intent.putExtra("MountID", Integer.toString(mountVO.getID()));
-                    //intent.putExtra("name", mountVO.getName());
-                    //intent.putExtra("height", Integer.toString(mountVO.getHeight()));
-                    //intent.putExtra("distance", Float.toString(mountVO.getDistance()));
-                    //intent.putExtra("grade", Float.toString(mountVO.getGrade()));
-                    //intent.putExtra("isClimbed", Boolean.toString(mountVO.isClimbed()));
-                    //Log.d("mee:MountListAdapter", "isClimbed : " + Boolean.toString(mountVO.isClimbed()));
 
                     m_context.startActivity(intent);
                 }
