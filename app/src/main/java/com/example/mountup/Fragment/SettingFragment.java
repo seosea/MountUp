@@ -53,7 +53,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.btn_logout_setting:
-                // TODO: 로그아웃 시
+                Toast.makeText(this.getContext(),"로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this.getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

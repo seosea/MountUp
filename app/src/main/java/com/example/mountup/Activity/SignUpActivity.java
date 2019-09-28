@@ -2,6 +2,8 @@ package com.example.mountup.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText editID, editPass, editPassConfirm;
 
     ConfirmDialog errDialog;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         SignUpTask signUpTask = new SignUpTask(url, values, new AsyncCallback() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(SignUpActivity.this,
-                        "회원 가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                LoginActivity.isSignUp = true;
                 BackToLoginActivity();
             }
 

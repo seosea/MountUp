@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Dialog dialog;
     private ConfirmDialog errDialog;
 
+    public static boolean isSignUp = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // postToken 내부에서 postMountList, initListener, callback으로 순차적 실행
 
         getGPS();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isSignUp){
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            View customLayout=View.inflate(getApplicationContext(),R.layout.dialog_signup,null);
+            builder.setView(customLayout);
+
+            customLayout.findViewById(R.id.btn_ok_dialog).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog=builder.create();
+            dialog.show();
+            isSignUp = false;
+        }
+
     }
 
     @Override
@@ -229,19 +254,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     7);
         } catch (IOException ioException) {
             //네트워크 문제
-            Toast.makeText(this, "지오코더 사용불가", Toast.LENGTH_LONG).show();
-            return "지오코더 사용불가";
+            Log.v("GPS","지오코더 서비스 사용불가");
+            return "지오코더 서비스 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(this, "잘못된 좌표", Toast.LENGTH_LONG).show();
-            return "잘못된 좌표";
+            Log.v("GPS","잘못된 GPS 좌표");
+            return "잘못된 GPS 좌표";
         }
-
         if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            Log.v("GPS","주소 미발견");
             return "주소 미발견";
-
         }
-
         Address address = addresses.get(0);
         return address.getAddressLine(0).toString()+"\n";
 
