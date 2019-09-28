@@ -58,6 +58,7 @@
 
     <Button
         android:id="@+id/btn_about_setting"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorWhite"

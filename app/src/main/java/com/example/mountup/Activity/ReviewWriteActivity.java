@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 public class ReviewWriteActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton btn_close;
     private ImageButton btn_imageButton;
+    private ImageView imgAdd;
     private Button btn_submit;
 
     private RatingBar ratingBar_review;
@@ -106,6 +109,8 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         InputFilter[] fArray = new InputFilter[1];
         fArray[0] = new InputFilter.LengthFilter(max);
         editText_review.setFilters(fArray);
+
+        imgAdd = findViewById(R.id.img_add_write);
     }
 
     void initListener() {
@@ -152,7 +157,8 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                 }
                 int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
                 int exifDegree = exifOrientationToDegrees(exifOrientation);
-
+                imgAdd.setVisibility(View.INVISIBLE);
+                btn_imageButton.setBackgroundColor(Color.WHITE);
                 Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                 btn_imageButton.setImageBitmap(rotate(bitmap, exifDegree));
             }
