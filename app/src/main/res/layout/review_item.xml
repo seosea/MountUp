@@ -29,6 +29,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="0"
                 android:radius="25dp"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_user_main" />
 
             <TextView
