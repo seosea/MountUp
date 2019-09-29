@@ -218,24 +218,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void pushImageButton(){
-        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                doTakeAlbumAction();
-            }
-        };
-        DialogInterface.OnClickListener cancelListenner = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        };
-
-        new AlertDialog.Builder(this)
-                .setTitle("업로드할 이미지 선택")
-                .setNeutralButton("앨범선택",albumListener)
-                .setNegativeButton("취소",cancelListenner)
-                .show();
+        doTakeAlbumAction();
     }
 
     public void pushSubmitButton(){
@@ -346,16 +329,16 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
 
         if (permissionCheck!= PackageManager.PERMISSION_GRANTED) {
 
-            Toast.makeText(this,"권한 승인이 필요합니다",Toast.LENGTH_LONG).show();
+            Log.v("갤러리 권한","권한 승인이 필요합니다");
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+                Log.v("갤러리 권한","갤러리 사용을 위해 권한이 필요합니다.");
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_READ_EXTERNAL_STORAGE);
-                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+                Log.v("갤러리 권한","갤러리 사용을 위해 권한이 필요합니다.");
             }
         }
     }
@@ -367,10 +350,10 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
+                    Log.v("갤러리 권한","승인이 허가되어 있습니다.");
 
                 } else {
-                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                    Log.v("갤러리 권한","아직 승인받지 않았습니다.");
                 }
                 return;
             }
