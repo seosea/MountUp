@@ -20,17 +20,30 @@
         android:text="리뷰 보기"
         android:textAlignment="textStart" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#EBEDEF">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rc_review_recyclerview"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            android:padding="0dp" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:background="#EBEDEF">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rc_review_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:padding="0dp" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/txt_null_review"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="리뷰가 없습니다." />
+    </RelativeLayout>
+
 </LinearLayout>

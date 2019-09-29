@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +52,8 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
 
     private String m_url;
 
+    private TextView txtNull;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,8 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private void initView(){
+        txtNull = findViewById(R.id.txt_null_like_review);
+
         m_reviewItems = new ArrayList();
         m_bufferList = new ArrayList();
 
@@ -167,6 +172,12 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
         try {
             JSONArray jsonArray = new JSONArray(result);
             Log.d("smh:length",""+jsonArray.length());
+
+            if(jsonArray.length() == 0){
+                txtNull.setVisibility(View.VISIBLE);
+            } else {
+                txtNull.setVisibility(View.INVISIBLE);
+            }
 
             for(int i =0;i<jsonArray.length();i++) {
                 Log.d("mmee:ReviewActivity","1 review");
