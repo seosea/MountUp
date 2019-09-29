@@ -150,6 +150,10 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
         Log.d("smh:get","data");
         m_reviewItems.clear();
         int end = 5;
+        if(m_bufferList.size()==0){
+            Toast.makeText(this, "작성된 리뷰가 없습니다.", Toast.LENGTH_SHORT).show();
+        };
+
         if(m_bufferList.size() < 5){
             end = m_bufferList.size();
         }

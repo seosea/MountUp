@@ -155,10 +155,15 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         Log.d("smh:get","data");
         m_reviewItems.clear();
         int end = 5;
+        if(m_bufferList.size()==0){
+            Toast.makeText(this, "작성된 리뷰가 없습니다.", Toast.LENGTH_SHORT).show();
+        };
+
         if(m_bufferList.size() < 5){
             end = m_bufferList.size();
         }
         Log.d("smh:first size",""+m_bufferList.size());
+
 
         for(int i =0;i<end;i++){
             m_reviewItems.add(m_bufferList.get(i));
