@@ -245,7 +245,7 @@ public class MyReviewActivity extends AppCompatActivity implements SwipeRefreshL
         } catch (IOException e) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_mountain_ranking_main);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            newReview.setImage(bitmap);
+            newReview.setUserImage(bitmap);
             e.printStackTrace();
             return;
         }

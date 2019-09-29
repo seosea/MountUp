@@ -193,8 +193,6 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
             }
 
             for(int i =0;i<jsonArray.length();i++) {
-                Log.d("mmee:ReviewActivity","1 review");
-
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
                 int reviewID = jsonObj.getInt("reviewID");
@@ -226,9 +224,10 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         InputStream is = null;
         try {
             String reviewImg_url = "http://15011066.iptime.org:8888/reviewimages/" + newReview.getImageName();
-            //Log.d("mmee:ReviewActivity", "url : " + reviewImg_url + "\nininputStream : " + is.toString());
+            Log.d("mmee:ReviewActivity", "ImageName: " + newReview.getImageName());
             is = (InputStream) new URL(reviewImg_url).getContent();
            } catch (IOException e) {
+            Log.d("mmee:ReviewActivity", "fail to load review image");
             Drawable drawable = getResources().getDrawable(R.drawable.ic_mountain_ranking_main);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             newReview.setImage(bitmap);
@@ -250,7 +249,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         } catch (IOException e) {
             Drawable drawable = getResources().getDrawable(R.drawable.ic_mountain_ranking_main);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            newReview.setImage(bitmap);
+            newReview.setUserImage(bitmap);
             e.printStackTrace();
             return;
         }
