@@ -328,9 +328,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (permissionCheck!= PackageManager.PERMISSION_GRANTED) {
-
             Log.v("갤러리 권한","권한 승인이 필요합니다");
-
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Log.v("갤러리 권한","갤러리 사용을 위해 권한이 필요합니다.");

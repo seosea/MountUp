@@ -101,8 +101,13 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
             public void onLoadMore() {
                 if (m_reviewItems.size() <= 100) {
                     Log.d("smh:loadmore","more");
+
                     m_reviewItems.add(null);
-                    m_adapter.notifyItemInserted(m_reviewItems.size() - 1);
+                    m_recyclerView.post(new Runnable() {
+                        public void run() {
+                            m_adapter.notifyItemInserted(m_reviewItems.size() - 1);
+                        }
+                    });
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -115,6 +120,13 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                             if (end > m_bufferList.size() - 1) {
                                 end = m_bufferList.size();
                             }
+
+                            if(index == end){
+                                Log.d("smh:reviewStart",""+index);
+                                Log.d("smh:end",""+end);
+                                return;
+                            }
+
                             for (int i = index; i < end; i++) {
                                 m_reviewItems.add(m_bufferList.get(i));
                             }
