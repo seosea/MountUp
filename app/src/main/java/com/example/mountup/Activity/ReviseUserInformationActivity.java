@@ -180,16 +180,16 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
 
         if (permissionCheck!= PackageManager.PERMISSION_GRANTED) {
 
-            Toast.makeText(this,"권한 승인이 필요합니다",Toast.LENGTH_LONG).show();
+            Log.v("갤러리 권한","권한 승인이 필요합니다");
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+                Log.v("갤러리 권한","갤러리 사용을 위해 권한이 필요합니다.");
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_READ_EXTERNAL_STORAGE);
-                Toast.makeText(this,"갤러리 사용을 위해 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+                Log.v("갤러리 권한","갤러리 사용을 위해 권한이 필요합니다.");
             }
         }
     }
@@ -202,10 +202,10 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
+                    Log.v("갤러리 권한","승인이 허가되어 있습니다.");
 
                 } else {
-                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                    Log.v("갤러리 권한","아직 승인받지 않았습니다.");
                 }
                 return;
             }
@@ -229,120 +229,17 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
         return path;
     }
 
-    /*
-    private void connectNetwork() {
-        URL url = null;
-        try {
-            url = new URL("http://15011066.iptime.org:8888/userimageup");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        final String boundary = "SpecificString";
-        HttpURLConnection con = null;
-        try {
-            con = (HttpURLConnection) url.openConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-
-        //읽기 쓰기
-        con.setDoOutput(true);
-        con.setDoInput(true);
-        try {
-            con.setRequestMethod("POST");
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        }
-
-        //캐시를 사용하지 않게 설정
-        con.setUseCaches(false);
-
-        final URLConnection finalCon = con;
-        new Thread() {
-            public void run() {
-
-                try {
-                    DataOutputStream wr = new DataOutputStream(finalCon.getOutputStream());
-                    wr.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + Constant.ADMIN_ID);
-                    wr.writeBytes("\r\n--" + boundary + "\r\n");
-                    wr.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n");
-                    wr.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
-
-                    // Bitmap을 ByteBuffer로 전환
-                    Drawable d = imgProfile.getDrawable();
-                    Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-
-                    byte[] pixels = new byte[bitmap.getWidth() * bitmap.getHeight()];
-                    for (int i = 0; i < bitmap.getWidth(); ++i) {
-                        for (int j = 0; j < bitmap.getHeight(); ++j) {
-                            //we're interested only in the MSB of the first byte,
-                            //since the other 3 bytes are identical for B&W images
-                            pixels[i + j] = (byte) ((bitmap.getPixel(i, j) & 0x80) >> 7);
-                        }
-                    }
-                    wr.write(pixels);
-
-                    wr.writeBytes("\r\n--" + boundary + "--\r\n");
-                    wr.flush();
-                    wr.close();
-
-                    BufferedReader rd = null;
-                    // Response받기
-                    InputStream responseStream = new
-                            BufferedInputStream(finalCon.getInputStream());
-                    BufferedReader responseStreamReader =
-                            new BufferedReader(new InputStreamReader(responseStream));
-                    String line = "";
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((line = responseStreamReader.readLine()) != null) {
-                        stringBuilder.append(line).append("\n");
-                    }
-                    responseStreamReader.close();
-                    String response = stringBuilder.toString();
-
-
-                    //Response stream종료
-                    responseStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }.start();
-    }
-    */
 
    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_complete_revise_user_information:
-                //connectNetwork();
             case R.id.btn_close_revise_user_information:
                 onBackPressed();
                 break;
             case R.id.btn_upload_image_revise_user_information:
                 Log.d("button","image");
-
-                DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        doTakeAlbumAction();
-                    }
-                };
-                DialogInterface.OnClickListener cancelListenner = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                };
-
-                new AlertDialog.Builder(this)
-                        .setTitle("업로드할 이미지 선택")
-                        .setNeutralButton("앨범선택",albumListener)
-                        .setNegativeButton("취소",cancelListenner)
-                        .show();
-
+                doTakeAlbumAction();
                 break;
         }
     }
