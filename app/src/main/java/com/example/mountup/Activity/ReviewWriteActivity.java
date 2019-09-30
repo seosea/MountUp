@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,8 @@ import com.example.mountup.VO.MountVO;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -252,7 +255,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                     e.printStackTrace();
                 }
 
-                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,"reviewID",reviewID,getRealFilePath(m_uri),new AsyncCallback(){
+                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,"reviewID",reviewID,saveBitmapToJpeg(getBaseContext(),BitmapFactory.decodeFile(getRealFilePath(m_uri))),new AsyncCallback(){
                     @Override
                     public void onSuccess(Object object) {
                         ContentValues values = new ContentValues();
@@ -357,6 +360,33 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
             }
 
         }
+    }
+
+
+    public static String saveBitmapToJpeg(Context context, Bitmap bitmap){
+
+        File storage = context.getCacheDir(); // 이 부분이 임시파일 저장 경로
+
+        String fileName = "123" + ".jpg";  // 파일이름은 마음대로!
+
+        File tempFile = new File(storage,fileName);
+
+        try{
+            tempFile.createNewFile();  // 파일을 생성해주고
+
+            FileOutputStream out = new FileOutputStream(tempFile);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG,  70, out);  // 넘거 받은 bitmap을 jpeg(손실압축)으로 저장해줌
+
+            out.close(); // 마무리로 닫아줍니다.
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return tempFile.getAbsolutePath();   // 임시파일 저장경로를 리턴해주면 끝!
     }
 }
 
