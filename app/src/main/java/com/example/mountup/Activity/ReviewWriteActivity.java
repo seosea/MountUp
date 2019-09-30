@@ -67,6 +67,8 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
     private int m_mountID;
     private Uri m_uri;
 
+    private int exifDegree;
+
     private String m_reviewSentURL;
     private String m_reviewImageUploadURL;
     private String m_reviewStarURL;
@@ -159,7 +161,7 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                     e.printStackTrace();
                 }
                 int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                int exifDegree = exifOrientationToDegrees(exifOrientation);
+                exifDegree = exifOrientationToDegrees(exifOrientation);
                 imgAdd.setVisibility(View.INVISIBLE);
                 btn_imageButton.setBackgroundColor(Color.WHITE);
                 Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
@@ -255,7 +257,9 @@ public class ReviewWriteActivity extends AppCompatActivity implements View.OnCli
                     e.printStackTrace();
                 }
 
-                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,"reviewID",reviewID,saveBitmapToJpeg(getBaseContext(),BitmapFactory.decodeFile(getRealFilePath(m_uri))),new AsyncCallback(){
+                Bitmap review_bitmap = BitmapFactory.decodeFile(getRealFilePath(m_uri));
+                Bitmap resize = rotate(review_bitmap, exifDegree);
+                WriteImageTask imageTask = new WriteImageTask(m_reviewImageUploadURL,"reviewID",reviewID,saveBitmapToJpeg(getBaseContext(),resize),new AsyncCallback(){
                     @Override
                     public void onSuccess(Object object) {
                         ContentValues values = new ContentValues();
