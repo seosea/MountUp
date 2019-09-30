@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,13 +16,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mountup.Adapter.ReviewRecyclerViewAdapter;
+import com.example.mountup.Helper.Constant;
 import com.example.mountup.Listener.AsyncCallback;
 import com.example.mountup.Model.User;
 import com.example.mountup.ServerConnect.MountImageTask;
@@ -57,6 +63,8 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 
     private TextView txtNull;
 
+    private CheckTypesTask loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +92,62 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         });
         networkTask.execute();
     }
+
+    public class CheckTypesTask extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(ReviewActivity.this, R.style.progress_bar_style);
+
+        @Override
+        protected void onPreExecute() {
+
+            asyncDialog.setCancelable(false);
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("리뷰를 불러오고 있습니다");
+
+            // show dialog
+            asyncDialog.show();
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    asyncDialog.setProgress(i*30);
+                    Thread.sleep(500);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            asyncDialog.dismiss();
+            super.onPostExecute(result);
+        }
+
+    }
+
+    final Handler handlerLoadingStart = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            loading = new CheckTypesTask();
+            loading.execute();
+        }
+    };
+
+    final Handler handlerLoading = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            loading.onPostExecute(null);
+        }
+    };
 
     private void initView(){
         txtNull = findViewById(R.id.txt_null_review);
@@ -212,6 +276,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 
                 m_bufferList.add(newReview);
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -254,6 +319,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         Drawable user_drawable = Drawable.createFromStream(is, "mount" + newReview.getUserId());
         newReview.setUserImage(((BitmapDrawable) user_drawable).getBitmap());
         Log.d("mmee:ReviewActivity", "Get user image");
+
     }
 
     @Override
@@ -261,7 +327,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         String str = ""+view.getId();
         Log.d("button click",str);
 
-        finish();
+        onBackPressed();
         overridePendingTransition(R.anim.anim_slide_in_top,R.anim.anim_slide_out_bottom);
     }
 
@@ -283,6 +349,9 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
             this.callback = callback;
             this.url = url;
             this.values = values;
+
+            Message msgProfile = handlerLoadingStart.obtainMessage();
+            handlerLoadingStart.sendMessage(msgProfile);
         }
 
         @Override
@@ -300,6 +369,10 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            Message msgProfile = handlerLoading.obtainMessage();
+            handlerLoading.sendMessage(msgProfile);
+
             if (callback != null && exception == null) {
                 callback.onSuccess(true);
             } else {

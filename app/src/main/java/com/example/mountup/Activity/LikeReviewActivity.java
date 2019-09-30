@@ -1,12 +1,15 @@
 package com.example.mountup.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,6 +56,8 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
     private String m_url;
 
     private TextView txtNull;
+
+    private CheckTypesTask loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +147,62 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
         m_swipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    public class CheckTypesTask extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(LikeReviewActivity.this, R.style.progress_bar_style);
+
+        @Override
+        protected void onPreExecute() {
+
+            asyncDialog.setCancelable(false);
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("리뷰를 불러오고 있습니다");
+
+            // show dialog
+            asyncDialog.show();
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    asyncDialog.setProgress(i*30);
+                    Thread.sleep(500);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            asyncDialog.dismiss();
+            super.onPostExecute(result);
+        }
+
+    }
+
+    final Handler handlerLoadingStart = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            loading = new CheckTypesTask();
+            loading.execute();
+        }
+    };
+
+    final Handler handlerLoading = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            loading.onPostExecute(null);
+        }
+    };
+
     private void getData(){
         Log.d("smh:get","data");
         m_reviewItems.clear();
@@ -160,7 +221,6 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
     }
 
     @Override
-
     public void onRefresh() {
         // 새로고침 코드
         m_adapter.clear();
@@ -266,6 +326,9 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
             this.callback = callback;
             this.url = url;
             this.values = values;
+
+            Message msgProfile = handlerLoadingStart.obtainMessage();
+            handlerLoadingStart.sendMessage(msgProfile);
         }
 
         @Override
@@ -283,6 +346,10 @@ public class LikeReviewActivity extends AppCompatActivity implements SwipeRefres
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            Message msgProfile = handlerLoading.obtainMessage();
+            handlerLoading.sendMessage(msgProfile);
+
             if (callback != null && exception == null) {
                 callback.onSuccess(true);
             } else {
