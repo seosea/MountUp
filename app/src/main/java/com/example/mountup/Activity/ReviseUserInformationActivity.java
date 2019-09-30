@@ -132,7 +132,9 @@ public class ReviseUserInformationActivity extends AppCompatActivity implements 
                 String key = "id";
                 String value = MyInfo.getInstance().getUser().getID();
 
-                WriteImageTask writeImageTask = new WriteImageTask(imageUploadURL,key,value, saveBitmapToJpeg(getBaseContext(),bitmap), new AsyncCallback(){
+                Bitmap review_bitmap = BitmapFactory.decodeFile(getRealFilePath(uri));
+                Bitmap resize = rotate(review_bitmap, exifDegree);
+                WriteImageTask writeImageTask = new WriteImageTask(imageUploadURL,key,value, saveBitmapToJpeg(getBaseContext(),resize), new AsyncCallback(){
                     @Override
                     public void onSuccess(Object object) {
                         Log.d("smh:user_image_upload","success");
